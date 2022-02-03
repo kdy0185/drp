@@ -1,0 +1,368 @@
+@charset "utf-8";
+/* 사용자 정의 CSS Document */
+
+/* scroll plugin 영역 height 지정 (17. 7. 27 by 강덕우) */
+.scroll-small {
+  height: 100px;
+}
+
+.scroll-middle {
+  height: 184px;
+}
+
+.scroll-large {
+  height: 225px;
+}
+
+/* 테이블 내 컬럼 강조 (18. 7. 25 by 강덕우) */
+div.em-col {
+  color: red;
+  font-weight: 700;
+}
+
+/* 팝업 테이블 내 tooltip 컬럼 강조 (18. 7. 9 by 강덕우) */
+.table td.tooltip-col, .table-mini td.tooltip-col {
+  color: #69229d;
+  font-weight: 700;
+}
+
+/* input box width percentage 추가 (17. 5. 19 by 김대현) */
+table[class*="base-table"] tr td input.width_10 {
+  width: 10% !important;
+}
+
+table[class*="base-table"] tr td input.width_22 {
+  width: 22% !important;
+}
+
+table[class*="base-table"] tr td input.width_28 {
+  width: 28% !important;
+}
+
+table[class*="base-table"] tr td input.width_42 {
+  width: 42% !important;
+}
+
+table[class*="base-table"] tr td input.width_50 {
+  width: 50% !important;
+}
+
+table[class*="base-table"] tr td input.width_66 {
+  width: 66% !important;
+}
+
+table[class*="base-table"] tr td input.width_80 {
+  width: 80% !important;
+}
+
+table[class*="base-table"] tr td input.width_95 {
+  width: 95% !important;
+}
+
+table[class*="base-table"] tr td textarea.width_95 {
+  width: 95% !important;
+}
+
+table[class*="base-table"] tr td input.width_98 {
+  width: 98% !important;
+}
+
+table[class*="base-table"] tr td textarea.width_98 {
+  width: 98% !important;
+}
+
+table[class*="base-table"] tr td input.width_982 {
+  width: 98.2% !important;
+}
+
+/* select box width percentage 추가 (17. 5. 19 by 김대현) */
+table[class*="base-table"] tr td select.width_25 {
+  width: 25% !important;
+}
+
+table[class*="base-table"] tr td select.width_262 {
+  width: 26.2% !important;
+}
+
+table[class*="base-table"] tr td select.width_28 {
+  width: 28% !important;
+}
+
+table[class*="base-table"] tr td select.width_34 {
+  width: 34% !important;
+}
+
+table[class*="base-table"] tr td select.width_42 {
+  width: 42% !important;
+}
+
+table[class*="base-table"] tr td select.width_53 {
+  width: 53% !important;
+}
+
+table[class*="base-table"] tr td select.width_66 {
+  width: 66% !important;
+}
+
+table[class*="base-table"] tr td select.width_954 {
+  width: 95.4% !important;
+}
+
+/* textarea box width percentage 추가 (17. 5. 19 by 김대현) */
+table[class*="base-table"] tr td textarea.width_981 {
+  width: 98.1% !important;
+}
+
+/* rowspan="2" 효과 추가 (18. 7. 24 by 강덕우) */
+table[class*="base-table"] div.rowspan2 {
+  height: 45px !important;
+  overflow: auto;
+}
+
+/*일반 css width 값(17. 5. 26 by 김대현) */
+.width_10 {
+  width: 10% !important;
+}
+
+.width_20 {
+  width: 20% !important;
+}
+
+.width_25 {
+  width: 25% !important;
+}
+
+.width_30 {
+  width: 30% !important;
+}
+
+.width_40 {
+  width: 40% !important;
+}
+
+.width_449 {
+  width: 44.9% !important;
+}
+
+.width_50 {
+  width: 50% !important;
+}
+
+.width_60 {
+  width: 60% !important;
+}
+
+.width_70 {
+  width: 70% !important;
+}
+
+.width_87 {
+  width: 87% !important;
+}
+
+.width_93 {
+  width: 93% !important;
+}
+
+.width_95 {
+  width: 95% !important;
+}
+
+.width_100 {
+  width: 100% !important;
+}
+
+/*일반 css padding 값(17. 5. 26 by 김대현) (per=%) */
+.padding_none {
+  padding: 0 !important;
+}
+
+.padding_l0 {
+  padding-left: 0;
+}
+
+.padding_l5 {
+  padding-left: 5px;
+}
+
+.padding_l25 {
+  padding-left: 25px;
+}
+
+.padding_l27 {
+  padding-left: 27px;
+}
+
+.padding_l29 {
+  padding-left: 29px;
+}
+
+.padding_l13 {
+  padding-left: 13px;
+}
+
+.padding_l15 {
+  padding-left: 15px;
+}
+
+.padding_l26 {
+  padding-left: 26px;
+}
+
+.padding_r0 {
+  padding-right: 0;
+}
+
+.padding_r6 {
+  padding-right: 6px;
+}
+
+.padding_r7 {
+  padding-right: 7px;
+}
+
+.padding_r9 {
+  padding-right: 9px;
+}
+
+.padding_r10 {
+  padding-right: 10px;
+}
+
+.padding_r11 {
+  padding-right: 11px;
+}
+
+.padding_r20 {
+  padding-right: 20px;
+}
+
+.padding_r21 {
+  padding-right: 21px;
+}
+
+.padding_r26 {
+  padding-right: 26px;
+}
+
+.padding_b10 {
+  padding-bottom: 10px;
+}
+
+/*일반 css margin 값(17. 5. 26 by 김대현) (per=%) */
+.margin_none {
+  margin: 0 !important;
+}
+
+.margin_t5 {
+  margin-top: 5px;
+}
+
+.margin_t10 {
+  margin-top: 10px;
+}
+
+.margin_l0 {
+  margin-left: 0;
+}
+
+.margin_l11 {
+  margin-left: 11px;
+}
+
+.margin_l3 {
+  margin-left: 3px;
+}
+
+.margin_l8 {
+  margin-left: 8px;
+}
+
+.margin_r5per {
+  margin-right: 5%;
+}
+
+.margin_r26per {
+  margin-right: 2.6% !important;
+}
+
+.margin_b10 {
+  margin-bottom: 10px;
+}
+
+.margin_b0 {
+  margin-bottom: 0;
+}
+
+/*일반 css float 값(17. 5. 26 by 김대현) */
+.float_r {
+  float: right !important;
+}
+
+.float_l {
+  float: left !important;
+}
+
+.float_none {
+  float: none;
+}
+
+.float_i {
+  float: initial;
+}
+
+/*일반 css text-align 값(17. 5. 26 by 김대현) */
+.text_l {
+  text-align: left !important;
+}
+
+.text_c {
+  text-align: center !important;
+}
+
+.text_r {
+  text-align: right !important;
+}
+
+/*일반 css font-weight 값(17. 6. 31 by 김대현)*/
+.font_w500 {
+  font-weight: 500;
+}
+
+/*일반 css width px 값(버튼값)(17. 6. 2 by 김대현)*/
+.width_80px {
+  width: 80px;
+}
+
+.width_84per {
+  width: 84%;
+}
+
+.valign_middle {
+  vertical-align: middle !important;
+}
+
+.border_bottom_none {
+  border-bottom: none !important;
+}
+
+.border_left_th {
+  color: #115ba7;
+  border-top: 0px;
+  border-left: 1px solid #222c32;
+  background: #f1f6fc;
+}
+
+.border_right_th {
+  border-top: 0px;
+  border-right: 1px solid #222c32;
+  background: #f1f6fc;
+}
+
+.border_left_td {
+  border-left: 1px solid #222c32;
+}
+
+.border_right_td {
+  border-right: 1px solid #222c32;
+}

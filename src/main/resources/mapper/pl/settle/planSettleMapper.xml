@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PlanSettle">
+
+	<!-- 페이징 설정 -->
+	<sql id="paginationHeader">
+		SELECT *
+			FROM (
+	</sql>
+	<sql id="paginationFooter">
+			) DATA
+		WHERE RN BETWEEN #{startIndex} AND #{endIndex}
+	</sql>
+
+	<!-- 검색 조건 -->
+	<sql id="planSettleSearch">
+		<if test="userId != null and userId != ''">
+			AND B.PLAN_USER = #{userId}
+		</if>
+		<if test="rtneStartDate != null and rtneStartDate != ''">
+			AND CONVERT(DATE, B.RTNE_DATE) &gt;= #{rtneStartDate}
+		</if>
+		<if test="rtneEndDate != null and rtneEndDate != ''">
+			AND CONVERT(DATE, B.RTNE_DATE) &lt;= #{rtneEndDate}
+		</if>
+	</sql>
+
+	<!-- 일일 결산 목록 -->
+	<select id="selectPlanSettleDayList" resultType="planSettleVO">
+		<include refid="paginationHeader" />
+			SELECT ROW_NUMBER() OVER(ORDER BY B.RTNE_DATE) rn,
+						 B.RTNE_DATE   rtneDate,
+						 A.ACHV_RATE   achvRate,
+						 A.CONC_RATE   concRate,
+						 B.DAILY_SCORE dailyScore,
+						 B.MEMO        memo,
+						 B.PLAN_USER   planUser
+			FROM   (SELECT RTNE_DATE,
+										 CONVERT(VARCHAR, CONVERT(DECIMAL(4, 1), AVG(CONVERT(FLOAT, ACHV_RATE)))) + '%' ACHV_RATE,
+										 CONVERT(VARCHAR, CONVERT(DECIMAL(3, 2), AVG(CONVERT(FLOAT, CONC_RATE)))) + ' / 5' CONC_RATE,
+										 PLAN_USER
+							FROM   PL_RTNE
+							GROUP  BY RTNE_DATE,
+												PLAN_USER) A
+						 INNER JOIN (SELECT RTNE_DATE,
+																DAILY_SCORE,
+																MEMO,
+																PLAN_USER
+												 FROM   PL_RTNE_DAILY) B
+										 ON A.RTNE_DATE = B.RTNE_DATE
+												AND A.PLAN_USER = B.PLAN_USER
+			WHERE  1 = 1
+				<include refid="planSettleSearch" />
+		<include refid="paginationFooter" />
+	</select>
+
+	<!-- 일일 결산 목록 수 -->
+	<select id="selectPlanSettleDayListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM   (SELECT RTNE_DATE,
+									 CONVERT(VARCHAR, CONVERT(DECIMAL(4, 1), AVG(CONVERT(FLOAT, ACHV_RATE)))) + '%' ACHV_RATE,
+									 CONVERT(VARCHAR, CONVERT(DECIMAL(3, 2), AVG(CONVERT(FLOAT, CONC_RATE)))) + ' / 5' CONC_RATE,
+									 PLAN_USER
+						FROM   PL_RTNE
+						GROUP  BY RTNE_DATE,
+											PLAN_USER) A
+					 INNER JOIN (SELECT RTNE_DATE,
+															DAILY_SCORE,
+															MEMO,
+															PLAN_USER
+											 FROM   PL_RTNE_DAILY) B
+									 ON A.RTNE_DATE = B.RTNE_DATE
+											AND A.PLAN_USER = B.PLAN_USER
+		WHERE  1 = 1
+			<include refid="planSettleSearch" />
+	</select>
+
+	<!-- 분류별 할당 시간 목록 -->
+	<select id="selectPlanSettleDayTime" resultType="planSettleVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY A.RTNE_CTG_CD) rn,
+					 B.RTNE_CTG_NM                              rtneCtgNm,
+					 A.RTNE_ASSIGN_TIME                         rtneAssignCnt,
+					 DBO.FN_GET_FORMAT_TIME(A.RTNE_ASSIGN_TIME) rtneAssignTime,
+					 A.RTNE_ASSIGN_PER                          rtneAssignPer,
+					 A.RTNE_CNT                                 rtneCnt
+		FROM   (SELECT P.RTNE_CTG_CD,
+									 SUM(P.RTNE_ASSIGN_TIME)   RTNE_ASSIGN_TIME,
+									 CONVERT(VARCHAR, ROUND(CONVERT(FLOAT, SUM(P.RTNE_ASSIGN_TIME)) /
+									 SUM(SUM(P.RTNE_ASSIGN_TIME)) OVER() * 100, 2)) + '%' RTNE_ASSIGN_PER,
+									 COUNT(P.RTNE_ASSIGN_TIME) RTNE_CNT,
+									 MAX(P.PLAN_USER)          PLAN_USER
+						FROM   (SELECT RTNE_DATE,
+													 RTNE_CTG_CD,
+													 DATEDIFF(MI, RTNE_START_DATE, RTNE_END_DATE)
+													 RTNE_ASSIGN_TIME,
+													 PLAN_USER
+										FROM   PL_RTNE
+										WHERE  RTNE_DATE = #{rtneDate}
+													 AND PLAN_USER = #{planUser}) P
+						GROUP  BY P.RTNE_CTG_CD) A
+					 INNER JOIN (SELECT RTNE_CTG_CD,
+															RTNE_CTG_NM,
+															PLAN_USER
+											 FROM   PL_RTNE_CTG) B
+									 ON A.RTNE_CTG_CD = B.RTNE_CTG_CD
+											AND A.PLAN_USER = B.PLAN_USER
+	</select>
+
+	<!-- 일과별 달성률 목록 -->
+	<select id="selectPlanSettleDayAchvRate" resultType="planSettleVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY ACHV_RATE DESC) rn,
+					 CONVERT(VARCHAR, ACHV_RATE) + '%' achvRate,
+					 COUNT(ACHV_RATE)                  rtneCnt
+		FROM   PL_RTNE
+		WHERE  RTNE_DATE = #{rtneDate}
+					 AND PLAN_USER = #{planUser}
+		GROUP  BY ACHV_RATE
+	</select>
+
+	<!-- 일과별 몰입도 목록 -->
+	<select id="selectPlanSettleDayConcRate" resultType="planSettleVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY CONC_RATE DESC) rn,
+					 DBO.FN_GET_CODE_NM('CONC_RATE', CONC_RATE) concRate,
+					 COUNT(CONC_RATE)                           rtneCnt
+		FROM   PL_RTNE
+		WHERE  RTNE_DATE = #{rtneDate}
+					 AND PLAN_USER = #{planUser}
+		GROUP  BY CONC_RATE
+	</select>
+
+	<!-- 일일 결산 엑셀 목록 -->
+	<select id="selectPlanSettleDayExcelList" resultType="planSettleVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY B.RTNE_DATE) rn,
+					 B.RTNE_DATE   rtneDate,
+					 A.ACHV_RATE   achvRate,
+					 A.CONC_RATE   concRate,
+					 B.DAILY_SCORE dailyScore,
+					 B.MEMO        memo,
+					 B.PLAN_USER   planUser
+		FROM   (SELECT RTNE_DATE,
+									 CONVERT(VARCHAR, CONVERT(DECIMAL(4, 1), AVG(CONVERT(FLOAT, ACHV_RATE)))) + '%' ACHV_RATE,
+									 CONVERT(VARCHAR, CONVERT(DECIMAL(3, 2), AVG(CONVERT(FLOAT, CONC_RATE)))) + ' / 5' CONC_RATE,
+									 PLAN_USER
+						FROM   PL_RTNE
+						GROUP  BY RTNE_DATE,
+											PLAN_USER) A
+					 INNER JOIN (SELECT RTNE_DATE,
+															DAILY_SCORE,
+															MEMO,
+															PLAN_USER
+											 FROM   PL_RTNE_DAILY) B
+									 ON A.RTNE_DATE = B.RTNE_DATE
+											AND A.PLAN_USER = B.PLAN_USER
+		WHERE  1 = 1
+			<include refid="planSettleSearch" />
+	</select>
+
+</mapper>

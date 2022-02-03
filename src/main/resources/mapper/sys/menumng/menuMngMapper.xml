@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MenuMng">
+
+	<!-- 메뉴 목록 -->
+	<select id="selectMenuMngList" resultType="menuMngVO">
+		SELECT MENU_CD       menuCd,
+		       UPPER_MENU_CD upperMenuCd,
+		       MENU_NM       menuNm,
+		       MENU_URL      menuUrl,
+		       MENU_LV       menuLv,
+		       MENU_ORD      menuOrd,
+		       CASE
+		         WHEN USE_YN = 'Y' THEN '사용'
+		         WHEN USE_YN = 'N' THEN '미사용'
+		       END           useYn,
+		       CASE
+		         WHEN MENU_CD IN (SELECT DISTINCT UPPER_MENU_CD
+		                          FROM   SYS_DRP_MENU
+		                          WHERE  MENU_LV = T.MENU_LV + 1) THEN 'N'
+		         ELSE 'Y'
+		       END           lastYn
+		FROM   SYS_DRP_MENU T
+		WHERE  1 = 1
+		       <if test="menuCd != null and menuCd != ''">
+			       AND UPPER_MENU_CD = #{menuCd}
+		       </if>
+		       <if test="menuCd == null or menuCd == ''">
+			       AND UPPER_MENU_CD IS NULL
+		       </if>
+		ORDER  BY MENU_ORD
+	</select>
+
+	<!-- 메뉴 상세 -->
+	<select id="selectMenuMngDetail" resultType="menuMngVO">
+    SELECT MENU_CD       menuCd,
+           UPPER_MENU_CD upperMenuCd,
+           MENU_NM       menuNm,
+           MENU_ENG_NM   menuEngNm,
+           MENU_URL      menuUrl,
+           MENU_DESC     menuDesc,
+           MENU_LV       menuLv,
+           MENU_ORD      menuOrd,
+           USE_YN        useYn
+    FROM SYS_DRP_MENU
+    WHERE MENU_CD = #{menuCd}
+	</select>
+
+	<!-- 메뉴별 권한 목록 -->
+	<select id="selectMenuAuthMngList" resultType="menuMngVO">
+		SELECT A.AUTH_CD authCd,
+		       A.AUTH_NM authNm,
+		       A.LEAF_YN lastYn,
+		       CASE
+		         WHEN B.AUTH_CD IS NULL THEN 'N'
+		         ELSE 'Y'
+		       END       authYn
+		FROM   (SELECT AUTH_CD,
+		               UPPER_AUTH_CD,
+		               AUTH_NM,
+		               AUTH_LV,
+		               AUTH_ORD,
+		               CASE
+		                 WHEN AUTH_CD IN (SELECT DISTINCT UPPER_AUTH_CD
+		                                  FROM   SYS_DRP_AUTH
+		                                  WHERE  AUTH_LV = T.AUTH_LV + 1) THEN 'N'
+		                 ELSE 'Y'
+		               END LEAF_YN
+		        FROM   SYS_DRP_AUTH T
+		        WHERE  USE_YN = 'Y') A
+		       LEFT OUTER JOIN (SELECT DISTINCT AUTH_CD
+		                        FROM   SYS_DRP_MENU_AUTH
+		                        WHERE  MENU_CD IN (
+			                        <foreach item="list" collection="menuCdList" separator=",">
+			                        #{list}
+			                        </foreach>
+		                        )
+	                        ) B
+		                    ON A.AUTH_CD = B.AUTH_CD
+		WHERE  1 = 1
+		       <if test="authCd != null and authCd != ''">
+			       AND A.UPPER_AUTH_CD = #{authCd}
+		       </if>
+		       <if test="authCd == null or authCd == ''">
+			       AND A.UPPER_AUTH_CD IS NULL
+		       </if>
+		ORDER  BY A.AUTH_ORD
+	</select>
+
+	<!-- 메뉴 등록 -->
+	<update id="insertMenuMngData">
+		INSERT INTO SYS_DRP_MENU
+		            (MENU_CD,
+		            <if test="upperMenuCd != null and upperMenuCd != ''">
+			             UPPER_MENU_CD,
+		             </if>
+		             MENU_NM,
+		             MENU_ENG_NM,
+		             <if test="menuUrl != null and menuUrl != ''">
+			             MENU_URL,
+		             </if>
+		             <if test="menuDesc != null and menuDesc != ''">
+			             MENU_DESC,
+		             </if>
+		             MENU_LV,
+		             MENU_ORD,
+		             USE_YN)
+		VALUES      (#{menuCd},
+		             <if test="upperMenuCd != null and upperMenuCd != ''">
+			             #{upperMenuCd},
+		             </if>
+		             #{menuNm},
+		             #{menuEngNm},
+		             <if test="menuUrl != null and menuUrl != ''">
+			             #{menuUrl},
+		             </if>
+		             <if test="menuDesc != null and menuDesc != ''">
+			             #{menuDesc},
+		             </if>
+		             #{menuLv},
+		             #{menuOrd},
+		             #{useYn})
+	</update>
+
+	<!-- 메뉴 수정 -->
+	<update id="updateMenuMngData">
+		UPDATE SYS_DRP_MENU
+		SET    MENU_NM = #{menuNm},
+		       <if test="menuEngNm != null and menuEngNm != ''">
+			       MENU_ENG_NM = #{menuEngNm},
+		       </if>
+		       <if test="menuEngNm == null or menuEngNm == ''">
+			       MENU_ENG_NM = NULL,
+		       </if>
+		       <if test="menuUrl != null and menuUrl != ''">
+			       MENU_URL = #{menuUrl},
+		       </if>
+		       <if test="menuUrl == null or menuUrl == ''">
+			       MENU_URL = NULL,
+		       </if>
+		       <if test="menuDesc != null and menuDesc != ''">
+			       MENU_DESC = #{menuDesc},
+		       </if>
+		       <if test="menuDesc == null or menuDesc == ''">
+			       MENU_DESC = NULL,
+		       </if>
+		       MENU_ORD = #{menuOrd},
+		       USE_YN = #{useYn}
+		WHERE  MENU_CD = #{menuCd}
+	</update>
+
+	<!-- 메뉴 삭제 -->
+	<delete id="deleteMenuMngData">
+		DELETE FROM SYS_DRP_MENU
+		WHERE  MENU_CD = #{menuCd}
+	</delete>
+
+	<!-- 메뉴별 권한 등록 -->
+	<update id="insertMenuAuthMngData">
+		INSERT SYS_DRP_MENU_AUTH
+		VALUES (#{menuCd}, #{authCd})
+	</update>
+
+	<!-- 메뉴별 권한 삭제 -->
+	<delete id="deleteMenuAuthMngData">
+		DELETE FROM SYS_DRP_MENU_AUTH
+		WHERE  MENU_CD = #{menuCd}
+	</delete>
+
+	<!-- 메뉴 엑셀 목록 -->
+	<select id="selectMenuMngExcelList" resultType="menuMngVO">
+    SELECT ROW_NUMBER()  OVER(ORDER BY MENU_CD) rn,
+           MENU_CD       menuCd,
+           UPPER_MENU_CD upperMenuCd,
+           MENU_NM       menuNm,
+           MENU_URL      menuUrl,
+           MENU_DESC     menuDesc,
+           MENU_LV       menuLv,
+           MENU_ORD      menuOrd,
+           CASE USE_YN
+             WHEN 'Y' THEN '사용'
+             WHEN 'N' THEN '미사용'
+             END         useYn
+    FROM SYS_DRP_MENU
+    WHERE 1 = 1
+	</select>
+
+</mapper>

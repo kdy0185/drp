@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMng">
+
+	<!-- 페이징 설정 -->
+	<sql id="paginationHeader">
+		SELECT *
+			FROM (
+	</sql>
+	<sql id="paginationFooter">
+			) DATA
+		WHERE RN BETWEEN #{startIndex} AND #{endIndex}
+	</sql>
+
+	<!-- 검색 조건 -->
+	<sql id="grpSearch">
+		<if test="grpNm != null and grpNm != ''">
+			AND LTRIM(RTRIM(REPLACE(UPPER(GRP_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{grpNm}), ' ', ''))) + '%'
+		</if>
+	</sql>
+	<sql id="userSearch">
+		<if test="grpCd != null and grpCd != ''">
+			AND A.GRP_CD = #{grpCd}
+		</if>
+		<if test="searchWord != null and searchWord != ''">
+			<if test="searchCd == 'userId'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(B.USER_ID), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+			<if test="searchCd == 'userNm'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(B.USER_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+		</if>
+		<if test="useYn != null and useYn != ''">
+			AND B.USE_YN = #{useYn}
+		</if>
+	</sql>
+
+	<!-- 그룹 목록 -->
+	<select id="selectGrpMngList" resultType="userMngVO">
+		<include refid="paginationHeader" />
+			SELECT ROW_NUMBER() OVER(ORDER BY GRP_CD)              rn,
+			       GRP_CD                            grpCd,
+			       GRP_NM                            grpNm,
+			       GRP_DESC                          grpDesc,
+			       DBO.FN_GET_DRP_USER_NM(REG_USER) regUser,
+			       CONVERT(DATE, REG_DATE)           regDate,
+			       DBO.FN_GET_DRP_USER_NM(MOD_USER) modUser,
+			       CONVERT(DATE, MOD_DATE)           modDate
+			FROM   SYS_DRP_GRP
+			WHERE  1 = 1
+			<include refid="grpSearch" />
+		<include refid="paginationFooter" />
+	</select>
+
+	<!-- 그룹 목록 수 -->
+	<select id="selectGrpMngListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM SYS_DRP_GRP
+		WHERE 1 = 1
+		<include refid="grpSearch" />
+	</select>
+
+	<!-- 그룹 상세 -->
+	<select id="selectGrpMngDetail" resultType="userMngVO">
+		SELECT GRP_CD                           grpCd,
+					 GRP_NM                           grpNm,
+					 GRP_DESC                         grpDesc,
+					 DBO.FN_GET_DRP_USER_NM(REG_USER) regUser,
+					 CONVERT(VARCHAR, REG_DATE, 120)  regDate,
+					 DBO.FN_GET_DRP_USER_NM(MOD_USER) modUser,
+					 CONVERT(VARCHAR, MOD_DATE, 120)  modDate
+		FROM SYS_DRP_GRP
+		WHERE GRP_CD = #{grpCd}
+	</select>
+
+	<!-- 그룹 등록 -->
+	<update id="insertGrpMngData">
+		INSERT INTO SYS_DRP_GRP
+		            (GRP_CD,
+		             GRP_NM,
+		             <if test="grpDesc != null and grpDesc != ''">
+			             GRP_DESC,
+		             </if>
+		             REG_USER,
+		             REG_DATE)
+		VALUES      (#{grpCd},
+		             #{grpNm},
+		             <if test="grpDesc != null and grpDesc != ''">
+			             #{grpDesc},
+		             </if>
+		             #{loginId},
+		             GETDATE())
+	</update>
+
+	<!-- 그룹 수정 -->
+	<update id="updateGrpMngData">
+		UPDATE SYS_DRP_GRP
+		SET    GRP_NM = #{grpNm},
+		       GRP_DESC = #{grpDesc},
+		       <if test="grpDesc != null and grpDesc != ''">
+			       GRP_DESC = #{grpDesc},
+		       </if>
+		       <if test="grpDesc == null or grpDesc == ''">
+			       GRP_DESC = NULL,
+		       </if>
+		       MOD_USER = #{loginId},
+		       MOD_DATE = GETDATE()
+		WHERE  GRP_CD = #{grpCd}
+	</update>
+
+	<!-- 그룹 삭제 -->
+	<delete id="deleteGrpMngData">
+		DELETE FROM SYS_DRP_GRP
+		WHERE  GRP_CD = #{grpCd}
+	</delete>
+
+	<!-- 그룹 엑셀 목록 -->
+	<select id="selectGrpMngExcelList" resultType="userMngVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY GRP_CD)    rn,
+		       GRP_CD                  AS grpCd,
+		       GRP_NM                  AS grpNm,
+		       GRP_DESC                grpDesc,
+		       REG_USER                regUser,
+		       CONVERT(DATE, REG_DATE) regDate,
+		       MOD_USER                modUser,
+		       CONVERT(DATE, MOD_DATE) modDate
+		FROM   SYS_DRP_GRP
+		WHERE  1 = 1
+			<include refid="grpSearch" />
+	</select>
+
+	<!-- 사용자 목록 -->
+	<select id="selectUserMngList" resultType="userMngVO">
+		<include refid="paginationHeader" />
+			SELECT ROW_NUMBER() OVER(ORDER BY B.REG_DATE DESC) rn,
+			       A.GRP_CD                        grpCd,
+			       A.GRP_NM                        grpNm,
+			       B.USER_ID                       userId,
+			       B.USER_NM                       userNm,
+			       B.MOBILE_NUM                    mobileNum,
+			       B.EMAIL                         email,
+			       DBO.FN_GET_CODE_NM('USER_TYPE', B.USER_TYPE) userType,
+			       CASE B.USE_YN
+			         WHEN 'Y' THEN '사용'
+			         WHEN 'N' THEN '미사용'
+			       END                             useYn,
+			       CONVERT(DATE, B.REG_DATE)       regDate,
+			       CONVERT(DATE, B.MOD_DATE)       modDate
+			FROM   (SELECT GRP_CD, GRP_NM
+			        FROM   SYS_DRP_GRP) A
+			       INNER JOIN (SELECT GRP_CD,
+			                          USER_ID,
+			                          USER_NM,
+			                          MOBILE_NUM,
+			                          EMAIL,
+			                          USER_TYPE,
+			                          USE_YN,
+			                          REG_DATE,
+			                          MOD_DATE
+			                   FROM   SYS_DRP_USER) B
+			               ON A.GRP_CD = B.GRP_CD
+			WHERE  1 = 1
+				<include refid="userSearch" />
+		<include refid="paginationFooter" />
+	</select>
+
+	<!-- 사용자 목록 수 -->
+	<select id="selectUserMngListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM   (SELECT GRP_CD, GRP_NM
+						FROM   SYS_DRP_GRP) A
+					 INNER JOIN (SELECT GRP_CD,
+															USER_ID,
+															USER_NM,
+															MOBILE_NUM,
+															EMAIL,
+															USER_TYPE,
+															USE_YN,
+															REG_DATE,
+															MOD_DATE
+											 FROM   SYS_DRP_USER) B
+									 ON A.GRP_CD = B.GRP_CD
+		WHERE  1 = 1
+			<include refid="userSearch" />
+	</select>
+
+	<!-- 사용자 상세 -->
+	<select id="selectUserMngDetail" resultType="userMngVO">
+		SELECT A.GRP_CD                          grpCd,
+					 B.USER_ID                         userId,
+					 B.USER_NM                         userNm,
+					 B.MOBILE_NUM                      mobileNum,
+					 B.EMAIL                           email,
+					 B.USER_TYPE                       userType,
+					 B.USE_YN                          useYn,
+					 CONVERT(VARCHAR, B.REG_DATE, 120) regDate,
+					 CONVERT(VARCHAR, B.MOD_DATE, 120) modDate
+		FROM (SELECT GRP_CD, GRP_NM
+					FROM SYS_DRP_GRP) A
+					 INNER JOIN (SELECT GRP_CD,
+															USER_ID,
+															USER_NM,
+															MOBILE_NUM,
+															EMAIL,
+															USER_TYPE,
+															USE_YN,
+															REG_DATE,
+															MOD_DATE
+											 FROM SYS_DRP_USER) B
+											ON A.GRP_CD = B.GRP_CD
+		WHERE A.GRP_CD = #{grpCd}
+			AND B.USER_ID = #{userId}
+	</select>
+
+	<!-- 사용자 권한 목록 -->
+	<select id="selectUserAuthMngList" resultType="userMngVO">
+		SELECT A.AUTH_CD authCd,
+		       A.AUTH_NM authNm,
+		       A.LAST_YN lastYn,
+		       CASE
+		         WHEN B.AUTH_CD IS NULL THEN 'N'
+		         ELSE 'Y'
+		       END       authYn
+		FROM   (SELECT AUTH_CD,
+		               UPPER_AUTH_CD,
+		               AUTH_NM,
+		               AUTH_LV,
+		               AUTH_ORD,
+		               CASE
+		                 WHEN AUTH_CD IN (SELECT DISTINCT UPPER_AUTH_CD
+		                                  FROM   SYS_DRP_AUTH
+		                                  WHERE  AUTH_LV = T.AUTH_LV + 1) THEN 'N'
+		                 ELSE 'Y'
+		               END LAST_YN
+		        FROM   SYS_DRP_AUTH T
+		        WHERE  USE_YN = 'Y') A
+		       LEFT OUTER JOIN (SELECT DISTINCT AUTH_CD
+		                        FROM   SYS_DRP_USER_AUTH
+		                        WHERE  USER_ID IN (
+			                        <foreach item="list" collection="userIdList" separator=",">
+			                        #{list}
+			                        </foreach>
+		                        )
+	                        ) B
+		                    ON A.AUTH_CD = B.AUTH_CD
+		WHERE  1 = 1
+		       <if test="authCd != null and authCd != ''">
+			       AND A.UPPER_AUTH_CD = #{authCd}
+		       </if>
+		       <if test="authCd == null or authCd == ''">
+			       AND A.UPPER_AUTH_CD IS NULL
+		       </if>
+		ORDER  BY A.AUTH_ORD
+	</select>
+
+	<!-- 사용자 아이디 중복 체크 -->
+	<select id="selectUserMngDupCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM SYS_DRP_USER
+		WHERE USER_ID = #{userId}
+	</select>
+
+	<!-- 사용자 등록 -->
+	<update id="insertUserMngData">
+		INSERT SYS_DRP_USER
+		       (GRP_CD,
+		        USER_ID,
+		        USER_NM,
+		        USER_PW,
+		        <if test="mobileNum != null and mobileNum != ''">
+			        MOBILE_NUM,
+		        </if>
+		        <if test="email != null and email != ''">
+			        EMAIL,
+		        </if>
+			      USER_TYPE,
+			      USE_YN,
+		        REG_DATE)
+		VALUES ( #{grpCd},
+		         #{userId},
+		         #{userNm},
+		         #{userPw},
+		         <if test="mobileNum != null and mobileNum != ''">
+			         #{mobileNum},
+		         </if>
+		         <if test="email != null and email != ''">
+			         #{email},
+		         </if>
+		         #{userType},
+		         #{useYn},
+		         GETDATE() )
+	</update>
+
+	<!-- 사용자 권한 등록 -->
+	<update id="insertUserAuthMngData">
+		INSERT SYS_DRP_USER_AUTH
+		VALUES (#{userId}, #{authCd})
+	</update>
+
+	<!-- 사용자 수정 -->
+	<update id="updateUserMngData">
+		UPDATE SYS_DRP_USER
+		SET    GRP_CD = #{grpCd},
+		       USER_NM = #{userNm},
+		       <if test="userPw != null and userPw != ''">
+			       USER_PW = #{userPw},
+		       </if>
+		       <if test="mobileNum != null and mobileNum != ''">
+			       MOBILE_NUM = #{mobileNum},
+		       </if>
+		       <if test="mobileNum == null or mobileNum == ''">
+			       MOBILE_NUM = NULL,
+		       </if>
+		       <if test="email != null and email != ''">
+			       EMAIL = #{email},
+		       </if>
+		       <if test="email == null or email == ''">
+			       EMAIL = NULL,
+		       </if>
+		       USER_TYPE = #{userType},
+		       USE_YN = #{useYn},
+		       MOD_DATE = GETDATE()
+		WHERE  GRP_CD = #{grpCd}
+		       AND USER_ID = #{userId}
+	</update>
+
+	<!-- 사용자 삭제 -->
+	<delete id="deleteUserMngData">
+		DELETE FROM SYS_DRP_USER
+		WHERE  GRP_CD = #{grpCd}
+		       AND USER_ID = #{userId}
+	</delete>
+
+	<!-- 사용자 권한 삭제 -->
+	<delete id="deleteUserAuthMngData">
+		DELETE FROM SYS_DRP_USER_AUTH
+		WHERE  USER_ID = #{userId}
+	</delete>
+
+	<!-- 사용자 엑셀 목록 -->
+	<select id="selectUserMngExcelList" resultType="userMngVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY B.USER_NM) rn,
+		       A.GRP_CD                        grpCd,
+		       A.GRP_NM                        grpNm,
+		       B.USER_ID                       userId,
+		       B.USER_NM                       userNm,
+		       B.MOBILE_NUM                    mobileNum,
+		       B.EMAIL                         email,
+		       DBO.FN_GET_CODE_NM('USER_TYPE', B.USER_TYPE) userType,
+		       CASE B.USE_YN
+		       	 WHEN 'Y' THEN '사용'
+		       	 WHEN 'N' THEN '미사용'
+		       END                             useYn,
+		       CONVERT(DATE, B.REG_DATE)       regDate,
+		       CONVERT(DATE, B.MOD_DATE)       modDate
+		FROM   (SELECT GRP_CD, GRP_NM
+		        FROM   SYS_DRP_GRP) A
+		       INNER JOIN (SELECT GRP_CD,
+		       										USER_ID,
+		       										USER_NM,
+		       										MOBILE_NUM,
+		       										EMAIL,
+		       										USER_TYPE,
+		       										USE_YN,
+		       										REG_DATE,
+		       										MOD_DATE
+		                   FROM   SYS_DRP_USER) B
+		               ON A.GRP_CD = B.GRP_CD
+		WHERE  1 = 1
+			<include refid="userSearch" />
+	</select>
+
+</mapper>

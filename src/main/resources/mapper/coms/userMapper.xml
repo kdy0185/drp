@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+
+  <!-- 사용자 정보 -->
+  <select id="selectUserDetail" parameterType="String" resultType="userVO">
+    SELECT GRP_CD   grpCd,
+           USER_ID userId,
+           USER_NM userNm,
+           USER_PW userPw,
+           USE_YN  useYn
+    FROM SYS_DRP_USER
+    WHERE USER_ID = #{userId}
+  </select>
+
+  <!-- 사용자 권한 정보 -->
+  <select id="selectUserAuthList" parameterType="String" resultType="userVO">
+    SELECT AUTH_CD authCd
+    FROM SYS_DRP_USER_AUTH
+    WHERE USER_ID = #{userId}
+  </select>
+
+</mapper>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AuthMng">
+
+	<!-- 페이징 설정 -->
+	<sql id="paginationHeader">
+		SELECT *
+			FROM (
+	</sql>
+	<sql id="paginationFooter">
+			) DATA
+		WHERE RN BETWEEN #{startIndex} AND #{endIndex}
+	</sql>
+
+	<!-- 권한 목록 -->
+	<select id="selectAuthMngList" resultType="authMngVO">
+		SELECT AUTH_CD       authCd,
+		       UPPER_AUTH_CD upperAuthCd,
+		       AUTH_NM       authNm,
+		       AUTH_DESC      authDesc,
+		       AUTH_LV       authLv,
+		       AUTH_ORD      authOrd,
+		       CASE
+		         WHEN USE_YN = 'Y' THEN '사용'
+		         WHEN USE_YN = 'N' THEN '미사용'
+		       END           useYn,
+		       CASE
+		         WHEN AUTH_CD IN (SELECT DISTINCT UPPER_AUTH_CD
+		                          FROM   SYS_DRP_AUTH
+		                          WHERE  AUTH_LV = T.AUTH_LV + 1) THEN 'N'
+		         ELSE 'Y'
+		       END           lastYn
+		FROM   SYS_DRP_AUTH T
+		WHERE  1 = 1
+		       <if test="authCd != null and authCd != ''">
+			       AND UPPER_AUTH_CD = #{authCd}
+		       </if>
+		       <if test="authCd == null or authCd == ''">
+			       AND UPPER_AUTH_CD IS NULL
+		       </if>
+		ORDER  BY AUTH_ORD
+	</select>
+
+	<!-- 상위 권한 목록 -->
+	<select id="selectUpperAuthMngList" resultType="authMngVO">
+		SELECT AUTH_CD authCd,
+					 AUTH_NM authNm
+		FROM SYS_DRP_AUTH
+		WHERE USE_YN = 'Y'
+	</select>
+
+	<!-- 권한 상세 -->
+	<select id="selectAuthMngDetail" resultType="authMngVO">
+		SELECT AUTH_CD       authCd,
+					 UPPER_AUTH_CD upperAuthCd,
+					 AUTH_NM       authNm,
+					 AUTH_DESC     authDesc,
+					 AUTH_LV       authLv,
+					 AUTH_ORD      authOrd,
+					 USE_YN        useYn
+		FROM SYS_DRP_AUTH
+		WHERE AUTH_CD = #{authCd}
+	</select>
+
+	<!-- 권한 등록 -->
+	<update id="insertAuthMngData">
+		INSERT INTO SYS_DRP_AUTH
+		            (AUTH_CD,
+		             <if test="upperAuthCd != null and upperAuthCd != ''">
+			             UPPER_AUTH_CD,
+		             </if>
+		             AUTH_NM,
+		             <if test="authDesc != null and authDesc != ''">
+			             AUTH_DESC,
+		             </if>
+		             AUTH_LV,
+		             AUTH_ORD,
+		             USE_YN)
+		VALUES      (#{authCd},
+		             <if test="upperAuthCd != null and upperAuthCd != ''">
+			             #{upperAuthCd},
+		             </if>
+		             #{authNm},
+		             <if test="authDesc != null and authDesc != ''">
+			             #{authDesc},
+		             </if>
+		             #{authLv},
+		             #{authOrd},
+		             'Y')
+	</update>
+
+	<!-- 권한 수정 -->
+	<update id="updateAuthMngData">
+		UPDATE SYS_DRP_AUTH
+		SET    AUTH_NM = #{authNm},
+		       <if test="upperAuthCd != null and upperAuthCd != ''">
+			       UPPER_AUTH_CD = #{upperAuthCd},
+		       </if>
+		       <if test="upperAuthCd == null or upperAuthCd == ''">
+			       UPPER_AUTH_CD = NULL,
+		       </if>
+		       <if test="authDesc != null and authDesc != ''">
+			       AUTH_DESC = #{authDesc},
+		       </if>
+		       <if test="authDesc == null or authDesc == ''">
+			       AUTH_DESC = NULL,
+		       </if>
+		       AUTH_LV = #{authLv},
+		       AUTH_ORD = #{authOrd}
+		WHERE  AUTH_CD = #{authCd}
+	</update>
+
+	<!-- 권한별 사용자 목록 수 -->
+	<select id="selectAuthUserListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM   SYS_DRP_USER_AUTH
+		WHERE  AUTH_CD = #{authCd}
+	</select>
+
+	<!-- 권한별 메뉴 목록 수 -->
+	<select id="selectAuthMenuListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM   SYS_DRP_MENU_AUTH
+		WHERE  AUTH_CD = #{authCd}
+	</select>
+
+	<!-- 권한 삭제 -->
+	<delete id="deleteAuthMngData">
+		DELETE FROM SYS_DRP_AUTH
+		WHERE  AUTH_CD = #{authCd}
+	</delete>
+
+	<!-- 권한별 사용자 목록 -->
+	<select id="selectAuthUserMngList" resultType="authMngVO">
+		<include refid="paginationHeader" />
+			SELECT ROW_NUMBER() OVER(ORDER BY A.USER_ID) rn,
+			       A.USER_ID               userId,
+			       A.USER_NM               userNm,
+			       A.MOBILE_NUM            mobileNum,
+			       CASE
+			         WHEN B.USER_ID IS NULL THEN '허용하지 않음'
+			         ELSE '허용'
+			       END                     authYn
+			FROM   (SELECT GRP_CD,
+			               USER_ID,
+			               USER_NM,
+			               MOBILE_NUM
+			        FROM   SYS_DRP_USER) A
+			       LEFT OUTER JOIN (SELECT DISTINCT USER_ID
+			                        FROM   SYS_DRP_USER_AUTH
+			                        WHERE  AUTH_CD IN (
+				                        <foreach item="list" collection="authCdList" separator=",">
+				                        #{list}
+				                        </foreach>
+			                        )
+		                        ) B
+			                    ON A.USER_ID = B.USER_ID
+			WHERE  1 = 1
+			       <if test="grpCd != null and grpCd != ''">
+				       AND A.GRP_CD = #{grpCd}
+			       </if>
+			       <if test="searchWord != null and searchWord != ''">
+				       <if test="searchCd == 'userId'">
+					       AND LTRIM(RTRIM(REPLACE(UPPER(A.USER_ID), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+				       </if>
+				       <if test="searchCd == 'userNm'">
+					       AND LTRIM(RTRIM(REPLACE(UPPER(A.USER_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+				       </if>
+			       </if>
+		<include refid="paginationFooter" />
+	</select>
+
+	<!-- 권한별 사용자 목록 수 -->
+	<select id="selectAuthUserMngListCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM   (SELECT GRP_CD,
+		               USER_ID,
+		               USER_NM,
+		               MOBILE_NUM
+		        FROM   SYS_DRP_USER) A
+		       LEFT OUTER JOIN (SELECT DISTINCT USER_ID
+		                        FROM   SYS_DRP_USER_AUTH
+		                        WHERE  AUTH_CD IN (
+			                        <foreach item="list" collection="authCdList" separator=",">
+			                        #{list}
+			                        </foreach>
+		                        )
+	                        ) B
+		                    ON A.USER_ID = B.USER_ID
+		WHERE  1 = 1
+		       <if test="grpCd != null and grpCd != ''">
+			       AND A.GRP_CD = #{grpCd}
+		       </if>
+		       <if test="searchWord != null and searchWord != ''">
+			       <if test="searchCd == 'userId'">
+				       AND LTRIM(RTRIM(REPLACE(UPPER(A.USER_ID), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			       </if>
+			       <if test="searchCd == 'userNm'">
+				       AND LTRIM(RTRIM(REPLACE(UPPER(A.USER_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			       </if>
+		       </if>
+	</select>
+
+	<!-- 권한별 사용자 등록 -->
+	<update id="insertAuthUserMngData">
+		MERGE SYS_DRP_USER_AUTH T
+		USING (SELECT COUNT(*) CNT
+		       FROM   SYS_DRP_USER_AUTH
+		       WHERE  AUTH_CD = #{authCd}
+		              AND USER_ID = #{userId}) C
+		ON ( C.CNT &gt; 0 )
+		WHEN NOT MATCHED THEN
+		  INSERT (USER_ID,
+		          AUTH_CD)
+		  VALUES (#{userId},
+		          #{authCd});
+	</update>
+
+	<!-- 권한별 사용자 삭제 -->
+	<delete id="deleteAuthUserMngData">
+		DELETE FROM SYS_DRP_USER_AUTH
+		WHERE  AUTH_CD = #{authCd}
+		       AND USER_ID = #{userId}
+	</delete>
+
+	<!-- 권한별 메뉴 목록 -->
+	<select id="selectAuthMenuMngList" resultType="authMngVO">
+		SELECT A.MENU_CD menuCd,
+		       A.MENU_NM menuNm,
+		       A.LAST_YN lastYn,
+		       CASE
+		         WHEN B.MENU_CD IS NULL THEN 'N'
+		         ELSE 'Y'
+		       END       authYn
+		FROM   (SELECT MENU_CD,
+		               UPPER_MENU_CD,
+		               MENU_NM,
+		               MENU_LV,
+		               MENU_ORD,
+		               CASE
+		                 WHEN MENU_CD IN (SELECT DISTINCT UPPER_MENU_CD
+		                                  FROM   SYS_DRP_MENU
+		                                  WHERE  MENU_LV = T.MENU_LV + 1) THEN 'N'
+		                 ELSE 'Y'
+		               END LAST_YN
+		        FROM   SYS_DRP_MENU T
+		        ) A
+		       LEFT OUTER JOIN (SELECT DISTINCT MENU_CD
+		                        FROM   SYS_DRP_MENU_AUTH
+		                        WHERE  AUTH_CD IN (
+			                        <foreach item="list" collection="authCdList" separator=",">
+			                        #{list}
+			                        </foreach>
+		                        )
+	                        ) B
+		                    ON A.MENU_CD = B.MENU_CD
+		WHERE  1 = 1
+		       <if test="menuCd != null and menuCd != ''">
+			       AND A.UPPER_MENU_CD = #{menuCd}
+		       </if>
+		       <if test="menuCd == null or menuCd == ''">
+			       AND A.UPPER_MENU_CD IS NULL
+		       </if>
+		ORDER  BY A.MENU_ORD
+	</select>
+
+	<!-- 권한별 메뉴 등록 -->
+	<update id="insertAuthMenuMngData">
+		INSERT SYS_DRP_MENU_AUTH
+		VALUES (#{menuCd}, #{authCd})
+	</update>
+
+	<!-- 권한별 메뉴 삭제 -->
+	<delete id="deleteAuthMenuMngData">
+		DELETE FROM SYS_DRP_MENU_AUTH
+		WHERE  AUTH_CD = #{authCd}
+	</delete>
+
+	<!-- 권한 엑셀 목록 -->
+	<select id="selectAuthMngExcelList" resultType="authMngVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY AUTH_CD) rn,
+		       AUTH_CD               authCd,
+		       UPPER_AUTH_CD         upperAuthCd,
+		       AUTH_NM               authNm,
+		       AUTH_DESC               authDesc,
+		       AUTH_LV               authLv,
+		       AUTH_ORD              authOrd,
+		       CASE USE_YN
+		         WHEN 'Y' THEN '사용'
+		         WHEN 'N' THEN '미사용'
+		       END                   useYn
+		FROM   SYS_DRP_AUTH
+		WHERE  1 = 1
+	</select>
+
+</mapper>

@@ -1,0 +1,189 @@
+@charset "utf-8";
+
+/* ---------------------------------------------------- HTML5 Element ---------------------------------------------------- */
+header, nav, section, article, aside, footer {
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+html, body, div, h1, h2, h3, h4, h5, h6, p, form, fieldset, dl, dt, dd,
+	ul, ol, li, label, span, b, input {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	font-family: Nanum Gothic;
+	font-size: 15px;
+	font-weight: 400;
+	color: #000000;
+	background: #f3f2f4;
+}
+
+button span {
+	overflow: hidden;
+	display: block;
+	visibility: hidden;
+}
+
+/* ---------------------------------------------------- Login ---------------------------------------------------- */
+.login_allbox {
+	display: -webkit-flex;
+	display: flex;
+	height: 950px;
+	-webkit-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+}
+
+.login-box>.login-contents {
+	width: 319px;
+	margin: 0 auto;
+}
+
+.login-box>.login-header {
+	position: relative;
+	width: 319px;
+	height: 73px;
+	margin: 0 auto;
+}
+
+.login-box>.login-contents {
+	box-sizing: border-box;
+	padding: 20px 50px 50px 50px;
+	background: #fff;
+	border: 1px solid #cbced5;
+	border-top: 0;
+}
+
+.login-box>.login-contents>p:nth-child(1) {
+	padding-bottom: 5px;
+}
+
+.login-box>.login-contents>p:nth-child(2) {
+	padding: 5px 0;
+}
+
+.login-box>.login-contents>p:nth-child(4) {
+	color: #c62e02;
+	text-align: center;
+	height: 20px;
+	font-size: 0.8em;
+	padding: 15px 0 10px 0;
+}
+
+.login-box>.login-contents>p:nth-child(5) {
+	padding-top: 10px;
+	border-top: 1px solid #c5e3fa;
+	text-align: center;
+}
+
+.login-box>.login-contents>p label {
+	position: relative;
+	display: block;
+	height: 26px;
+}
+
+.login-box>.login-contents>p label b {
+	display: inline-block;
+	top: 0;
+	left: 0;
+	width: 83px;
+	height: 26px;
+}
+
+.login-box>.login-contents>p:nth-child(1) label b {
+	width: 10%;
+	float: left;
+	background: url("../img/login/login_info.png") no-repeat left top;
+}
+
+.login-box>.login-contents>p:nth-child(2) label b {
+	background: url("../img/login/login_info.png") no-repeat left -26px;
+	width: 10%;
+	float: left;
+}
+
+.login-box>.login-contents>p label b span {
+	overflow: hidden;
+	display: block;
+	visibility: hidden;
+	width: 83px;
+	height: 26px;
+	-moz-opacity: 0;
+	filter: alpha(opacity = 0);
+	opacity: 0;
+}
+
+.login-box>.login-contents>p label input {
+	box-sizing: border-box;
+	background: #fff;
+	width: 90%;
+	float: left;
+	height: 26px;
+	padding: 0 10px;
+	border: 1px solid #bcbcbc;
+	border-radius: 2px;
+	font-size: 13px;
+	line-height: 24px;
+}
+
+/* ---------------------------------------- Button ---------------------------------------- */
+.login_btn {
+	width: 100%;
+	height: 50px;
+	background: #222c31;
+	border-radius: 5px;
+	color: #ffffff;
+	font-size: 1.5em;
+	transition: color 1s;
+	cursor: pointer;
+}
+
+.btn-right-area {
+	text-align: right;
+	margin-top: 20px;
+}
+
+.btn-default {
+	position: relative;
+	min-width: 72px;
+	font-size: 12px;
+	color: #000;
+	padding: 6px 12px;
+	border: 1px solid #188ae2;
+	background: #f3fafe;
+	border-radius: 3px;
+	font-weight: 700;
+}
+
+.btn-default>i {
+	margin-right: 5px;
+}
+
+.btn-default:hover {
+	color: #fff;
+	border: 1px solid #188ae2;
+	background: #188ae2;
+}
+
+.autologin {
+	padding-top: 10px;
+}
+
+.autologin span {
+	font-size: 0.8em;
+}
+
+.autologin span input {
+	vertical-align: text-top;
+	height: 15px;
+}
+
+.autologin span:nth-child(2) {
+	margin-left: 60px;
+}

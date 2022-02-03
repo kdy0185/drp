@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Main">
+
+  <!-- 사용자 상세 -->
+  <select id="selectMyInfoDetail" resultType="mainVO">
+    SELECT A.GRP_CD                          grpCd,
+           A.GRP_NM                          grpNm,
+           B.USER_ID                         userId,
+           B.USER_NM                         userNm,
+           B.MOBILE_NUM                      mobileNum,
+           B.EMAIL                           email,
+           B.USER_TYPE                       userType,
+           B.USE_YN                          useYn,
+           CONVERT(VARCHAR, B.REG_DATE, 120) regDate,
+           CONVERT(VARCHAR, B.MOD_DATE, 120) modDate
+    FROM (SELECT GRP_CD, GRP_NM
+          FROM SYS_DRP_GRP) A
+           INNER JOIN (SELECT GRP_CD,
+                              USER_ID,
+                              USER_NM,
+                              MOBILE_NUM,
+                              EMAIL,
+                              USER_TYPE,
+                              USE_YN,
+                              REG_DATE,
+                              MOD_DATE
+                       FROM SYS_DRP_USER) B
+                      ON A.GRP_CD = B.GRP_CD
+    WHERE B.USER_ID = #{loginId}
+  </select>
+
+	<!-- 사용자 수정 -->
+	<update id="updateMyInfoData">
+		UPDATE SYS_DRP_USER
+		SET <if test="userPw != null and userPw != ''">
+			     USER_PW = #{userPw},
+		    </if>
+		       USER_NM = #{userNm},
+		    <if test="mobileNum != null and mobileNum != ''">
+		       MOBILE_NUM = #{mobileNum},
+		    </if>
+		    <if test="mobileNum == null or mobileNum == ''">
+		       MOBILE_NUM = NULL,
+		    </if>
+		    <if test="email != null and email != ''">
+		       EMAIL = #{email},
+		    </if>
+		    <if test="email == null or email == ''">
+		       EMAIL = NULL,
+		    </if>
+		       MOD_DATE = GETDATE()
+		WHERE  USER_ID = #{userId}
+	</update>
+
+</mapper>
