@@ -95,7 +95,7 @@ project:
   properties:
     package: com.jsplan.drp
   path:
-    domain: http://13.209.50.216:3380/
+    domain: http://13.209.50.216:3380
     root: /home/ec2-user/tomcat-8.5_drp/webapps/drp/
     upload: /home/ec2-user/tomcat-8.5_drp/webapps/drp/WEB-INF/classes/static/upload/
 logging:

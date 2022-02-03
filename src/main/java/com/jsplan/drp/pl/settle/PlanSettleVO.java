@@ -111,13 +111,9 @@ public class PlanSettleVO extends ComsVO implements Serializable {
         this.rtneCtgNm = rtneCtgNm;
     }
 
-    public String getRtneAssignCnt() {
-        return rtneAssignCnt;
-    }
+    public String getRtneAssignCnt() { return rtneAssignCnt; }
 
-    public void setRtneAssignCnt(String rtneAssignCnt) {
-        this.rtneAssignCnt = rtneAssignCnt;
-    }
+    public void setRtneAssignCnt(String rtneAssignCnt) { this.rtneAssignCnt = rtneAssignCnt; }
 
     public String getRtneAssignTime() {
         return rtneAssignTime;
