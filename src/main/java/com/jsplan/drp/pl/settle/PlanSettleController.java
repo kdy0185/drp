@@ -141,6 +141,72 @@ public class PlanSettleController {
     }
 
     /**
+     * <p>분류별 할당 시간 조회</p>
+     *
+     * @param planSettleVO
+     * @return Map
+     * @throws Exception throws Exception
+     */
+    @RequestMapping(value = "/pl/settle/planSettleDayTimeSearch.do")
+    public @ResponseBody
+    List<PlanSettleVO> planSettleDayTimeSearch(@ModelAttribute PlanSettleVO planSettleVO)
+        throws Exception {
+        List<PlanSettleVO> timeList = null;
+
+        try {
+            timeList = planSettleService.selectPlanSettleDayTime(planSettleVO);
+        } catch (Exception e) {
+            logger.error("{}", e);
+        }
+
+        return timeList;
+    }
+
+    /**
+     * <p>일과별 달성률 조회</p>
+     *
+     * @param planSettleVO
+     * @return Map
+     * @throws Exception throws Exception
+     */
+    @RequestMapping(value = "/pl/settle/planSettleDayAchvRateSearch.do")
+    public @ResponseBody
+    List<PlanSettleVO> planSettleDayAchvRateSearch(@ModelAttribute PlanSettleVO planSettleVO)
+        throws Exception {
+        List<PlanSettleVO> achvRateList = null;
+
+        try {
+            achvRateList = planSettleService.selectPlanSettleDayAchvRate(planSettleVO);
+        } catch (Exception e) {
+            logger.error("{}", e);
+        }
+
+        return achvRateList;
+    }
+
+    /**
+     * <p>일과별 몰입도 조회</p>
+     *
+     * @param planSettleVO
+     * @return Map
+     * @throws Exception throws Exception
+     */
+    @RequestMapping(value = "/pl/settle/planSettleDayConcRateSearch.do")
+    public @ResponseBody
+    List<PlanSettleVO> planSettleDayConcRateSearch(@ModelAttribute PlanSettleVO planSettleVO)
+        throws Exception {
+        List<PlanSettleVO> concRateList = null;
+
+        try {
+            concRateList = planSettleService.selectPlanSettleDayConcRate(planSettleVO);
+        } catch (Exception e) {
+            logger.error("{}", e);
+        }
+
+        return concRateList;
+    }
+
+    /**
      * <p>일일 결산 엑셀 출력</p>
      *
      * @param planSettleVO

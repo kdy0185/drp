@@ -81,6 +81,7 @@
 	<select id="selectPlanSettleDayTime" resultType="planSettleVO">
 		SELECT ROW_NUMBER() OVER(ORDER BY A.RTNE_CTG_CD) rn,
 					 B.RTNE_CTG_NM                              rtneCtgNm,
+					 A.RTNE_ASSIGN_TIME                         rtneAssignCnt,
 					 DBO.FN_GET_FORMAT_TIME(A.RTNE_ASSIGN_TIME) rtneAssignTime,
 					 A.RTNE_ASSIGN_PER                          rtneAssignPer,
 					 A.RTNE_CNT                                 rtneCnt

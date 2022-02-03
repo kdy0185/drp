@@ -26,6 +26,7 @@ public class PlanSettleVO extends ComsVO implements Serializable {
     /* 상세 */
     private String settleType; // 결산 유형
     private String rtneCtgNm; // 루틴 분류명
+    private String rtneAssignCnt; // 할당 시간(분)
     private String rtneAssignTime; // 할당 시간
     private String rtneAssignPer; // 할당 비율
     private String rtneCnt; // 일과 수
@@ -109,6 +110,10 @@ public class PlanSettleVO extends ComsVO implements Serializable {
     public void setRtneCtgNm(String rtneCtgNm) {
         this.rtneCtgNm = rtneCtgNm;
     }
+
+    public String getRtneAssignCnt() { return rtneAssignCnt; }
+
+    public void setRtneAssignCnt(String rtneAssignCnt) { this.rtneAssignCnt = rtneAssignCnt; }
 
     public String getRtneAssignTime() {
         return rtneAssignTime;
