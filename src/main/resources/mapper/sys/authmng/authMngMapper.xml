@@ -14,10 +14,30 @@
 		WHERE RN BETWEEN #{startIndex} AND #{endIndex}
 	</sql>
 
+	<!-- 검색 조건 -->
+	<sql id="authMngSearch">
+		<if test="authCd != null and authCd != ''">
+			AND UPPER_AUTH_CD = #{authCd}
+		</if>
+		<if test="authCd == null or authCd == ''">
+			AND UPPER_AUTH_CD IS NULL
+		</if>
+		<if test="searchWord != null and searchWord != ''">
+			<if test="searchCd == 'authCd'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(AUTH_CD), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+			<if test="searchCd == 'authNm'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(AUTH_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+		</if>
+		<if test="useYn != null and useYn != ''">
+			AND USE_YN = #{useYn}
+		</if>
+	</sql>
+
 	<!-- 권한 목록 -->
 	<select id="selectAuthMngList" resultType="authMngVO">
 		SELECT AUTH_CD       authCd,
-		       UPPER_AUTH_CD upperAuthCd,
 		       AUTH_NM       authNm,
 		       AUTH_DESC      authDesc,
 		       AUTH_LV       authLv,
@@ -34,12 +54,7 @@
 		       END           lastYn
 		FROM   SYS_DRP_AUTH T
 		WHERE  1 = 1
-		       <if test="authCd != null and authCd != ''">
-			       AND UPPER_AUTH_CD = #{authCd}
-		       </if>
-		       <if test="authCd == null or authCd == ''">
-			       AND UPPER_AUTH_CD IS NULL
-		       </if>
+			<include refid="authMngSearch" />
 		ORDER  BY AUTH_ORD
 	</select>
 
@@ -282,7 +297,6 @@
 	<select id="selectAuthMngExcelList" resultType="authMngVO">
 		SELECT ROW_NUMBER() OVER(ORDER BY AUTH_CD) rn,
 		       AUTH_CD               authCd,
-		       UPPER_AUTH_CD         upperAuthCd,
 		       AUTH_NM               authNm,
 		       AUTH_DESC               authDesc,
 		       AUTH_LV               authLv,
@@ -292,7 +306,8 @@
 		         WHEN 'N' THEN '미사용'
 		       END                   useYn
 		FROM   SYS_DRP_AUTH
-		WHERE  1 = 1
+    WHERE 1 = 1
+      <include refid="authMngSearch" />
 	</select>
 
 </mapper>

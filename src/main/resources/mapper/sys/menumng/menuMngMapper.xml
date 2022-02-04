@@ -4,10 +4,30 @@
 
 <mapper namespace="MenuMng">
 
+	<!-- 검색 조건 -->
+	<sql id="menuMngSearch">
+		<if test="menuCd != null and menuCd != ''">
+			AND UPPER_MENU_CD = #{menuCd}
+		</if>
+		<if test="menuCd == null or menuCd == ''">
+			AND UPPER_MENU_CD IS NULL
+		</if>
+		<if test="searchWord != null and searchWord != ''">
+			<if test="searchCd == 'menuCd'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(MENU_CD), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+			<if test="searchCd == 'menuNm'">
+				AND LTRIM(RTRIM(REPLACE(UPPER(MENU_NM), ' ', ''))) LIKE '%' + LTRIM(RTRIM(REPLACE(UPPER(#{searchWord}), ' ', ''))) + '%'
+			</if>
+		</if>
+		<if test="useYn != null and useYn != ''">
+			AND USE_YN = #{useYn}
+		</if>
+	</sql>
+
 	<!-- 메뉴 목록 -->
 	<select id="selectMenuMngList" resultType="menuMngVO">
 		SELECT MENU_CD       menuCd,
-		       UPPER_MENU_CD upperMenuCd,
 		       MENU_NM       menuNm,
 		       MENU_URL      menuUrl,
 		       MENU_LV       menuLv,
@@ -24,12 +44,7 @@
 		       END           lastYn
 		FROM   SYS_DRP_MENU T
 		WHERE  1 = 1
-		       <if test="menuCd != null and menuCd != ''">
-			       AND UPPER_MENU_CD = #{menuCd}
-		       </if>
-		       <if test="menuCd == null or menuCd == ''">
-			       AND UPPER_MENU_CD IS NULL
-		       </if>
+			<include refid="menuMngSearch" />
 		ORDER  BY MENU_ORD
 	</select>
 
@@ -173,7 +188,6 @@
 	<select id="selectMenuMngExcelList" resultType="menuMngVO">
     SELECT ROW_NUMBER()  OVER(ORDER BY MENU_CD) rn,
            MENU_CD       menuCd,
-           UPPER_MENU_CD upperMenuCd,
            MENU_NM       menuNm,
            MENU_URL      menuUrl,
            MENU_DESC     menuDesc,
@@ -185,6 +199,7 @@
              END         useYn
     FROM SYS_DRP_MENU
     WHERE 1 = 1
+      <include refid="menuMngSearch" />
 	</select>
 
 </mapper>

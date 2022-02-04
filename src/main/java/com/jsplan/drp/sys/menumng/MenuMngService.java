@@ -38,13 +38,12 @@ public class MenuMngService {
             menuMngObject = new JSONObject();
             menuMngObject.put("menuNm", vo.getMenuNm());
             menuMngObject.put("menuCd", vo.getMenuCd());
-            menuMngObject.put("upperMenuCd", vo.getUpperMenuCd());
             menuMngObject.put("menuUrl", vo.getMenuUrl());
             menuMngObject.put("menuLv", vo.getMenuLv());
             menuMngObject.put("menuOrd", vo.getMenuOrd());
             menuMngObject.put("useYn", vo.getUseYn());
             menuMngObject.put("leaf", "Y".equals(vo.getLastYn()));
-            menuMngObject.put("expanded", true);
+            menuMngObject.put("expanded", !"Y".equals(vo.getLastYn()));
 
             menuMngArray.add(menuMngObject);
         }
