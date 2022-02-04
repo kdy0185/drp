@@ -82,17 +82,17 @@ public class AuthMngController {
     @RequestMapping(value = "/sys/authmng/authMngSearch.do")
     public @ResponseBody
     JSONObject authMngSearch(@ModelAttribute AuthMngVO authMngVO) throws Exception {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject authMngObject = new JSONObject();
         JSONArray authMngList = new JSONArray();
 
         try {
             authMngList = authMngService.selectAuthMngList(authMngVO);
-            jsonObject.put("authMngList", authMngList);
+            authMngObject.put("authMngList", authMngList);
         } catch (Exception e) {
             logger.error("{}", e);
         }
 
-        return jsonObject;
+        return authMngObject;
     }
 
     /**

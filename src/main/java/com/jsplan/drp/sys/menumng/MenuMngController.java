@@ -75,15 +75,17 @@ public class MenuMngController {
     @RequestMapping(value = "/sys/menumng/menuMngSearch.do")
     public @ResponseBody
     JSONObject menuMngSearch(@ModelAttribute MenuMngVO menuMngVO) throws Exception {
-        JSONObject menuMngList = new JSONObject();
+        JSONObject menuMngObject = new JSONObject();
+        JSONArray menuMngList = new JSONArray();
 
         try {
             menuMngList = menuMngService.selectMenuMngList(menuMngVO);
+            menuMngObject.put("menuMngList", menuMngList);
         } catch (Exception e) {
             logger.error("{}", e);
         }
 
-        return menuMngList;
+        return menuMngObject;
     }
 
     /**

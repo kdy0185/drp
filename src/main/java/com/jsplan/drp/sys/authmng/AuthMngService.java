@@ -28,28 +28,28 @@ public class AuthMngService {
      * @return JSONArray
      * @throws Exception throws Exception
      */
-    public JSONArray selectAuthMngList(AuthMngVO authMngVO)
-        throws Exception {
-        JSONArray authArray = new JSONArray();
-        JSONObject authObject = new JSONObject();
+    public JSONArray selectAuthMngList(AuthMngVO authMngVO) throws Exception {
+        JSONArray authMngArray = new JSONArray();
+        JSONObject authMngObject = new JSONObject();
 
         // 하위 권한 조회
         List<AuthMngVO> authMngList = authMngMapper.selectAuthMngList(authMngVO);
-        for (AuthMngVO authVO : authMngList) {
-            authObject = new JSONObject();
-            authObject.put("authNm", authVO.getAuthNm());
-            authObject.put("authCd", authVO.getAuthCd());
-            authObject.put("upperAuthCd", authVO.getUpperAuthCd());
-            authObject.put("authDesc", authVO.getAuthDesc());
-            authObject.put("authLv", authVO.getAuthLv());
-            authObject.put("authOrd", authVO.getAuthOrd());
-            authObject.put("useYn", authVO.getUseYn());
-            authObject.put("leaf", "Y".equals(authVO.getLastYn()));
-            authObject.put("expanded", !"Y".equals(authVO.getLastYn()));
-            authArray.add(authObject);
+        for (AuthMngVO vo : authMngList) {
+            authMngObject = new JSONObject();
+            authMngObject.put("authNm", vo.getAuthNm());
+            authMngObject.put("authCd", vo.getAuthCd());
+            authMngObject.put("upperAuthCd", vo.getUpperAuthCd());
+            authMngObject.put("authDesc", vo.getAuthDesc());
+            authMngObject.put("authLv", vo.getAuthLv());
+            authMngObject.put("authOrd", vo.getAuthOrd());
+            authMngObject.put("useYn", vo.getUseYn());
+            authMngObject.put("leaf", "Y".equals(vo.getLastYn()));
+            authMngObject.put("expanded", !"Y".equals(vo.getLastYn()));
+
+            authMngArray.add(authMngObject);
         }
 
-        return authArray;
+        return authMngArray;
     }
 
     /**

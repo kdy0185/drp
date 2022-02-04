@@ -7,6 +7,7 @@ import com.jsplan.drp.cmmn.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,15 +86,17 @@ public class PlanCtgOptController {
     @RequestMapping(value = "/pl/ctgopt/planCtgOptSearch.do")
     public @ResponseBody
     JSONObject planCtgOptSearch(@ModelAttribute PlanCtgOptVO planCtgOptVO) throws Exception {
-        JSONObject planCtgOptList = new JSONObject();
+        JSONObject planCtgOptObject = new JSONObject();
+        JSONArray planCtgOptList = new JSONArray();
 
         try {
             planCtgOptList = planCtgOptService.selectPlanCtgOptList(planCtgOptVO);
+            planCtgOptObject.put("planCtgOptList", planCtgOptList);
         } catch (Exception e) {
             logger.error("{}", e);
         }
 
-        return planCtgOptList;
+        return planCtgOptObject;
     }
 
     /**
