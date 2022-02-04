@@ -39,7 +39,6 @@ public class AuthMngService {
             authObject = new JSONObject();
             authObject.put("authNm", authVO.getAuthNm());
             authObject.put("authCd", authVO.getAuthCd());
-            authObject.put("upperAuthCd", authVO.getUpperAuthCd());
             authObject.put("authDesc", authVO.getAuthDesc());
             authObject.put("authLv", authVO.getAuthLv());
             authObject.put("authOrd", authVO.getAuthOrd());
