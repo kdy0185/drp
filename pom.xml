@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.jsplan</groupId>
   <artifactId>drp</artifactId>
-  <version>0.1.0-RC</version>
+  <version>0.2.0-RC</version>
   <packaging>war</packaging>
   <name>drp</name>
   <description>Daily Routine Project</description>
