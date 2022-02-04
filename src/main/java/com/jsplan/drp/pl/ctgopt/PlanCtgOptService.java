@@ -23,31 +23,31 @@ public class PlanCtgOptService {
      * <p>분류 옵션 목록</p>
      *
      * @param planCtgOptVO
-     * @return JSONObject
+     * @return JSONArray
      * @throws Exception throws Exception
      */
-    public JSONObject selectPlanCtgOptList(PlanCtgOptVO planCtgOptVO) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject nodeObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        List<PlanCtgOptVO> list = planCtgOptMapper.selectPlanCtgOptList(planCtgOptVO);
-        for (PlanCtgOptVO vo : list) {
-            nodeObject = new JSONObject();
-            nodeObject.put("rtneCtgNm", vo.getRtneCtgNm());
-            nodeObject.put("rtneCtgCd", vo.getRtneCtgCd());
-            nodeObject.put("wtVal", vo.getWtVal());
-            nodeObject.put("recgMinTime", vo.getRecgMinTime());
-            nodeObject.put("rtneStartDate", vo.getRtneStartDate());
-            nodeObject.put("useYn", vo.getUseYn());
-            nodeObject.put("planUser", vo.getPlanUser());
-            nodeObject.put("leaf", "Y".equals(vo.getLastYn()));
-            nodeObject.put("expanded", !"Y".equals(vo.getLastYn()));
+    public JSONArray selectPlanCtgOptList(PlanCtgOptVO planCtgOptVO) throws Exception {
+        JSONArray planCtgOptArray = new JSONArray();
+        JSONObject planCtgOptObject = new JSONObject();
 
-            jsonArray.add(nodeObject);
+        // 하위 분류 옵션 조회
+        List<PlanCtgOptVO> planCtgOptList = planCtgOptMapper.selectPlanCtgOptList(planCtgOptVO);
+        for (PlanCtgOptVO vo : planCtgOptList) {
+            planCtgOptObject = new JSONObject();
+            planCtgOptObject.put("rtneCtgNm", vo.getRtneCtgNm());
+            planCtgOptObject.put("rtneCtgCd", vo.getRtneCtgCd());
+            planCtgOptObject.put("wtVal", vo.getWtVal());
+            planCtgOptObject.put("recgMinTime", vo.getRecgMinTime());
+            planCtgOptObject.put("rtneStartDate", vo.getRtneStartDate());
+            planCtgOptObject.put("useYn", vo.getUseYn());
+            planCtgOptObject.put("planUser", vo.getPlanUser());
+            planCtgOptObject.put("leaf", "Y".equals(vo.getLastYn()));
+            planCtgOptObject.put("expanded", !"Y".equals(vo.getLastYn()));
+
+            planCtgOptArray.add(planCtgOptObject);
         }
 
-        jsonObject.put("planCtgOptList", jsonArray);
-        return jsonObject;
+        return planCtgOptArray;
     }
 
     /**

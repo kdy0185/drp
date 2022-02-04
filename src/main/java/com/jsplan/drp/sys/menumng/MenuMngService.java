@@ -25,31 +25,30 @@ public class MenuMngService {
      * <p>메뉴 목록</p>
      *
      * @param menuMngVO
-     * @return JSONObject
+     * @return JSONArray
      * @throws Exception throws Exception
      */
-    public JSONObject selectMenuMngList(MenuMngVO menuMngVO) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        JSONObject nodeObject = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-        List<MenuMngVO> list = menuMngMapper.selectMenuMngList(menuMngVO);
-        for (MenuMngVO vo : list) {
-            nodeObject = new JSONObject();
-            nodeObject.put("menuNm", vo.getMenuNm());
-            nodeObject.put("menuCd", vo.getMenuCd());
-            nodeObject.put("upperMenuCd", vo.getUpperMenuCd());
-            nodeObject.put("menuUrl", vo.getMenuUrl());
-            nodeObject.put("menuLv", vo.getMenuLv());
-            nodeObject.put("menuOrd", vo.getMenuOrd());
-            nodeObject.put("useYn", vo.getUseYn());
-            nodeObject.put("leaf", "Y".equals(vo.getLastYn()));
-            nodeObject.put("expanded", true);
+    public JSONArray selectMenuMngList(MenuMngVO menuMngVO) throws Exception {
+        JSONArray menuMngArray = new JSONArray();
+        JSONObject menuMngObject = new JSONObject();
 
-            jsonArray.add(nodeObject);
+        // 하위 메뉴 조회
+        List<MenuMngVO> menuMngList = menuMngMapper.selectMenuMngList(menuMngVO);
+        for (MenuMngVO vo : menuMngList) {
+            menuMngObject = new JSONObject();
+            menuMngObject.put("menuNm", vo.getMenuNm());
+            menuMngObject.put("menuCd", vo.getMenuCd());
+            menuMngObject.put("menuUrl", vo.getMenuUrl());
+            menuMngObject.put("menuLv", vo.getMenuLv());
+            menuMngObject.put("menuOrd", vo.getMenuOrd());
+            menuMngObject.put("useYn", vo.getUseYn());
+            menuMngObject.put("leaf", "Y".equals(vo.getLastYn()));
+            menuMngObject.put("expanded", !"Y".equals(vo.getLastYn()));
+
+            menuMngArray.add(menuMngObject);
         }
 
-        jsonObject.put("menuMngList", jsonArray);
-        return jsonObject;
+        return menuMngArray;
     }
 
     /**

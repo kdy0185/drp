@@ -23,6 +23,10 @@
     <script type="text/javascript" src="/extjs/ext-all.js"></script>
 
     <script type="text/javascript">
+      $(function () {
+        $.util.getSearchCondition();
+      });
+
       // Ext Tree Model 정의 - 권한
       Ext.define("authMngModel", {
         extend: "Ext.data.Model",
@@ -32,10 +36,6 @@
           useNull: true
         }, {
           name: "authCd", // 권한 코드
-          type: "String",
-          useNull: true
-        }, {
-          name: "upperAuthCd", // 상위 권한 코드
           type: "String",
           useNull: true
         }, {
@@ -75,8 +75,20 @@
         },
         listeners: {
           beforeload: function (store, operation, eOpts) {
-            var form = $('form[name="authMngForm"]');
+            var searchArea = $("div.search-area");
+            $.util.setSearchStyle(searchArea);
+
+            var form = $('form[name="authMngSearchForm"]');
+            operation.node.data.expanded = false; // 확장 여부 값 초기화
             operation.params.authCd = operation.node.get("authCd");
+            operation.params.searchCd = $(form).find('select[name="searchCd"] option:selected').val();
+            operation.params.searchWord = $(form).find('input[name="searchWord"]').val();
+            operation.params.useYn = $(form).find('select[name="useYn"] option:selected').val();
+          },
+          load: function (store, node, records, successful, eOpts) {
+            if (node.isRoot() && !node.isExpanded()) {
+              node.expand();
+            }
           }
         }
       });
@@ -108,17 +120,6 @@
             align: "center",
             sortable: true,
             dataIndex: "authCd",
-            renderer: function (val, metadata, record) {
-              metadata.style = "cursor: pointer;";
-              return val;
-            }
-          }, {
-            text: "상위 권한 코드",
-            width: 10,
-            align: "center",
-            sortable: true,
-            hidden: true,
-            dataIndex: "upperMenuCd",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -186,6 +187,12 @@
         });
         mainTree = authMngTree;
       });
+
+      // 조회
+      function searchAuthMng() {
+        authMngStore.load();
+        $.util.setSearchCondition();
+      }
 
       // 상세
       function readAuthMng(state) {
@@ -299,6 +306,47 @@
             <div class="sc-title">
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
+
+            <form:form modelAttribute="authMngVO" name="authMngSearchForm" method="post">
+                <div class="contents-box search-area margin_none">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-12 col-xs-12 padding_l25">
+                            <div class="col-md-1 col-sm-12 col-xs-12 padding_none">
+                                <span class="search-icon">권한</span>
+                            </div>
+                            <div class="col-md-2 col-sm-12 col-xs-12 padding_none">
+                                <form:select path="searchCd" cssClass="form-control input-sm pull-left">
+                                    <form:option value="authCd" label="권한 코드"/>
+                                    <form:option value="authNm" label="권한명"/>
+                                </form:select>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 padding_r0">
+                                <form:input path="searchWord" cssClass="form-control input-sm"
+                                            onkeydown="if(event.keyCode==13){searchAuthMng(); return false;}"/>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-1 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-md-2 col-sm-12 col-xs-12 padding_none">
+                                <span class="search-icon">사용 여부</span>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 padding_none">
+                                <form:select path="useYn" cssClass="form-control input-sm">
+                                    <form:option value="" label="선택"/>
+                                    <form:option value="Y" label="사용"/>
+                                    <form:option value="N" label="미사용"/>
+                                </form:select>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-2 col-md-1 col-sm-12 col-xs-12">
+                            <div class="search-btn-area">
+                                <button type="button" onclick="searchAuthMng();" class="btn btn-gray">
+                                    <i class="fa fa-search"></i>조회
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form:form>
 
             <form:form modelAttribute="authMngVO" name="authMngForm" method="post">
                 <form:hidden path="authCd"/>

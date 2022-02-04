@@ -405,7 +405,7 @@
             <form:form modelAttribute="planReportVO" name="planReportSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row padding_b10">
-                        <div class="padding_l25 col-md-3 col-sm-12 col-xs-12 padding_r0">
+                        <div class="col-md-3 col-sm-12 col-xs-12 padding_l25 padding_r0">
                             <div class="col-md-2 col-sm-12 col-xs-12 padding_none">
                                 <span class="search-icon">담당자</span>
                             </div>
@@ -441,7 +441,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="padding_l25 col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-md-3 col-sm-12 col-xs-12 padding_l25">
                             <div class="col-md-2 col-sm-12 col-xs-12 padding_none">
                                 <span class="search-icon">분류</span>
                             </div>

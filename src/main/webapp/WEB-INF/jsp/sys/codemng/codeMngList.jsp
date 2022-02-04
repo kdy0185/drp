@@ -135,10 +135,7 @@
       // Ext Grid Store 정의 - 공통 코드
       var codeMngStore = Ext.create("Ext.data.Store", {
         pageSize: defaultPageSize,
-        autoLoad: {
-          start: 0,
-          limit: defaultPageSize
-        },
+        autoLoad: false,
         model: "codeMngModel",
         proxy: {
           type: "ajax",
@@ -645,6 +642,7 @@
             } else {
               alert("오류가 발생하였습니다.\ncode : " + code);
             }
+          }
         });
       }
 

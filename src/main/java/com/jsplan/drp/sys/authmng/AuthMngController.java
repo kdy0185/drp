@@ -82,17 +82,17 @@ public class AuthMngController {
     @RequestMapping(value = "/sys/authmng/authMngSearch.do")
     public @ResponseBody
     JSONObject authMngSearch(@ModelAttribute AuthMngVO authMngVO) throws Exception {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject authMngObject = new JSONObject();
         JSONArray authMngList = new JSONArray();
 
         try {
             authMngList = authMngService.selectAuthMngList(authMngVO);
-            jsonObject.put("authMngList", authMngList);
+            authMngObject.put("authMngList", authMngList);
         } catch (Exception e) {
             logger.error("{}", e);
         }
 
-        return jsonObject;
+        return authMngObject;
     }
 
     /**
@@ -340,7 +340,6 @@ public class AuthMngController {
             // 컬럼명 설정
             colName.add("순번");
             colName.add("권한 코드");
-            colName.add("상위 권한 코드");
             colName.add("권한명");
             colName.add("권한 설명");
             colName.add("권한 수준");
@@ -349,7 +348,6 @@ public class AuthMngController {
 
             // 컬럼 사이즈 설정
             colWidth.add(2000);
-            colWidth.add(4000);
             colWidth.add(4000);
             colWidth.add(6000);
             colWidth.add(6000);
@@ -362,13 +360,12 @@ public class AuthMngController {
                 AuthMngVO vo = (AuthMngVO) authMngExcelList.get(i);
                 String rn = String.valueOf(vo.getRn());
                 String authCd = vo.getAuthCd();
-                String upperAuthCd = vo.getUpperAuthCd();
                 String authNm = vo.getAuthNm();
                 String authDesc = vo.getAuthDesc();
                 String authLv = vo.getAuthLv();
                 String authOrd = vo.getAuthOrd();
                 String useYn = vo.getUseYn();
-                String[] arr = {rn, authCd, upperAuthCd, authNm, authDesc, authLv, authOrd, useYn};
+                String[] arr = {rn, authCd, authNm, authDesc, authLv, authOrd, useYn};
                 colValue.add(arr);
             }
         } catch (Exception e) {

@@ -75,15 +75,17 @@ public class MenuMngController {
     @RequestMapping(value = "/sys/menumng/menuMngSearch.do")
     public @ResponseBody
     JSONObject menuMngSearch(@ModelAttribute MenuMngVO menuMngVO) throws Exception {
-        JSONObject menuMngList = new JSONObject();
+        JSONObject menuMngObject = new JSONObject();
+        JSONArray menuMngList = new JSONArray();
 
         try {
             menuMngList = menuMngService.selectMenuMngList(menuMngVO);
+            menuMngObject.put("menuMngList", menuMngList);
         } catch (Exception e) {
             logger.error("{}", e);
         }
 
-        return menuMngList;
+        return menuMngObject;
     }
 
     /**
@@ -248,7 +250,6 @@ public class MenuMngController {
             // 컬럼명 설정
             colName.add("순번");
             colName.add("메뉴 코드");
-            colName.add("상위 메뉴 코드");
             colName.add("메뉴명");
             colName.add("이동 주소");
             colName.add("메뉴 설명");
@@ -258,7 +259,6 @@ public class MenuMngController {
 
             // 컬럼 사이즈 설정
             colWidth.add(2000);
-            colWidth.add(4000);
             colWidth.add(4000);
             colWidth.add(6000);
             colWidth.add(6000);
@@ -272,15 +272,13 @@ public class MenuMngController {
                 MenuMngVO vo = (MenuMngVO) menuMngExcelList.get(i);
                 String rn = String.valueOf(vo.getRn());
                 String menuCd = vo.getMenuCd();
-                String upperMenuCd = vo.getUpperMenuCd();
                 String menuNm = vo.getMenuNm();
                 String menuUrl = vo.getMenuUrl();
                 String menuDesc = vo.getMenuDesc();
                 String menuLv = vo.getMenuLv();
                 String menuOrd = vo.getMenuOrd();
                 String useYn = vo.getUseYn();
-                String[] arr = {rn, menuCd, upperMenuCd, menuNm, menuUrl, menuDesc, menuLv, menuOrd,
-                    useYn};
+                String[] arr = {rn, menuCd, menuNm, menuUrl, menuDesc, menuLv, menuOrd, useYn};
                 colValue.add(arr);
             }
         } catch (Exception e) {

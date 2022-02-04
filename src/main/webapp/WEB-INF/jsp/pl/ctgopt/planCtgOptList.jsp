@@ -25,7 +25,6 @@
     <script type="text/javascript">
       $(function () {
         if ("${planCtgOptVO.authAdmin}" == "Y") $.util.getSearchCondition();
-        searchPlanCtgOpt();
       });
 
       // Ext Tree Model 정의 - 분류 옵션 설정
@@ -323,7 +322,7 @@
             <form:form modelAttribute="planCtgOptVO" name="planCtgOptSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
-                        <div class="padding_l25 col-md-3 col-sm-12 col-xs-12 padding_r0">
+                        <div class="col-md-3 col-sm-12 col-xs-12 padding_l25 padding_r0">
                             <div class="col-md-2 col-sm-12 col-xs-12 padding_none">
                                 <span class="search-icon">담당자</span>
                             </div>
