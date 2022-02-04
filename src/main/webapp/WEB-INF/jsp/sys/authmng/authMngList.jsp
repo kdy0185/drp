@@ -25,7 +25,6 @@
     <script type="text/javascript">
       $(function () {
         $.util.getSearchCondition();
-        searchAuthMng();
       });
 
       // Ext Tree Model 정의 - 권한

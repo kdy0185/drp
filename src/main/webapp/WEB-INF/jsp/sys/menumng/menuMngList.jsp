@@ -25,7 +25,6 @@
     <script type="text/javascript">
       $(function () {
         $.util.getSearchCondition();
-        searchMenuMng();
       });
 
       // Ext Tree Model 정의 - 메뉴

@@ -25,7 +25,6 @@
     <script type="text/javascript">
       $(function () {
         if ("${planCtgOptVO.authAdmin}" == "Y") $.util.getSearchCondition();
-        searchPlanCtgOpt();
       });
 
       // Ext Tree Model 정의 - 분류 옵션 설정
