@@ -1,14 +1,21 @@
 package com.jsplan.drp.cmmn.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.sql.DataSource;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -23,6 +30,52 @@ public class DatabaseConfig {
 
     @Value("${project.properties.package}")
     private String rootPackage;
+
+    @Value("${spring.jpa.database-platform}")
+    private String dialect;
+
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
+
+    /**
+     * <p>EntityManagerFactoryBean 설정</p>
+     *
+     * @param dataSource (DataSource 객체)
+     * @return LocalContainerEntityManagerFactoryBean (LocalContainerEntityManagerFactoryBean 객체)
+     */
+    @Primary
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactoryBean.setPersistenceUnitName("entityManagerFactory");
+        entityManagerFactoryBean.setDataSource(dataSource);
+        entityManagerFactoryBean.setPackagesToScan(rootPackage); // Entity 클래스 스캔
+
+        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.dialect", dialect);
+        properties.put("hibernate.hbm2ddl.auto", ddlAuto);
+        entityManagerFactoryBean.setJpaPropertyMap(properties);
+
+        return entityManagerFactoryBean;
+    }
+
+    /**
+     * <p>JPA TransactionManager 설정</p>
+     *
+     * @param entityManagerFactory (LocalContainerEntityManagerFactoryBean 객체)
+     * @return PlatformTransactionManager (PlatformTransactionManager 객체)
+     */
+    @Primary
+    @Bean
+    public PlatformTransactionManager transactionManager(
+        LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
+        return transactionManager;
+    }
 
     /**
      * <p>SqlSessionFactory 설정</p>
