@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,6 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @Class : DatabaseConfig
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @Description : DB 환경 설정
  */
 @Configuration
-@EnableTransactionManagement
+@MapperScan(value = "com.jsplan.drp")
 public class DatabaseConfig {
 
     @Value("${project.properties.package}")
@@ -89,7 +89,7 @@ public class DatabaseConfig {
         sessionFactory.setDataSource(dataSource);
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         sessionFactory.setMapperLocations(
-            resolver.getResources("classpath*:mapper/**/*Mapper.xml"));
+            resolver.getResources("classpath:/mapper/**/*Mapper.xml"));
         sessionFactory.setTypeAliasesPackage(rootPackage);
         return sessionFactory.getObject();
     }
