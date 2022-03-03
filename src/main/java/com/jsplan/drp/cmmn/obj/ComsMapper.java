@@ -1,6 +1,7 @@
 package com.jsplan.drp.cmmn.obj;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,10 +11,9 @@ import org.springframework.stereotype.Repository;
  * @Description : 공통 Mapper
  */
 
-@Repository("ComsMapper")
-public class ComsMapper extends AbstractDAO {
-
-    String namespace = "Coms.";
+@Repository
+@Mapper
+public interface ComsMapper {
 
     /**
      * <p>메뉴 목록</p>
@@ -21,10 +21,7 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsMenuVO> selectComsMenuList() throws Exception {
-        return (List<ComsMenuVO>) selectList(namespace + "selectComsMenuList");
-    }
+    List<ComsMenuVO> selectComsMenuList() throws Exception;
 
     /**
      * <p>메뉴 상세</p>
@@ -33,9 +30,7 @@ public class ComsMapper extends AbstractDAO {
      * @return ComsMenuVO
      * @throws Exception throws Exception
      */
-    public ComsMenuVO selectComsMenuDetail(String menuCd) throws Exception {
-        return (ComsMenuVO) selectOne(namespace + "selectComsMenuDetail", menuCd);
-    }
+    ComsMenuVO selectComsMenuDetail(String menuCd) throws Exception;
 
     /**
      * <p>URL별 권한 목록</p>
@@ -43,10 +38,7 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsMenuVO> selectComsUrlAuthList() throws Exception {
-        return (List<ComsMenuVO>) selectList(namespace + "selectComsUrlAuthList");
-    }
+    List<ComsMenuVO> selectComsUrlAuthList() throws Exception;
 
     /**
      * <p>계층화 권한 목록</p>
@@ -54,10 +46,7 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsMenuVO> selectHierarchicalAuthList() throws Exception {
-        return (List<ComsMenuVO>) selectList(namespace + "selectHierarchicalAuthList");
-    }
+    List<ComsMenuVO> selectHierarchicalAuthList() throws Exception;
 
     /**
      * <p>공통 코드 목록</p>
@@ -66,10 +55,7 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsVO> selectComsCodeList(String comCd) throws Exception {
-        return (List<ComsVO>) selectList(namespace + "selectComsCodeList", comCd);
-    }
+    List<ComsVO> selectComsCodeList(String comCd) throws Exception;
 
     /**
      * <p>그룹 목록</p>
@@ -77,10 +63,7 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsVO> selectComsGrpList() throws Exception {
-        return (List<ComsVO>) selectList(namespace + "selectComsGrpList");
-    }
+    List<ComsVO> selectComsGrpList() throws Exception;
 
     /**
      * <p>담당자 목록</p>
@@ -89,9 +72,6 @@ public class ComsMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<ComsVO> selectComsUserList(ComsVO comsVO) throws Exception {
-        return (List<ComsVO>) selectList(namespace + "selectComsUserList", comsVO);
-    }
+    List<ComsVO> selectComsUserList(ComsVO comsVO) throws Exception;
 
 }
