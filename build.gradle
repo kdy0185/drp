@@ -14,6 +14,12 @@ plugins {
 group = 'com.jsplan'
 version = '0.3.0-RC'
 sourceCompatibility = '11'
+apply plugin: 'war'
+
+// plain war 생성 X
+war {
+    enabled = false
+}
 
 configurations {
     compileOnly {
