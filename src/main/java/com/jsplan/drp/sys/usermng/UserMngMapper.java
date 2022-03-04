@@ -1,10 +1,8 @@
 package com.jsplan.drp.sys.usermng;
 
 import java.util.List;
-
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-
-import com.jsplan.drp.cmmn.obj.AbstractDAO;
 
 /**
  * @Class : UserMngMapper
@@ -12,10 +10,9 @@ import com.jsplan.drp.cmmn.obj.AbstractDAO;
  * @Date : 2022-01-25
  * @Description : 사용자 관리 Mapper
  */
-@Repository("UserMngMapper")
-public class UserMngMapper extends AbstractDAO {
-
-    String namespace = "UserMng.";
+@Repository
+@Mapper
+public interface UserMngMapper {
 
     /**
      * <p>그룹 목록</p>
@@ -24,10 +21,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserMngVO> selectGrpMngList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) selectList(namespace + "selectGrpMngList", userMngVO);
-    }
+    List<UserMngVO> selectGrpMngList(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 목록 수</p>
@@ -36,9 +30,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectGrpMngListCnt(UserMngVO userMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectGrpMngListCnt", userMngVO);
-    }
+    int selectGrpMngListCnt(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 상세</p>
@@ -47,9 +39,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return UserMngVO
      * @throws Exception throws Exception
      */
-    public UserMngVO selectGrpMngDetail(UserMngVO userMngVO) throws Exception {
-        return (UserMngVO) selectOne(namespace + "selectGrpMngDetail", userMngVO);
-    }
+    UserMngVO selectGrpMngDetail(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 등록</p>
@@ -58,9 +48,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertGrpMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) update(namespace + "insertGrpMngData", userMngVO);
-    }
+    int insertGrpMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 수정</p>
@@ -69,9 +57,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int updateGrpMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) update(namespace + "updateGrpMngData", userMngVO);
-    }
+    int updateGrpMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 삭제</p>
@@ -80,9 +66,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteGrpMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteGrpMngData", userMngVO);
-    }
+    int deleteGrpMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>그룹 엑셀 목록</p>
@@ -91,10 +75,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserMngVO> selectGrpMngExcelList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) selectList(namespace + "selectGrpMngExcelList", userMngVO);
-    }
+    List<UserMngVO> selectGrpMngExcelList(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 목록</p>
@@ -103,10 +84,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserMngVO> selectUserMngList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) selectList(namespace + "selectUserMngList", userMngVO);
-    }
+    List<UserMngVO> selectUserMngList(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 목록 수</p>
@@ -115,9 +93,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectUserMngListCnt(UserMngVO userMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectUserMngListCnt", userMngVO);
-    }
+    int selectUserMngListCnt(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 상세</p>
@@ -126,9 +102,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return UserMngVO
      * @throws Exception throws Exception
      */
-    public UserMngVO selectUserMngDetail(UserMngVO userMngVO) throws Exception {
-        return (UserMngVO) selectOne(namespace + "selectUserMngDetail", userMngVO);
-    }
+    UserMngVO selectUserMngDetail(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 권한 목록</p>
@@ -137,10 +111,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserMngVO> selectUserAuthMngList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) selectList(namespace + "selectUserAuthMngList", userMngVO);
-    }
+    List<UserMngVO> selectUserAuthMngList(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 아이디 중복 체크</p>
@@ -149,9 +120,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectUserMngDupCnt(UserMngVO userMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectUserMngDupCnt", userMngVO);
-    }
+    int selectUserMngDupCnt(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 등록</p>
@@ -160,9 +129,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertUserMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) update(namespace + "insertUserMngData", userMngVO);
-    }
+    int insertUserMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 권한 등록</p>
@@ -171,9 +138,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertUserAuthMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) update(namespace + "insertUserAuthMngData", userMngVO);
-    }
+    int insertUserAuthMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 수정</p>
@@ -182,9 +147,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int updateUserMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) update(namespace + "updateUserMngData", userMngVO);
-    }
+    int updateUserMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 삭제</p>
@@ -193,9 +156,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteUserMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteUserMngData", userMngVO);
-    }
+    int deleteUserMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 권한 삭제</p>
@@ -204,9 +165,7 @@ public class UserMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteUserAuthMngData(UserMngVO userMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteUserAuthMngData", userMngVO);
-    }
+    int deleteUserAuthMngData(UserMngVO userMngVO) throws Exception;
 
     /**
      * <p>사용자 엑셀 목록</p>
@@ -215,8 +174,5 @@ public class UserMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<UserMngVO> selectUserMngExcelList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) selectList(namespace + "selectUserMngExcelList", userMngVO);
-    }
+    List<UserMngVO> selectUserMngExcelList(UserMngVO userMngVO) throws Exception;
 }

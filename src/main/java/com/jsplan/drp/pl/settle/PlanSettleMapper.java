@@ -1,7 +1,7 @@
 package com.jsplan.drp.pl.settle;
 
-import com.jsplan.drp.cmmn.obj.AbstractDAO;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
  * @Date : 2022-01-26
  * @Description : 일일 결산 Mapper
  */
-@Repository("PlanSettleMapper")
-public class PlanSettleMapper extends AbstractDAO {
-
-    String namespace = "PlanSettle.";
+@Repository
+@Mapper
+public interface PlanSettleMapper {
 
     /**
      * <p>일일 결산 목록</p>
@@ -22,10 +21,7 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanSettleVO> selectPlanSettleDayList(PlanSettleVO planSettleVO) throws Exception {
-        return (List<PlanSettleVO>) selectList(namespace + "selectPlanSettleDayList", planSettleVO);
-    }
+    List<PlanSettleVO> selectPlanSettleDayList(PlanSettleVO planSettleVO) throws Exception;
 
     /**
      * <p>일일 결산 목록 수</p>
@@ -34,9 +30,7 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectPlanSettleDayListCnt(PlanSettleVO planSettleVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectPlanSettleDayListCnt", planSettleVO);
-    }
+    int selectPlanSettleDayListCnt(PlanSettleVO planSettleVO) throws Exception;
 
     /**
      * <p>분류별 할당 시간 목록</p>
@@ -45,10 +39,7 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanSettleVO> selectPlanSettleDayTime(PlanSettleVO planSettleVO) throws Exception {
-        return (List<PlanSettleVO>) selectList(namespace + "selectPlanSettleDayTime", planSettleVO);
-    }
+    List<PlanSettleVO> selectPlanSettleDayTime(PlanSettleVO planSettleVO) throws Exception;
 
     /**
      * <p>일과별 달성률 목록</p>
@@ -57,10 +48,7 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanSettleVO> selectPlanSettleDayAchvRate(PlanSettleVO planSettleVO) throws Exception {
-        return (List<PlanSettleVO>) selectList(namespace + "selectPlanSettleDayAchvRate", planSettleVO);
-    }
+    List<PlanSettleVO> selectPlanSettleDayAchvRate(PlanSettleVO planSettleVO) throws Exception;
 
     /**
      * <p>일과별 몰입도 목록</p>
@@ -69,10 +57,7 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanSettleVO> selectPlanSettleDayConcRate(PlanSettleVO planSettleVO) throws Exception {
-        return (List<PlanSettleVO>) selectList(namespace + "selectPlanSettleDayConcRate", planSettleVO);
-    }
+    List<PlanSettleVO> selectPlanSettleDayConcRate(PlanSettleVO planSettleVO) throws Exception;
 
     /**
      * <p>일일 결산 엑셀 목록</p>
@@ -81,9 +66,5 @@ public class PlanSettleMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanSettleVO> selectPlanSettleDayExcelList(PlanSettleVO planSettleVO) throws Exception {
-        return (List<PlanSettleVO>) selectList(namespace + "selectPlanSettleDayExcelList", planSettleVO);
-    }
-
+    List<PlanSettleVO> selectPlanSettleDayExcelList(PlanSettleVO planSettleVO) throws Exception;
 }

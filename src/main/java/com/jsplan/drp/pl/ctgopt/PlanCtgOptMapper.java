@@ -1,7 +1,7 @@
 package com.jsplan.drp.pl.ctgopt;
 
-import com.jsplan.drp.cmmn.obj.AbstractDAO;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
  * @Date : 2022-01-26
  * @Description : 분류 옵션 설정 Mapper
  */
-@Repository("PlanCtgOptMapper")
-public class PlanCtgOptMapper extends AbstractDAO {
-
-    String namespace = "PlanCtgOpt.";
+@Repository
+@Mapper
+public interface PlanCtgOptMapper {
 
     /**
      * <p>분류 옵션 목록</p>
@@ -22,10 +21,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanCtgOptVO> selectPlanCtgOptList(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (List<PlanCtgOptVO>) selectList(namespace + "selectPlanCtgOptList", planCtgOptVO);
-    }
+    List<PlanCtgOptVO> selectPlanCtgOptList(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>분류 옵션 상세</p>
@@ -34,9 +30,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return PlanCtgOptVO
      * @throws Exception throws Exception
      */
-    public PlanCtgOptVO selectPlanCtgOptDetail(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (PlanCtgOptVO) selectOne(namespace + "selectPlanCtgOptDetail", planCtgOptVO);
-    }
+    PlanCtgOptVO selectPlanCtgOptDetail(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>분류 옵션 등록</p>
@@ -45,9 +39,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertPlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (Integer) update(namespace + "insertPlanCtgOptData", planCtgOptVO);
-    }
+    int insertPlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>분류 옵션 수정</p>
@@ -56,9 +48,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int updatePlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (Integer) update(namespace + "updatePlanCtgOptData", planCtgOptVO);
-    }
+    int updatePlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>적용 일과 수</p>
@@ -67,9 +57,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectPlanReportListCnt(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectPlanReportListCnt", planCtgOptVO);
-    }
+    int selectPlanReportListCnt(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>분류 옵션 삭제</p>
@@ -78,9 +66,7 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deletePlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (Integer) delete(namespace + "deletePlanCtgOptData", planCtgOptVO);
-    }
+    int deletePlanCtgOptData(PlanCtgOptVO planCtgOptVO) throws Exception;
 
     /**
      * <p>분류 옵션 엑셀 목록</p>
@@ -89,9 +75,5 @@ public class PlanCtgOptMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanCtgOptVO> selectPlanCtgOptExcelList(PlanCtgOptVO planCtgOptVO) throws Exception {
-        return (List<PlanCtgOptVO>) selectList(namespace + "selectPlanCtgOptExcelList", planCtgOptVO);
-    }
-
+    List<PlanCtgOptVO> selectPlanCtgOptExcelList(PlanCtgOptVO planCtgOptVO) throws Exception;
 }

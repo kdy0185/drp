@@ -73,5 +73,4 @@ public interface ComsMapper {
      * @throws Exception throws Exception
      */
     List<ComsVO> selectComsUserList(ComsVO comsVO) throws Exception;
-
 }

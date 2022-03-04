@@ -1,7 +1,7 @@
 package com.jsplan.drp.sys.authmng;
 
-import com.jsplan.drp.cmmn.obj.AbstractDAO;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
  * @Date : 2022-01-26
  * @Description : 권한 관리 Mapper
  */
-@Repository("AuthMngMapper")
-public class AuthMngMapper extends AbstractDAO {
-
-    String namespace = "AuthMng.";
+@Repository
+@Mapper
+public interface AuthMngMapper {
 
     /**
      * <p>권한 목록</p>
@@ -22,10 +21,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<AuthMngVO> selectAuthMngList(AuthMngVO authMngVO) throws Exception {
-        return (List<AuthMngVO>) selectList(namespace + "selectAuthMngList", authMngVO);
-    }
+    List<AuthMngVO> selectAuthMngList(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>상위 권한 목록</p>
@@ -34,10 +30,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<AuthMngVO> selectUpperAuthMngList(AuthMngVO authMngVO) throws Exception {
-        return (List<AuthMngVO>) selectList(namespace + "selectUpperAuthMngList", authMngVO);
-    }
+    List<AuthMngVO> selectUpperAuthMngList(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한 상세</p>
@@ -46,9 +39,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return AuthMngVO
      * @throws Exception throws Exception
      */
-    public AuthMngVO selectAuthMngDetail(AuthMngVO authMngVO) throws Exception {
-        return (AuthMngVO) selectOne(namespace + "selectAuthMngDetail", authMngVO);
-    }
+    AuthMngVO selectAuthMngDetail(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한 등록</p>
@@ -57,9 +48,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertAuthMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) update(namespace + "insertAuthMngData", authMngVO);
-    }
+    int insertAuthMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한 수정</p>
@@ -68,9 +57,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int updateAuthMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) update(namespace + "updateAuthMngData", authMngVO);
-    }
+    int updateAuthMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 사용자 목록 수</p>
@@ -79,9 +66,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectAuthUserListCnt(AuthMngVO authMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectAuthUserListCnt", authMngVO);
-    }
+    int selectAuthUserListCnt(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 메뉴 목록 수</p>
@@ -90,9 +75,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectAuthMenuListCnt(AuthMngVO authMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectAuthMenuListCnt", authMngVO);
-    }
+    int selectAuthMenuListCnt(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한 삭제</p>
@@ -101,9 +84,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteAuthMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteAuthMngData", authMngVO);
-    }
+    int deleteAuthMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 사용자 목록</p>
@@ -112,10 +93,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<AuthMngVO> selectAuthUserMngList(AuthMngVO authMngVO) throws Exception {
-        return (List<AuthMngVO>) selectList(namespace + "selectAuthUserMngList", authMngVO);
-    }
+    List<AuthMngVO> selectAuthUserMngList(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 사용자 목록 수</p>
@@ -124,9 +102,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectAuthUserMngListCnt(AuthMngVO authMngVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectAuthUserMngListCnt", authMngVO);
-    }
+    int selectAuthUserMngListCnt(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 사용자 등록</p>
@@ -135,9 +111,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertAuthUserMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) update(namespace + "insertAuthUserMngData", authMngVO);
-    }
+    int insertAuthUserMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 사용자 삭제</p>
@@ -146,9 +120,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteAuthUserMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteAuthUserMngData", authMngVO);
-    }
+    int deleteAuthUserMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 메뉴 목록</p>
@@ -157,10 +129,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<AuthMngVO> selectAuthMenuMngList(AuthMngVO authMngVO) throws Exception {
-        return (List<AuthMngVO>) selectList(namespace + "selectAuthMenuMngList", authMngVO);
-    }
+    List<AuthMngVO> selectAuthMenuMngList(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 메뉴 등록</p>
@@ -169,9 +138,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int insertAuthMenuMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) update(namespace + "insertAuthMenuMngData", authMngVO);
-    }
+    int insertAuthMenuMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한별 메뉴 삭제</p>
@@ -180,9 +147,7 @@ public class AuthMngMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int deleteAuthMenuMngData(AuthMngVO authMngVO) throws Exception {
-        return (Integer) delete(namespace + "deleteAuthMenuMngData", authMngVO);
-    }
+    int deleteAuthMenuMngData(AuthMngVO authMngVO) throws Exception;
 
     /**
      * <p>권한 엑셀 목록</p>
@@ -191,8 +156,5 @@ public class AuthMngMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<AuthMngVO> selectAuthMngExcelList(AuthMngVO authMngVO) throws Exception {
-        return (List<AuthMngVO>) selectList(namespace + "selectAuthMngExcelList", authMngVO);
-    }
+    List<AuthMngVO> selectAuthMngExcelList(AuthMngVO authMngVO) throws Exception;
 }

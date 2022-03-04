@@ -1,6 +1,7 @@
 package com.jsplan.drp.cmmn.obj;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -11,10 +12,9 @@ import org.springframework.stereotype.Repository;
  * @Description : 사용자 계정 Mapper
  */
 
-@Repository("UserMapper")
-public class UserMapper extends AbstractDAO {
-
-    String namespace = "User.";
+@Repository
+@Mapper
+public interface UserMapper {
 
     /**
      * <p>사용자 정보</p>
@@ -23,10 +23,7 @@ public class UserMapper extends AbstractDAO {
      * @return UserVO
      * @throws UsernameNotFoundException throws UsernameNotFoundException
      */
-    public UserVO selectUserDetail(String userId)
-        throws UsernameNotFoundException {
-        return (UserVO) selectOne(namespace + "selectUserDetail", userId);
-    }
+    UserVO selectUserDetail(String userId) throws UsernameNotFoundException;
 
     /**
      * <p>사용자 권한 정보</p>
@@ -34,8 +31,5 @@ public class UserMapper extends AbstractDAO {
      * @param userId
      * @return List<UserVO>
      */
-    @SuppressWarnings("unchecked")
-    public List<UserVO> selectUserAuthList(String userId) {
-        return (List<UserVO>) selectList(namespace + "selectUserAuthList", userId);
-    }
+    List<UserVO> selectUserAuthList(String userId);
 }

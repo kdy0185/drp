@@ -1,7 +1,7 @@
 package com.jsplan.drp.pl.report;
 
-import com.jsplan.drp.cmmn.obj.AbstractDAO;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
  * @Date : 2022-01-26
  * @Description : 데일리 리포트 Mapper
  */
-@Repository("PlanReportMapper")
-public class PlanReportMapper extends AbstractDAO {
-
-    String namespace = "PlanReport.";
+@Repository
+@Mapper
+public interface PlanReportMapper {
 
     /**
      * <p>분류 목록</p>
@@ -22,10 +21,7 @@ public class PlanReportMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanReportVO> selectPlanReportRtneCtgList(PlanReportVO planReportVO) throws Exception {
-        return (List<PlanReportVO>) selectList(namespace + "selectPlanReportRtneCtgList", planReportVO);
-    }
+    List<PlanReportVO> selectPlanReportRtneCtgList(PlanReportVO planReportVO) throws Exception;
 
     /**
      * <p>일과 목록</p>
@@ -34,10 +30,7 @@ public class PlanReportMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanReportVO> selectPlanReportList(PlanReportVO planReportVO) throws Exception {
-        return (List<PlanReportVO>) selectList(namespace + "selectPlanReportList", planReportVO);
-    }
+    List<PlanReportVO> selectPlanReportList(PlanReportVO planReportVO) throws Exception;
 
     /**
      * <p>일과 목록 수</p>
@@ -46,9 +39,7 @@ public class PlanReportMapper extends AbstractDAO {
      * @return int
      * @throws Exception throws Exception
      */
-    public int selectPlanReportListCnt(PlanReportVO planReportVO) throws Exception {
-        return (Integer) selectOne(namespace + "selectPlanReportListCnt", planReportVO);
-    }
+    int selectPlanReportListCnt(PlanReportVO planReportVO) throws Exception;
 
     /**
      * <p>일과 엑셀 목록</p>
@@ -57,9 +48,5 @@ public class PlanReportMapper extends AbstractDAO {
      * @return List
      * @throws Exception throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<PlanReportVO> selectPlanReportExcelList(PlanReportVO planReportVO) throws Exception {
-        return (List<PlanReportVO>) selectList(namespace + "selectPlanReportExcelList", planReportVO);
-    }
-
+    List<PlanReportVO> selectPlanReportExcelList(PlanReportVO planReportVO) throws Exception;
 }
