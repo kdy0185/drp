@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
-import static com.jsplan.drp.domain.sys.usermng.QUserGrpMng.userGrpMng;
+import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
