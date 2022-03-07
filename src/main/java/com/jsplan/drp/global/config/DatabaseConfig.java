@@ -25,7 +25,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  * @Description : DB 환경 설정
  */
 @Configuration
-@MapperScan(value = "com.jsplan.drp")
+@MapperScan(value = "com.jsplan.drp.**.mapper")
 public class DatabaseConfig {
 
     @Value("${project.properties.package}")
