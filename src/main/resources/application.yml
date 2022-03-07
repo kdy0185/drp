@@ -64,10 +64,10 @@ logging:
     org.springframework.web: debug
     jdbc:
       sqlonly: off
-      sqltiming: debug
+      sqltiming: off
       audit: off
       resultset: off
-      resultsettable: debug
+      resultsettable: off
       connection: off
 
 # 개발 환경 설정
