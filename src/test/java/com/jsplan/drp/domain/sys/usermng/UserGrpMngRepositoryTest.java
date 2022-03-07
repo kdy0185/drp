@@ -2,6 +2,8 @@ package com.jsplan.drp.domain.sys.usermng;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
+import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
