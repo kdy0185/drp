@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.authmng;
 
-import com.jsplan.drp.global.obj.ComsVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import java.io.Serializable;
 import java.util.List;
 

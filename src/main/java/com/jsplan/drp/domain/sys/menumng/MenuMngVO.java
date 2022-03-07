@@ -3,7 +3,7 @@ package com.jsplan.drp.domain.sys.menumng;
 import java.io.Serializable;
 import java.util.List;
 
-import com.jsplan.drp.global.obj.ComsVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 
 /**
  * @Class : MenuMngVO

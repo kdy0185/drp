@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.entity;
 
 import com.jsplan.drp.global.util.PagingUtil;
 import org.springframework.security.core.Authentication;

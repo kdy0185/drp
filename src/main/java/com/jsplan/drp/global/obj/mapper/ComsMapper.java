@@ -1,5 +1,7 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.mapper;
 
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;

@@ -1,8 +1,8 @@
 package com.jsplan.drp.domain.main;
 
-import com.jsplan.drp.global.obj.ComsMenuVO;
-import com.jsplan.drp.global.obj.ComsService;
-import com.jsplan.drp.global.obj.ComsVO;
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import java.util.List;
 import javax.annotation.Resource;
 import net.sf.json.JSONArray;

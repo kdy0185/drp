@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.repository;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;

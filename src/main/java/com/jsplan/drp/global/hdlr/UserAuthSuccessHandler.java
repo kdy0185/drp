@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.hdlr;
 
-import com.jsplan.drp.global.obj.UserVO;
+import com.jsplan.drp.global.obj.entity.UserVO;
 import com.jsplan.drp.global.util.StringUtil;
 import java.io.IOException;
 import javax.servlet.ServletException;

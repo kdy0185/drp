@@ -1,8 +1,8 @@
 package com.jsplan.drp.domain.sys.menumng;
 
 import com.jsplan.drp.global.bean.ReloadableFilterInvocationSecurityMetadataSource;
-import com.jsplan.drp.global.obj.ComsMenuVO;
-import com.jsplan.drp.global.obj.ComsService;
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.List;

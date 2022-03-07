@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.pl.settle;
 
-import com.jsplan.drp.global.obj.ComsVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import java.io.Serializable;
 
 /**

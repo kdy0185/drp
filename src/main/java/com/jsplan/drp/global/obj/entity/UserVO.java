@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.entity;
 
 import java.io.Serializable;
 import java.util.Collection;

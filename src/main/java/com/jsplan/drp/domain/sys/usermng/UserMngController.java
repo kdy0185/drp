@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jsplan.drp.global.obj.ComsMenuVO;
-import com.jsplan.drp.global.obj.ComsService;
-import com.jsplan.drp.global.obj.ComsVO;
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import com.jsplan.drp.global.util.ExcelUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;

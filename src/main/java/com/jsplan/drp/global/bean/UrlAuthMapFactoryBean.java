@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.bean;
 
-import com.jsplan.drp.global.obj.ComsService;
+import com.jsplan.drp.global.obj.service.ComsService;
 import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;

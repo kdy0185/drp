@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.bean;
 
-import com.jsplan.drp.global.obj.ComsService;
+import com.jsplan.drp.global.obj.service.ComsService;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.FactoryBean;
 

@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.lsnr;
 
-import com.jsplan.drp.global.obj.LoginAttemptService;
+import com.jsplan.drp.global.obj.service.LoginAttemptService;
 import javax.annotation.Resource;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;

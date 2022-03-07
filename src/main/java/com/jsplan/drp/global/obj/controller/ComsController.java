@@ -1,5 +1,7 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.controller;
 
+import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.obj.entity.ComsVO;
 import com.jsplan.drp.global.util.StringUtil;
 import com.jsplan.drp.global.util.io.FileDownload;
 import com.jsplan.drp.global.util.io.FileUtil;

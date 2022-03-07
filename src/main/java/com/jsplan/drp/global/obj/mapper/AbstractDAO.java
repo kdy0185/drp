@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.mapper;
 
 import java.util.List;
 

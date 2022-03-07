@@ -1,6 +1,8 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.service;
 
 import com.jsplan.drp.global.bean.AvailableRoleHierarchy;
+import com.jsplan.drp.global.obj.entity.UserVO;
+import com.jsplan.drp.global.obj.mapper.UserMapper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;

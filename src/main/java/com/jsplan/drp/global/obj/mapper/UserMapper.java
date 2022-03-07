@@ -1,5 +1,6 @@
-package com.jsplan.drp.global.obj;
+package com.jsplan.drp.global.obj.mapper;
 
+import com.jsplan.drp.global.obj.entity.UserVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,7 +1,7 @@
 package com.jsplan.drp.global.util;
 
 
-import com.jsplan.drp.global.obj.ExcelVO;
+import com.jsplan.drp.global.obj.entity.ExcelVO;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;

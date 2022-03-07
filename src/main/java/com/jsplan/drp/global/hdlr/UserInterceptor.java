@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.hdlr;
 
-import com.jsplan.drp.global.obj.UserVO;
+import com.jsplan.drp.global.obj.entity.UserVO;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
