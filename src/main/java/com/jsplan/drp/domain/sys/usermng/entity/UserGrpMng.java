@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,7 +19,7 @@ import org.springframework.data.domain.Persistable;
  * @Class : UserGrpMng
  * @Author : KDW
  * @Date : 2022-03-04
- * @Description : 그룹 Entity
+ * @Description : 그룹 관리 Entity
  */
 @Entity
 @Table(name = "SYS_DRP_GRP")
@@ -39,6 +40,13 @@ public class UserGrpMng extends BaseEntity implements Persistable<String> {
 
     @OneToMany(mappedBy = "userGrpMng")
     private List<UserMng> userMng = new ArrayList<>(); // 사용자 엔티티
+
+    @Builder
+    public UserGrpMng(String grpCd, String grpNm, String grpDesc) {
+        this.grpCd = grpCd;
+        this.grpNm = grpNm;
+        this.grpDesc = grpDesc;
+    }
 
     @Override
     public String getId() {

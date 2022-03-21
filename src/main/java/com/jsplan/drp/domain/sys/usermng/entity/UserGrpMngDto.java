@@ -9,7 +9,7 @@ import lombok.Data;
  * @Class : UserGrpMngDto
  * @Author : KDW
  * @Date : 2022-03-21
- * @Description : 그룹 DTO
+ * @Description : 그룹 관리 DTO
  */
 public class UserGrpMngDto {
 

@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * @Class : UserMng
  * @Author : KDW
  * @Date : 2022-03-18
- * @Description : 사용자 Entity
+ * @Description : 사용자 관리 Entity
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
