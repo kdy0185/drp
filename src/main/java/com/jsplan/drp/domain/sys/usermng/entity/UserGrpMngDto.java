@@ -59,7 +59,7 @@ public class UserGrpMngDto {
             this.regDate = regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             this.modUser = modUser;
             this.modDate =
-                modDate != null ? modDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+                modDate != null ? modDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
         }
     }
 }

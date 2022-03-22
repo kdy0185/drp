@@ -1,11 +1,11 @@
-package com.jsplan.drp.domain.sys.usermng;
+package com.jsplan.drp.domain.sys.usermng.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto;
-import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class UserGrpMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        Page<UserGrpMngDto.List> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
+        Page<List> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
 
         // then
         assertThat(pageList.getNumberOfElements()).isEqualTo(1);
@@ -61,11 +61,8 @@ class UserGrpMngRepositoryTest {
         String grpDesc = "설명";
 
         // when
-        UserGrpMngRequest request = UserGrpMngRequest.builder()
-            .grpCd(grpCd)
-            .grpNm(grpNm)
-            .grpDesc(grpDesc)
-            .build();
+        UserGrpMngRequest request = UserGrpMngRequest.builder().grpCd(grpCd).grpNm(grpNm)
+            .grpDesc(grpDesc).build();
 
         UserGrpMng savedUserGrpMng = userGrpMngRepository.save(request.toEntity());
         String findGrpCd = userGrpMngRepository.findByGrpCd(savedUserGrpMng.getGrpCd()).getGrpCd();
