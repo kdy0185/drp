@@ -7,16 +7,23 @@ import static org.mockito.BDDMockito.given;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
@@ -35,6 +42,51 @@ class UserGrpMngServiceTest {
     UserGrpMngRepository userGrpMngRepository;
 
     @Test
+    @DisplayName("그룹 목록 조회 테스트")
+    public void selectGrpMngList() throws Exception {
+        // given
+        String grpNm = "사용자";
+        PageRequest pageRequest = PageRequest.of(0, 20);
+
+        List<UserGrpMngListDto> list = new ArrayList<>();
+        list.add(new UserGrpMngListDto("GRP_USER", "사용자 그룹", "설명", "시스템 관리자",
+            LocalDateTime.now(), "시스템 관리자", LocalDateTime.now()));
+        Page<UserGrpMngListDto> pageList = new PageImpl<>(list);
+
+        // mocking
+        given(userGrpMngRepository.searchPageList(grpNm, pageRequest)).willReturn(pageList);
+
+        // when
+        Page<UserGrpMngListDto> resultList = userGrpMngService.selectGrpMngList(grpNm,
+            pageRequest);
+
+        // then
+        assertThat(resultList.getNumberOfElements()).isEqualTo(1);
+        assertThat(resultList.stream().findFirst().get().getGrpNm()).contains(grpNm);
+    }
+
+    @Test
+    @DisplayName("그룹 상세 조회 테스트")
+    public void selectGrpMngDetail() throws Exception {
+        // given
+        String grpCd = "GRP_TEST";
+        String regUser = "시스템 관리자";
+        UserGrpMngDetailDto detailDto = new UserGrpMngDetailDto(grpCd, "테스트 그룹", "설명",
+            regUser, LocalDateTime.now(), regUser, LocalDateTime.now());
+
+        // mocking
+        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
+
+        // when
+        UserGrpMngDetailDto findDetail = userGrpMngService.selectGrpMngDetail(grpCd);
+
+        // then
+        assertThat(findDetail.getGrpCd()).isEqualTo(grpCd);
+        assertThat(findDetail.getRegUser()).isEqualTo(regUser);
+        assertThat(findDetail.getRegDate()).isLessThan(String.valueOf(LocalDateTime.now()));
+    }
+
+    @Test
     @DisplayName("그룹 등록 테스트")
     public void insertGrpMngData() throws Exception {
         // given
@@ -46,22 +98,31 @@ class UserGrpMngServiceTest {
         String modUser = "sys_app";
         LocalDateTime modDate = LocalDateTime.now();
 
-        // mocking
         UserGrpMngRequest request = UserGrpMngRequest.builder().grpCd(grpCd).grpNm(grpNm)
             .grpDesc(grpDesc).build();
         UserGrpMng userGrpMng = UserGrpMng.builder().grpCd(grpCd).grpNm(grpNm)
             .grpDesc(grpDesc).build();
-        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "regUser", regUser, String.class);
-        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "regDate", regDate, LocalDateTime.class);
-        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "modUser", modUser, String.class);
-        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate, LocalDateTime.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "regUser", regUser,
+            String.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "regDate", regDate,
+            LocalDateTime.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "modUser", modUser,
+            String.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate,
+            LocalDateTime.class);
 
+        UserGrpMngDetailDto detailDto = new UserGrpMngDetailDto(grpCd, grpNm, grpDesc, regUser,
+            regDate, modUser, modDate);
+
+        // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
+        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
         // when
         UserGrpMngResponse response = userGrpMngService.insertGrpMngData(request);
+        String findGrpCd = userGrpMngService.selectGrpMngDetail(response.getGrpCd()).getGrpCd();
 
         // then
-        assertThat(response.getGrpCd()).isEqualTo(userGrpMng.getGrpCd());
+        assertThat(findGrpCd).isEqualTo(grpCd);
     }
 }

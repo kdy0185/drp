@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.List;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ class UserGrpMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        Page<List> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
+        Page<UserGrpMngListDto> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
 
         // then
         assertThat(pageList.getNumberOfElements()).isEqualTo(1);
@@ -43,7 +43,7 @@ class UserGrpMngRepositoryTest {
         String grpCd = "GRP_MNG";
 
         // when
-        UserGrpMngDto.Detail userGrpMng = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDto userGrpMng = userGrpMngRepository.findByGrpCd(grpCd);
 
         // then
         assertThat(userGrpMng.getGrpNm()).isEqualTo("관리자 그룹");

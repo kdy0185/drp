@@ -14,7 +14,7 @@ import lombok.Data;
 public class UserGrpMngDto {
 
     @Data
-    public static class List {
+    public static class UserGrpMngListDto {
 
         private String grpCd;
         private String grpNm;
@@ -25,7 +25,7 @@ public class UserGrpMngDto {
         private String modDate;
 
         @QueryProjection
-        public List(String grpCd, String grpNm, String grpDesc, String regUser,
+        public UserGrpMngListDto(String grpCd, String grpNm, String grpDesc, String regUser,
             LocalDateTime regDate, String modUser, LocalDateTime modDate) {
             this.grpCd = grpCd;
             this.grpNm = grpNm;
@@ -39,7 +39,7 @@ public class UserGrpMngDto {
     }
 
     @Data
-    public static class Detail {
+    public static class UserGrpMngDetailDto {
 
         private String grpCd;
         private String grpNm;
@@ -50,7 +50,7 @@ public class UserGrpMngDto {
         private String modDate;
 
         @QueryProjection
-        public Detail(String grpCd, String grpNm, String grpDesc, String regUser,
+        public UserGrpMngDetailDto(String grpCd, String grpNm, String grpDesc, String regUser,
             LocalDateTime regDate, String modUser, LocalDateTime modDate) {
             this.grpCd = grpCd;
             this.grpNm = grpNm;

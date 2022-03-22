@@ -1,6 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,13 +20,13 @@ public interface UserGrpMngCustomRepository {
      * @param pageable (페이징 정보)
      * @return Page (페이징 목록)
      */
-    Page<UserGrpMngDto.List> searchPageList(String grpNm, Pageable pageable);
+    Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable);
 
     /**
      * <p>그룹 상세</p>
      *
      * @param grpCd (그룹 코드)
-     * @return UserGrpMngDto (UserGrpMng DTO)
+     * @return UserGrpMngDto (그룹 DTO)
      */
-    UserGrpMngDto.Detail findByGrpCd(String grpCd);
+    UserGrpMngDetailDto findByGrpCd(String grpCd);
 }

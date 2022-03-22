@@ -5,7 +5,8 @@ import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_Detail;
 import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_List;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -36,7 +37,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param pageable (페이징 정보)
      * @return Page (페이징 목록)
      */
-    public Page<UserGrpMngDto.List> searchPageList(String grpNm, Pageable pageable) {
+    public Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable) {
         return applyPagination(pageable, contentQuery ->
             contentQuery.select(new QUserGrpMngDto_List(
                     userGrpMng.grpCd,
@@ -72,9 +73,9 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * <p>그룹 상세</p>
      *
      * @param grpCd (그룹 코드)
-     * @return UserGrpMngDto (UserGrpMng DTO)
+     * @return UserGrpMngDto (그룹 DTO)
      */
-    public UserGrpMngDto.Detail findByGrpCd(String grpCd) {
+    public UserGrpMngDetailDto findByGrpCd(String grpCd) {
         return select(new QUserGrpMngDto_Detail(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
