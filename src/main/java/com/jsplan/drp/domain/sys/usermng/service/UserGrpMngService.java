@@ -6,6 +6,7 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,13 +43,28 @@ public class UserGrpMngService {
     /**
      * <p>그룹 등록</p>
      *
-     * @param request (등록할 그룹 정보)
-     * @return UserGrpMngResponse (등록한 그룹 코드)
+     * @param request (그룹 정보)
+     * @return UserGrpMngResponse (그룹 코드)
      * @throws Exception throws Exception
      */
     @Transactional
     public UserGrpMngResponse insertGrpMngData(UserGrpMngRequest request) throws Exception {
         UserGrpMng userGrpMng = userGrpMngRepository.save(request.toEntity());
+        return new UserGrpMngResponse(userGrpMng.getGrpCd());
+    }
+
+    /**
+     * <p>그룹 수정</p>
+     *
+     * @param request (그룹 정보)
+     * @return UserGrpMngResponse (그룹 코드)
+     * @throws Exception throws Exception
+     */
+    @Transactional
+    public UserGrpMngResponse updateGrpMngData(UserGrpMngRequest request) throws Exception {
+        UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd())
+            .orElseThrow(NoSuchElementException::new);
+        userGrpMng.update(request);
         return new UserGrpMngResponse(userGrpMng.getGrpCd());
     }
 }

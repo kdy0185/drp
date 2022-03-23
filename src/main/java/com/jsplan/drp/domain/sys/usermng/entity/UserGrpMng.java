@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.entity;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,10 @@ public class UserGrpMng extends BaseEntity implements Persistable<String> {
     @Override
     public boolean isNew() {
         return getRegDate() == null;
+    }
+
+    public void update(UserGrpMngRequest request) {
+        this.grpNm = request.getGrpNm();
+        this.grpDesc = request.getGrpDesc();
     }
 }

@@ -2,7 +2,7 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import javax.validation.constraints.NotBlank;
-import lombok.Builder;
+import lombok.Getter;
 
 /**
  * @Class : UserGrpMngRequest
@@ -10,6 +10,7 @@ import lombok.Builder;
  * @Date : 2022-03-21
  * @Description : 그룹 관리 Request DTO
  */
+@Getter
 public class UserGrpMngRequest {
 
     @NotBlank(message = "{js.valid.msg.required}")
@@ -20,8 +21,8 @@ public class UserGrpMngRequest {
 
     private final String grpDesc; // 그룹 설명
 
-    @Builder
-    public UserGrpMngRequest(String grpCd, String grpNm, String grpDesc) {
+    // Test 전용 생성자
+    UserGrpMngRequest(String grpCd, String grpNm, String grpDesc) {
         this.grpCd = grpCd;
         this.grpNm = grpNm;
         this.grpDesc = grpDesc;

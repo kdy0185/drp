@@ -3,9 +3,12 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class UserGrpMngRepositoryTest {
+
+    @Autowired
+    UserGrpMngService userGrpMngService;
 
     @Autowired
     UserGrpMngRepository userGrpMngRepository;
@@ -61,13 +67,34 @@ class UserGrpMngRepositoryTest {
         String grpDesc = "설명";
 
         // when
-        UserGrpMngRequest request = UserGrpMngRequest.builder().grpCd(grpCd).grpNm(grpNm)
-            .grpDesc(grpDesc).build();
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
 
         UserGrpMng savedUserGrpMng = userGrpMngRepository.save(request.toEntity());
         String findGrpCd = userGrpMngRepository.findByGrpCd(savedUserGrpMng.getGrpCd()).getGrpCd();
 
         // then
         assertThat(findGrpCd).isEqualTo(grpCd);
+    }
+
+    @Test
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "kdy0185")
+    @DisplayName("그룹 수정 테스트")
+    public void updateGrpMngData() throws Exception {
+        // given
+        String grpCd = "GRP_MNG";
+        String grpNm = "관리자 그룹 수정";
+        String grpDesc = "설명 수정";
+        LocalDateTime beforeDate = LocalDateTime.now();
+
+        // when
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
+        UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd()).get();
+        userGrpMng.update(request);
+        userGrpMngRepository.flush();
+
+        // then
+        assertThat(userGrpMng.getGrpNm()).isEqualTo(grpNm);
+        assertThat(userGrpMng.getGrpDesc()).isEqualTo(grpDesc);
+        assertThat(userGrpMng.getModDate()).isAfter(beforeDate);
     }
 }

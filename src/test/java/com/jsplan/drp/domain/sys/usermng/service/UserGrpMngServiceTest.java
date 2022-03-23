@@ -3,8 +3,10 @@ package com.jsplan.drp.domain.sys.usermng.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
@@ -13,8 +15,10 @@ import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +87,8 @@ class UserGrpMngServiceTest {
         // then
         assertThat(findDetail.getGrpCd()).isEqualTo(grpCd);
         assertThat(findDetail.getRegUser()).isEqualTo(regUser);
-        assertThat(findDetail.getRegDate()).isLessThan(String.valueOf(LocalDateTime.now()));
+        assertThat(LocalDateTime.parse(findDetail.getRegDate(),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).isBefore(LocalDateTime.now());
     }
 
     @Test
@@ -98,8 +103,8 @@ class UserGrpMngServiceTest {
         String modUser = "sys_app";
         LocalDateTime modDate = LocalDateTime.now();
 
-        UserGrpMngRequest request = UserGrpMngRequest.builder().grpCd(grpCd).grpNm(grpNm)
-            .grpDesc(grpDesc).build();
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
+
         UserGrpMng userGrpMng = UserGrpMng.builder().grpCd(grpCd).grpNm(grpNm)
             .grpDesc(grpDesc).build();
         ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "regUser", regUser,
@@ -124,5 +129,41 @@ class UserGrpMngServiceTest {
 
         // then
         assertThat(findGrpCd).isEqualTo(grpCd);
+    }
+
+    @Test
+    @DisplayName("그룹 수정 테스트")
+    public void updateGrpMngData() throws Exception {
+        // given
+        String grpCd = "GRP_TEST";
+        String grpNm = "테스트 그룹";
+        String grpDesc = "설명";
+        String regUser = "sys_app";
+        LocalDateTime regDate = LocalDateTime.now();
+        String modUser = "sys_app";
+        LocalDateTime modDate = LocalDateTime.now();
+
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build("GRP_TEST", "그룹 수정", "설명 수정");
+
+        UserGrpMng userGrpMng = UserGrpMng.builder().grpCd(grpCd).grpNm(grpNm)
+            .grpDesc(grpDesc).build();
+        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "regUser", regUser,
+            String.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "regDate", regDate,
+            LocalDateTime.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseEntity.class, "modUser", modUser,
+            String.class);
+        ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate,
+            LocalDateTime.class);
+
+        // mocking
+        when(userGrpMngRepository.findById(any())).thenReturn(Optional.of(userGrpMng));
+
+        // when
+        userGrpMngService.updateGrpMngData(request);
+
+        // then
+        assertThat(userGrpMng.getGrpNm()).isEqualTo(request.getGrpNm());
+        assertThat(userGrpMng.getGrpDesc()).isEqualTo(request.getGrpDesc());
     }
 }
