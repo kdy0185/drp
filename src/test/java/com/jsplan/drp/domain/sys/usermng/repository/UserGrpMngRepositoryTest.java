@@ -9,6 +9,7 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDt
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @Class : UserGrpMngRepositoryTest
+ * @Author : KDW
+ * @Date : 2022-03-23
+ * @Description : 그룹 관리 Repository Test
+ */
 @SpringBootTest
 @Transactional
 class UserGrpMngRepositoryTest {
@@ -58,7 +65,7 @@ class UserGrpMngRepositoryTest {
     }
 
     @Test
-    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "kdy0185")
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 등록 테스트")
     public void insertGrpMngData() throws Exception {
         // given
@@ -77,7 +84,7 @@ class UserGrpMngRepositoryTest {
     }
 
     @Test
-    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "kdy0185")
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 수정 테스트")
     public void updateGrpMngData() throws Exception {
         // given
@@ -88,7 +95,8 @@ class UserGrpMngRepositoryTest {
 
         // when
         UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd()).get();
+        UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd()).orElseThrow(
+            NoSuchElementException::new);
         userGrpMng.update(request);
         userGrpMngRepository.flush();
 
@@ -96,5 +104,25 @@ class UserGrpMngRepositoryTest {
         assertThat(userGrpMng.getGrpNm()).isEqualTo(grpNm);
         assertThat(userGrpMng.getGrpDesc()).isEqualTo(grpDesc);
         assertThat(userGrpMng.getModDate()).isAfter(beforeDate);
+    }
+
+    @Test
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
+    @DisplayName("그룹 삭제 테스트")
+    public void deleteGrpMngData() throws Exception {
+        // given
+        String grpCd = "GRP_TEST";
+        String grpNm = "테스트 그룹";
+        String grpDesc = "설명";
+
+        // when
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
+        userGrpMngRepository.saveAndFlush(request.toEntity());
+
+        userGrpMngRepository.deleteById(grpCd);
+        UserGrpMngDetailDto detailDto = userGrpMngRepository.findByGrpCd(grpCd);
+
+        // then
+        assertThat(detailDto).isNull();
     }
 }

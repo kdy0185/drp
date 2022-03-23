@@ -45,10 +45,9 @@ public class UserGrpMngService {
      *
      * @param request (그룹 정보)
      * @return UserGrpMngResponse (그룹 코드)
-     * @throws Exception throws Exception
      */
     @Transactional
-    public UserGrpMngResponse insertGrpMngData(UserGrpMngRequest request) throws Exception {
+    public UserGrpMngResponse insertGrpMngData(UserGrpMngRequest request) {
         UserGrpMng userGrpMng = userGrpMngRepository.save(request.toEntity());
         return new UserGrpMngResponse(userGrpMng.getGrpCd());
     }
@@ -58,13 +57,22 @@ public class UserGrpMngService {
      *
      * @param request (그룹 정보)
      * @return UserGrpMngResponse (그룹 코드)
-     * @throws Exception throws Exception
      */
     @Transactional
-    public UserGrpMngResponse updateGrpMngData(UserGrpMngRequest request) throws Exception {
+    public UserGrpMngResponse updateGrpMngData(UserGrpMngRequest request) {
         UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd())
             .orElseThrow(NoSuchElementException::new);
         userGrpMng.update(request);
         return new UserGrpMngResponse(userGrpMng.getGrpCd());
+    }
+
+    /**
+     * <p>그룹 삭제</p>
+     *
+     * @param request (그룹 정보)
+     */
+    @Transactional
+    public void deleteGrpMngData(UserGrpMngRequest request) {
+        userGrpMngRepository.deleteById(request.getGrpCd());
     }
 }
