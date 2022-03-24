@@ -1,6 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +33,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
@@ -87,22 +89,21 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 목록 조회 테스트")
     public void selectGrpMngList() throws Exception {
         // given
-        String grpNm = "테스트";
-        PageRequest pageRequest = PageRequest.of(0, 20);
-
         List<UserGrpMngListDto> list = new ArrayList<>();
         list.add(listDto);
         Page<UserGrpMngListDto> pageList = new PageImpl<>(list);
 
         // mocking
-        given(userGrpMngRepository.searchPageList(grpNm, pageRequest)).willReturn(pageList);
+        given(userGrpMngRepository.searchPageList(anyString(), any())).willReturn(pageList);
 
         // when
-        Page<UserGrpMngListDto> resultList = userGrpMngService.selectGrpMngList(grpNm, pageRequest);
+        Page<UserGrpMngListDto> resultList = userGrpMngService.selectGrpMngList(
+            new UserGrpMngSearchDto(0, 20, grpNm));
 
         // then
         assertThat(resultList.getNumberOfElements()).isEqualTo(1);
-        assertThat(resultList.stream().findFirst().get().getGrpNm()).contains(grpNm);
+        assertThat(resultList.stream().findFirst().orElseThrow(NoSuchElementException::new)
+            .getGrpNm()).contains(grpNm);
     }
 
     @Test

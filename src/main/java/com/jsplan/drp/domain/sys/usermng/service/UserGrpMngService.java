@@ -2,6 +2,7 @@ package com.jsplan.drp.domain.sys.usermng.service;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
@@ -9,10 +10,16 @@ import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @Class : UserGrpMngService
+ * @Author : KDW
+ * @Date : 2022-03-24
+ * @Description : 그룹 관리 Service
+ */
 @Service
 @RequiredArgsConstructor
 public class UserGrpMngService {
@@ -22,12 +29,13 @@ public class UserGrpMngService {
     /**
      * <p>그룹 목록</p>
      *
-     * @param grpNm    (그룹명)
-     * @param pageable (페이징 정보)
+     * @param userGrpMngSearchDto (조회 조건)
      * @return Page (페이징 목록)
      */
-    public Page<UserGrpMngListDto> selectGrpMngList(String grpNm, Pageable pageable) {
-        return userGrpMngRepository.searchPageList(grpNm, pageable);
+    public Page<UserGrpMngListDto> selectGrpMngList(UserGrpMngSearchDto userGrpMngSearchDto) {
+        PageRequest pageRequest = PageRequest.of(userGrpMngSearchDto.getPageNo(),
+            userGrpMngSearchDto.getPageSize());
+        return userGrpMngRepository.searchPageList(userGrpMngSearchDto.getGrpNm(), pageRequest);
     }
 
     /**
