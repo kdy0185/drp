@@ -7,7 +7,6 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
-import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class UserGrpMngRepositoryTest {
-
-    @Autowired
-    UserGrpMngService userGrpMngService;
 
     @Autowired
     UserGrpMngRepository userGrpMngRepository;
