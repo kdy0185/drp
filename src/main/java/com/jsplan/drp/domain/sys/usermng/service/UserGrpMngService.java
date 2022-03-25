@@ -29,23 +29,22 @@ public class UserGrpMngService {
     /**
      * <p>그룹 목록</p>
      *
-     * @param userGrpMngSearchDto (조회 조건)
+     * @param searchDto (조회 조건)
      * @return Page (페이징 목록)
      */
-    public Page<UserGrpMngListDto> selectGrpMngList(UserGrpMngSearchDto userGrpMngSearchDto) {
-        PageRequest pageRequest = PageRequest.of(userGrpMngSearchDto.getPageNo(),
-            userGrpMngSearchDto.getPageSize());
-        return userGrpMngRepository.searchPageList(userGrpMngSearchDto.getGrpNm(), pageRequest);
+    public Page<UserGrpMngListDto> selectGrpMngList(UserGrpMngSearchDto searchDto) {
+        PageRequest pageRequest = PageRequest.of(searchDto.getPageNo(), searchDto.getPageSize());
+        return userGrpMngRepository.searchPageList(searchDto.getGrpNm(), pageRequest);
     }
 
     /**
      * <p>그룹 상세</p>
      *
-     * @param grpCd (그룹 코드)
+     * @param request (그룹 정보)
      * @return UserGrpMngDto (그룹 DTO)
      */
-    public UserGrpMngDetailDto selectGrpMngDetail(String grpCd) {
-        return userGrpMngRepository.findByGrpCd(grpCd);
+    public UserGrpMngDetailDto selectGrpMngDetail(UserGrpMngRequest request) {
+        return userGrpMngRepository.findByGrpCd(request.getGrpCd());
     }
 
     /**

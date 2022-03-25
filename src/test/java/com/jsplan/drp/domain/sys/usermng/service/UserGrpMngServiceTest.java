@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
@@ -59,7 +58,11 @@ class UserGrpMngServiceTest {
     LocalDateTime regDate, modDate;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
+        setTestModel();
+    }
+
+    private void setTestModel() {
         grpCd = "GRP_TEST";
         grpNm = "테스트 그룹";
         grpDesc = "설명";
@@ -113,7 +116,7 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
         // when
-        UserGrpMngDetailDto findDetail = userGrpMngService.selectGrpMngDetail(grpCd);
+        UserGrpMngDetailDto findDetail = userGrpMngService.selectGrpMngDetail(request);
 
         // then
         assertThat(findDetail.getGrpCd()).isEqualTo(grpCd);
@@ -130,8 +133,8 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
         // when
-        UserGrpMngResponse response = userGrpMngService.insertGrpMngData(request);
-        String findGrpCd = userGrpMngService.selectGrpMngDetail(response.getGrpCd()).getGrpCd();
+        userGrpMngService.insertGrpMngData(request);
+        String findGrpCd = userGrpMngService.selectGrpMngDetail(request).getGrpCd();
 
         // then
         assertThat(findGrpCd).isEqualTo(grpCd);
