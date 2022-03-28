@@ -7,8 +7,11 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
+import com.jsplan.drp.global.exception.entity.ErrorStatus;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -55,8 +58,21 @@ public class UserGrpMngService {
      */
     @Transactional
     public UserGrpMngResponse insertGrpMngData(UserGrpMngRequest request) {
+        validateDupGrpMngData(request);
         UserGrpMng userGrpMng = userGrpMngRepository.save(request.toEntity());
         return new UserGrpMngResponse(userGrpMng.getGrpCd());
+    }
+
+    /**
+     * <p>중복 그룹 체크</p>
+     *
+     * @param request (그룹 정보)
+     */
+    private void validateDupGrpMngData(UserGrpMngRequest request) {
+        Optional<UserGrpMng> findData = userGrpMngRepository.findById(request.getGrpCd());
+        findData.ifPresent(findUser -> {
+            throw new DataIntegrityViolationException(ErrorStatus.DUPLICATED_KEY.getMessage());
+        });
     }
 
     /**

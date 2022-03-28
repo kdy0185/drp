@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.controller;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -15,6 +16,8 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
+import java.util.Locale;
+import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,10 +28,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -62,6 +68,7 @@ class UserGrpMngControllerTest {
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
+            .defaultRequest(MockMvcRequestBuilders.head("/**/*.do").locale(Locale.KOREA))
             .addFilter(new CharacterEncodingFilter("UTF-8", true))
             .alwaysDo(print())
             .build();
@@ -152,6 +159,44 @@ class UserGrpMngControllerTest {
     @Test
     @Order(5)
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
+    @DisplayName("그룹 등록 에러 테스트 : 빈 값")
+    public void userGrpMngInsert_emptyValue() throws Exception {
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(null, grpNm, grpDesc);
+        String jsonData = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/sys/usermng/userGrpMngInsert.do")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonData)
+        ).andExpect(
+            result -> assertTrue(
+                Objects.requireNonNull(result.getResolvedException()).getClass()
+                    .isAssignableFrom(MethodArgumentNotValidException.class)
+            )
+        ).andReturn();
+    }
+
+    @Test
+    @Order(6)
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
+    @DisplayName("그룹 등록 에러 테스트 : 중복 코드")
+    public void userGrpMngInsert_dupCode() throws Exception {
+        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
+        String jsonData = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/sys/usermng/userGrpMngInsert.do")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonData)
+        ).andExpect(
+            result -> assertTrue(
+                Objects.requireNonNull(result.getResolvedException()).getClass()
+                    .isAssignableFrom(DataIntegrityViolationException.class)
+            )
+        ).andReturn();
+    }
+
+    @Test
+    @Order(7)
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 수정 테스트")
     public void userGrpMngUpdate() throws Exception {
         String grpNm = "테스트 그룹 수정";
@@ -167,7 +212,7 @@ class UserGrpMngControllerTest {
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 삭제 테스트")
     public void userGrpMngDelete() throws Exception {

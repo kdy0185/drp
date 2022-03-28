@@ -6,6 +6,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -72,7 +73,7 @@ public class UserGrpMngController {
      */
     @PostMapping(value = "/sys/usermng/userGrpMngInsert.do")
     public @ResponseBody
-    UserGrpMngResponse userGrpMngInsert(@RequestBody UserGrpMngRequest request) {
+    UserGrpMngResponse userGrpMngInsert(@RequestBody @Valid UserGrpMngRequest request) {
         return userGrpMngService.insertGrpMngData(request);
     }
 
@@ -84,7 +85,7 @@ public class UserGrpMngController {
      */
     @PutMapping(value = "/sys/usermng/userGrpMngUpdate.do")
     public @ResponseBody
-    UserGrpMngResponse userGrpMngUpdate(@RequestBody UserGrpMngRequest request) {
+    UserGrpMngResponse userGrpMngUpdate(@RequestBody @Valid UserGrpMngRequest request) {
         return userGrpMngService.updateGrpMngData(request);
     }
 
