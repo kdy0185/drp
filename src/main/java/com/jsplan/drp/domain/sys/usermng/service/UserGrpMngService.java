@@ -69,8 +69,8 @@ public class UserGrpMngService {
      * @param request (그룹 정보)
      */
     private void validateDupGrpMngData(UserGrpMngRequest request) {
-        Optional<UserGrpMng> findData = userGrpMngRepository.findById(request.getGrpCd());
-        findData.ifPresent(findUser -> {
+        Optional<UserGrpMng> optionalUserGrpMng = userGrpMngRepository.findById(request.getGrpCd());
+        optionalUserGrpMng.ifPresent(userGrpMng -> {
             throw new DataIntegrityViolationException(ErrorStatus.DUPLICATED_KEY.getMessage());
         });
     }

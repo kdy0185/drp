@@ -2,8 +2,8 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_Detail;
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_List;
+import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
@@ -39,7 +39,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      */
     public Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable) {
         return applyPagination(pageable, contentQuery ->
-            contentQuery.select(new QUserGrpMngDto_List(
+            contentQuery.select(new QUserGrpMngDto_UserGrpMngListDto(
                     userGrpMng.grpCd,
                     userGrpMng.grpNm,
                     userGrpMng.grpDesc,
@@ -76,7 +76,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return UserGrpMngDto (그룹 DTO)
      */
     public UserGrpMngDetailDto findByGrpCd(String grpCd) {
-        return select(new QUserGrpMngDto_Detail(
+        return select(new QUserGrpMngDto_UserGrpMngDetailDto(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
             userGrpMng.grpDesc,
