@@ -1,13 +1,15 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
+import static com.jsplan.drp.domain.sys.usermng.entity.QUserMng.userMng;
 
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_Detail;
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_List;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
+import com.jsplan.drp.global.util.RowNumUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import org.springframework.data.domain.Page;
@@ -38,8 +40,8 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return Page (페이징 목록)
      */
     public Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable) {
-        return applyPagination(pageable, contentQuery ->
-            contentQuery.select(new QUserGrpMngDto_List(
+        Page<UserGrpMngListDto> pageList = applyPagination(pageable, contentQuery ->
+            contentQuery.select(new QUserGrpMngDto_UserGrpMngListDto(
                     userGrpMng.grpCd,
                     userGrpMng.grpNm,
                     userGrpMng.grpDesc,
@@ -57,6 +59,23 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
                 .from(userGrpMng)
                 .where(grpNmLike(grpNm))
         );
+
+        return addRowNum(pageable, pageList);
+    }
+
+    /**
+     * <p>RowNum 추가</p>
+     *
+     * @param pageable (페이징 정보)
+     * @param pageList (페이징 목록)
+     * @return Page (페이징 목록)
+     */
+    private Page<UserGrpMngListDto> addRowNum(Pageable pageable,
+        Page<UserGrpMngListDto> pageList) {
+        RowNumUtil rowNumUtil = new RowNumUtil(pageList.getTotalElements(),
+            pageable.getPageNumber() + 1, pageable.getPageSize());
+        pageList.getContent().forEach(v -> v.setRn(rowNumUtil.getRn()));
+        return pageList;
     }
 
     /**
@@ -76,7 +95,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return UserGrpMngDto (그룹 DTO)
      */
     public UserGrpMngDetailDto findByGrpCd(String grpCd) {
-        return select(new QUserGrpMngDto_Detail(
+        return select(new QUserGrpMngDto_UserGrpMngDetailDto(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
             userGrpMng.grpDesc,
@@ -89,5 +108,19 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
             .from(userGrpMng)
             .where(userGrpMng.grpCd.eq(grpCd))
             .fetchOne();
+    }
+
+    /**
+     * <p>사용자 확인</p>
+     *
+     * @param grpCd (그룹 코드)
+     * @return boolean (사용자 존재 여부)
+     */
+    public boolean existsUserMngByGrpCd(String grpCd) {
+        Long userMngCnt = select(userMng.count())
+            .from(userMng)
+            .where(userMng.userGrpMng.grpCd.eq(grpCd))
+            .fetchOne();
+        return userMngCnt != null && userMngCnt > 0;
     }
 }

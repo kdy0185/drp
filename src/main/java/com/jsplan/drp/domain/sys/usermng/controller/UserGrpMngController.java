@@ -3,17 +3,22 @@ package com.jsplan.drp.domain.sys.usermng.controller;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.service.ComsService;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,15 +33,37 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserGrpMngController {
 
     private final UserGrpMngService userGrpMngService;
+    private final ComsService comsService;
 
     /**
      * <p>그룹 관리</p>
      *
-     * @return ModelAndView
+     * @param comsMenuVO (메뉴 VO)
+     * @return ModelAndView (그룹 관리 페이지 정보)
      */
     @PostMapping(value = "/sys/usermng/userGrpMngList.do")
-    public ModelAndView userGrpMngList() {
-        return new ModelAndView("sys/usermng/userGrpMngList");
+    public ModelAndView userGrpMngList(@ModelAttribute ComsMenuVO comsMenuVO) {
+        ModelAndView mav = new ModelAndView("sys/usermng/userGrpMngList");
+
+        try {
+            // ***************************** MENU : S *****************************
+            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            mav.addObject("menuList", menuList);
+            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
+            mav.addObject("comsMenuVO", comsMenuVO);
+            // ***************************** MENU : E *****************************
+
+            // ***************************** PAGE : S *****************************
+            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
+            mav.addObject("pageList", pageList);
+            // ***************************** PAGE : E *****************************
+
+            mav.addObject("searchDto", new UserGrpMngSearchDto());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mav;
     }
 
     /**
@@ -45,10 +72,10 @@ public class UserGrpMngController {
      * @param searchDto (조회 조건)
      * @return Page (페이징 목록)
      */
-    @PostMapping(value = "/sys/usermng/userGrpMngSearch.do")
+    @GetMapping(value = "/sys/usermng/userGrpMngSearch.do")
     public @ResponseBody
-    Page<UserGrpMngListDto> userGrpMngSearch(@RequestBody UserGrpMngSearchDto searchDto) {
-        return userGrpMngService.selectGrpMngList(searchDto);
+    Page<UserGrpMngListDto> userGrpMngSearch(@ModelAttribute UserGrpMngSearchDto searchDto) {
+        return userGrpMngService.selectUserGrpMngList(searchDto);
     }
 
     /**
@@ -58,9 +85,15 @@ public class UserGrpMngController {
      * @return ModelAndView (그룹 상세 페이지 정보)
      */
     @PostMapping(value = "/sys/usermng/userGrpMngDetail.do")
-    public ModelAndView userGrpMngDetail(@RequestBody UserGrpMngRequest request) {
+    public ModelAndView userGrpMngDetail(@ModelAttribute UserGrpMngRequest request) {
         ModelAndView mav = new ModelAndView("sys/usermng/userGrpMngDetail");
-        UserGrpMngDetailDto detailDto = userGrpMngService.selectGrpMngDetail(request);
+        UserGrpMngDetailDto detailDto = new UserGrpMngDetailDto();
+
+        if ("U".equals(request.getState())) {
+            detailDto = userGrpMngService.selectUserGrpMngDetail(request);
+        }
+
+        detailDto.setState(request.getState());
         mav.addObject("detailDto", detailDto);
         return mav;
     }
@@ -73,8 +106,8 @@ public class UserGrpMngController {
      */
     @PostMapping(value = "/sys/usermng/userGrpMngInsert.do")
     public @ResponseBody
-    UserGrpMngResponse userGrpMngInsert(@RequestBody @Valid UserGrpMngRequest request) {
-        return userGrpMngService.insertGrpMngData(request);
+    UserGrpMngResponse userGrpMngInsert(@ModelAttribute @Valid UserGrpMngRequest request) {
+        return userGrpMngService.insertUserGrpMngData(request);
     }
 
     /**
@@ -85,8 +118,8 @@ public class UserGrpMngController {
      */
     @PutMapping(value = "/sys/usermng/userGrpMngUpdate.do")
     public @ResponseBody
-    UserGrpMngResponse userGrpMngUpdate(@RequestBody @Valid UserGrpMngRequest request) {
-        return userGrpMngService.updateGrpMngData(request);
+    UserGrpMngResponse userGrpMngUpdate(@ModelAttribute @Valid UserGrpMngRequest request) {
+        return userGrpMngService.updateUserGrpMngData(request);
     }
 
     /**
@@ -97,8 +130,7 @@ public class UserGrpMngController {
      */
     @DeleteMapping(value = "/sys/usermng/userGrpMngDelete.do")
     public @ResponseBody
-    UserGrpMngResponse userGrpMngDelete(@RequestBody UserGrpMngRequest request) {
-        userGrpMngService.deleteGrpMngData(request);
-        return new UserGrpMngResponse(request.getGrpCd());
+    UserGrpMngResponse userGrpMngDelete(@ModelAttribute UserGrpMngRequest request) {
+        return userGrpMngService.deleteUserGrpMngData(request);
     }
 }

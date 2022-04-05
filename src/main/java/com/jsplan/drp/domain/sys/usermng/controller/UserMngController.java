@@ -1,14 +1,18 @@
 package com.jsplan.drp.domain.sys.usermng.controller;
 
-import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMngVO;
+import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
+import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
 import javax.annotation.Resource;
-
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,13 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.service.ComsService;
-import com.jsplan.drp.global.obj.entity.ComsVO;
-import com.jsplan.drp.global.util.ExcelUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * @Class : UserMngController
@@ -41,140 +38,6 @@ public class UserMngController {
 
     @Resource(name = "ComsService")
     private ComsService comsService;
-
-    /**
-     * <p>그룹 관리</p>
-     *
-     * @param userMngVO
-     * @param comsMenuVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
-     */
-    @RequestMapping(value = "/sys/usermng/grpMngList.do")
-    public ModelAndView grpMngList(@ModelAttribute UserMngVO userMngVO, ComsMenuVO comsMenuVO)
-        throws Exception {
-        ModelAndView mav = new ModelAndView("sys/usermng/grpMngList");
-
-        try {
-            // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
-            mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
-            // ***************************** MENU : E *****************************
-
-            // ***************************** PAGE : S *****************************
-            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
-            mav.addObject("pageList", pageList);
-            // ***************************** PAGE : E *****************************
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return mav;
-    }
-
-    /**
-     * <p>그룹 조회</p>
-     *
-     * @param userMngVO
-     * @return JSONObject
-     * @throws Exception throws Exception
-     */
-    @RequestMapping(value = "/sys/usermng/grpMngSearch.do")
-    public @ResponseBody
-    Map<String, Object> grpMngSearch(@ModelAttribute UserMngVO userMngVO) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            int cnt = userMngService.selectGrpMngListCnt(userMngVO);
-            userMngVO.setTotalCnt(cnt);
-            userMngVO.setPaging();
-            List<UserMngVO> grpMngList = userMngService.selectGrpMngList(userMngVO);
-
-            map.put("cnt", cnt);
-            map.put("grpMngList", grpMngList);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return map;
-    }
-
-    /**
-     * <p>그룹 상세</p>
-     *
-     * @param userMngVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
-     */
-    @RequestMapping(value = "/sys/usermng/grpMngDetail.do")
-    public ModelAndView grpMngDetail(@ModelAttribute UserMngVO userMngVO) throws Exception {
-        ModelAndView mav = new ModelAndView("sys/usermng/grpMngDetail");
-        String state = userMngVO.getState();
-
-        try {
-            if ("U".equals(state)) {
-                UserMngVO vo = userMngService.selectGrpMngDetail(userMngVO);
-                vo.setState(state);
-                mav.addObject("userMngVO", vo);
-            }
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return mav;
-    }
-
-    /**
-     * <p>그룹 수정</p>
-     *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
-     */
-    @RequestMapping(value = "/sys/usermng/grpMngUpdate.do")
-    public @ResponseBody
-    String grpMngUpdate(@ModelAttribute UserMngVO userMngVO) throws Exception {
-        String code = null;
-        String state = userMngVO.getState();
-
-        try {
-            if ("I".equals(state)) {
-                code = userMngService.insertGrpMngData(userMngVO);
-            }
-            if ("U".equals(state)) {
-                code = userMngService.updateGrpMngData(userMngVO);
-            }
-        } catch (Exception e) {
-            logger.error("{}", e);
-            code = e.getClass().getName();
-        }
-
-        return code;
-    }
-
-    /**
-     * <p>그룹 삭제</p>
-     *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
-     */
-    @RequestMapping(value = "/sys/usermng/grpMngDelete.do")
-    public @ResponseBody
-    String grpMngDelete(@ModelAttribute UserMngVO userMngVO) throws Exception {
-        String code = null;
-
-        try {
-            code = userMngService.deleteGrpMngData(userMngVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-            code = e.getClass().getName();
-        }
-
-        return code;
-    }
 
     /**
      * <p>그룹 엑셀 출력</p>

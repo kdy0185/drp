@@ -2,6 +2,7 @@ package com.jsplan.drp.domain.sys.usermng.controller;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -10,11 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import java.util.Locale;
 import java.util.Objects;
@@ -28,13 +27,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.BindException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -58,9 +56,6 @@ class UserGrpMngControllerTest {
     @Autowired
     private UserGrpMngService userGrpMngService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     UserGrpMngRequest request;
     UserGrpMngDetailDto detailDto;
     String grpCd, grpNm, grpDesc;
@@ -82,13 +77,13 @@ class UserGrpMngControllerTest {
         grpDesc = "설명";
 
         request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        userGrpMngService.insertGrpMngData(request);
-        detailDto = userGrpMngService.selectGrpMngDetail(request);
+        userGrpMngService.insertUserGrpMngData(request);
+        detailDto = userGrpMngService.selectUserGrpMngDetail(request);
     }
 
     @AfterEach
     public void tearDown() {
-        userGrpMngService.deleteGrpMngData(request);
+        userGrpMngService.deleteUserGrpMngData(request);
     }
 
     // 테스트 조건
@@ -112,13 +107,13 @@ class UserGrpMngControllerTest {
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 목록 조회 테스트")
     public void userGrpMngSearch() throws Exception {
-        UserGrpMngSearchDto searchDto = new UserGrpMngSearchDto(0, 20, "테스트");
-        String jsonData = objectMapper.writeValueAsString(searchDto);
-
-        mockMvc.perform(post("/sys/usermng/userGrpMngSearch.do")
+        mockMvc.perform(get("/sys/usermng/userGrpMngSearch.do")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonData)
+                .param("pageNo", "0")
+                .param("pageSize", "20")
+                .param("grpNm", "테스트")
             ).andExpect(jsonPath("$.content").isArray())
+            .andExpect(jsonPath("$.content[0].rn").value(1))
             .andExpect(jsonPath("$.content[0].grpCd").value(grpCd))
             .andExpect(jsonPath("$.content[0].grpNm").value(grpNm))
             .andExpect(jsonPath("$.totalElements").value(1))
@@ -130,11 +125,12 @@ class UserGrpMngControllerTest {
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 상세 조회 테스트")
     public void userGrpMngDetail() throws Exception {
-        String jsonData = objectMapper.writeValueAsString(request);
-
         mockMvc.perform(post("/sys/usermng/userGrpMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonData)
+                .param("grpCd", grpCd)
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
+                .param("state", "U")
             ).andExpect(model().attribute("detailDto", detailDto))
             .andExpect(view().name("sys/usermng/userGrpMngDetail"))
             .andExpect(status().isOk());
@@ -146,12 +142,12 @@ class UserGrpMngControllerTest {
     @DisplayName("그룹 등록 테스트")
     public void userGrpMngInsert() throws Exception {
         String grpCd = "GRP_TEST2";
-        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        String jsonData = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(post("/sys/usermng/userGrpMngInsert.do")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonData)
+                .param("grpCd", grpCd)
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
             .andExpect(status().isOk());
     }
@@ -161,16 +157,15 @@ class UserGrpMngControllerTest {
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 등록 에러 테스트 : 빈 값")
     public void userGrpMngInsert_emptyValue() throws Exception {
-        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(null, grpNm, grpDesc);
-        String jsonData = objectMapper.writeValueAsString(request);
-
         mockMvc.perform(post("/sys/usermng/userGrpMngInsert.do")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonData)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grpCd", "")
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
         ).andExpect(
             result -> assertTrue(
                 Objects.requireNonNull(result.getResolvedException()).getClass()
-                    .isAssignableFrom(MethodArgumentNotValidException.class)
+                    .isAssignableFrom(BindException.class)
             )
         ).andReturn();
     }
@@ -180,18 +175,13 @@ class UserGrpMngControllerTest {
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 등록 에러 테스트 : 중복 코드")
     public void userGrpMngInsert_dupCode() throws Exception {
-        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        String jsonData = objectMapper.writeValueAsString(request);
-
         mockMvc.perform(post("/sys/usermng/userGrpMngInsert.do")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonData)
-        ).andExpect(
-            result -> assertTrue(
-                Objects.requireNonNull(result.getResolvedException()).getClass()
-                    .isAssignableFrom(DataIntegrityViolationException.class)
-            )
-        ).andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grpCd", grpCd)
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
+            ).andExpect(jsonPath("$.code").value("D"))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -201,12 +191,12 @@ class UserGrpMngControllerTest {
     public void userGrpMngUpdate() throws Exception {
         String grpNm = "테스트 그룹 수정";
         String grpDesc = "설명 수정";
-        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        String jsonData = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(put("/sys/usermng/userGrpMngUpdate.do")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonData)
+                .param("grpCd", grpCd)
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
             .andExpect(status().isOk());
     }
@@ -217,12 +207,12 @@ class UserGrpMngControllerTest {
     @DisplayName("그룹 삭제 테스트")
     public void userGrpMngDelete() throws Exception {
         String grpCd = "GRP_TEST2";
-        UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
-        String jsonData = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(delete("/sys/usermng/userGrpMngDelete.do")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonData)
+                .param("grpCd", grpCd)
+                .param("grpNm", grpNm)
+                .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
             .andExpect(status().isOk());
     }

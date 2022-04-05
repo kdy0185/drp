@@ -14,4 +14,5 @@ import lombok.RequiredArgsConstructor;
 public class UserGrpMngResponse {
 
     private final String grpCd; // 그룹 코드
+    private final String code; // 응답 코드
 }

@@ -1,9 +1,10 @@
-package com.jsplan.drp.domain.sys.usermng.entity;
+package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Class : UserGrpMngDto
@@ -16,6 +17,7 @@ public class UserGrpMngDto {
     @Data
     public static class UserGrpMngListDto {
 
+        private long rn;
         private String grpCd;
         private String grpNm;
         private String grpDesc;
@@ -39,6 +41,7 @@ public class UserGrpMngDto {
     }
 
     @Data
+    @NoArgsConstructor
     public static class UserGrpMngDetailDto {
 
         private String grpCd;
@@ -48,6 +51,7 @@ public class UserGrpMngDto {
         private String regDate;
         private String modUser;
         private String modDate;
+        private String state;
 
         @QueryProjection
         public UserGrpMngDetailDto(String grpCd, String grpNm, String grpDesc, String regUser,
@@ -59,7 +63,8 @@ public class UserGrpMngDto {
             this.regDate = regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             this.modUser = modUser;
             this.modDate =
-                modDate != null ? modDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null;
+                modDate != null ? modDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    : null;
         }
     }
 }

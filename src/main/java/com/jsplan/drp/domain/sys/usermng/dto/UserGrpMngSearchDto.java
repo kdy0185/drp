@@ -1,8 +1,9 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 /**
  * @Class : UserGrpMngSearchDto
@@ -11,11 +12,13 @@ import lombok.RequiredArgsConstructor;
  * @Description : 그룹 관리 Search DTO
  */
 @Getter
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserGrpMngSearchDto {
 
-    private final int pageNo; // 조회할 페이지 번호
-    private final int pageSize; // 페이지당 데이터 출력 수
-    private final String grpNm; // 그룹명
+    private int pageNo; // 조회할 페이지 번호
+    private int pageSize; // 페이지당 데이터 출력 수
+    private String grpCd; // 그룹 코드
+    private String grpNm; // 그룹명
 }

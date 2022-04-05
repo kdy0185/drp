@@ -4,6 +4,7 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @Class : UserGrpMngRequest
@@ -12,16 +13,19 @@ import lombok.NoArgsConstructor;
  * @Description : 그룹 관리 Request DTO
  */
 @Getter
-@NoArgsConstructor(force = true)
+@Setter
+@NoArgsConstructor
 public class UserGrpMngRequest {
 
     @NotBlank(message = "{js.valid.msg.required}")
-    private final String grpCd; // 그룹 코드
+    private String grpCd; // 그룹 코드
 
     @NotBlank(message = "{js.valid.msg.required}")
-    private final String grpNm; // 그룹명
+    private String grpNm; // 그룹명
 
-    private final String grpDesc; // 그룹 설명
+    private String grpDesc; // 그룹 설명
+
+    private String state; // 등록/수정 (등록 : I, 수정 : U)
 
     // Test 전용 생성자
     UserGrpMngRequest(String grpCd, String grpNm, String grpDesc) {

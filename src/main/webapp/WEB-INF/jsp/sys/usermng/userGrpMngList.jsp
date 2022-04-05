@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     /**
-     * @FileName : grpMngList.jsp
+     * @FileName : userGrpMngList.jsp
      * @Author : KDW
      * @Date : 2022-01-26
      * @Description : 그룹 관리
@@ -25,11 +25,11 @@
     <script type="text/javascript">
       $(function () {
         $.util.getSearchCondition();
-        searchGrpMng();
+        searchUserGrpMng();
       });
 
       // Ext Grid Model 정의 - 그룹
-      Ext.define("grpMngModel", {
+      Ext.define("userGrpMngModel", {
         extend: "Ext.data.Model",
         fields: [{
           name: "rn", // 순번
@@ -67,17 +67,17 @@
       });
 
       // Ext Grid Store 정의 - 그룹
-      var grpMngStore = Ext.create("Ext.data.Store", {
+      var userGrpMngStore = Ext.create("Ext.data.Store", {
         pageSize: defaultPageSize,
         autoLoad: false,
-        model: "grpMngModel",
+        model: "userGrpMngModel",
         proxy: {
           type: "ajax",
-          url: "/sys/usermng/grpMngSearch.do",
+          url: "/sys/usermng/userGrpMngSearch.do",
           reader: {
             type: "json",
-            root: "grpMngList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
@@ -85,7 +85,7 @@
           load: function (dataStore) {
             if (dataStore.pageSize
                 > dataStore.totalCount) dataStore.pageSize = dataStore.totalCount;
-            var textPoint = $("#grpMngGrid").prev().find(".sub-title-info");
+            var textPoint = $("#userGrpMngGrid").prev().find(".sub-title-info");
             textPoint.empty();
             var em = '<em class="sub-title-info-em">' + dataStore.pageSize + '</em>건 / 전체 '
                 + dataStore.totalCount + '건';
@@ -96,7 +96,7 @@
       });
 
       // 페이지 이동 시 파라미터 재생성 - 그룹
-      grpMngStore.on("beforeload", function (store, operation) {
+      userGrpMngStore.on("beforeload", function (store, operation) {
         var searchArea = $("div.search-area");
         $.util.setSearchStyle(searchArea);
 
@@ -104,7 +104,7 @@
         var grpNm = $('input[name="grpNm"]').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           grpNm: grpNm
         };
@@ -114,8 +114,8 @@
         Ext.QuickTips.init();
 
         // Ext Grid 정의 - 그룹
-        var grpMngGrid = Ext.create("Ext.grid.Panel", {
-          store: grpMngStore,
+        var userGrpMngGrid = Ext.create("Ext.grid.Panel", {
+          store: userGrpMngStore,
           loadMask: true,
           plugins: "bufferedrenderer",
           callbackKey: "callback",
@@ -204,42 +204,42 @@
           }],
           height: comHeight,
           autoWidth: true,
-          renderTo: "grpMngGrid",
+          renderTo: "userGrpMngGrid",
           viewConfig: {
             stripeRows: true,
             enableTextSelection: true,
             listeners: {
               cellclick: function (grid, htmlElement, columnIndex, dataRecord) {
-                var form = $('form[name="grpMngForm"]');
+                var form = $('form[name="userGrpMngForm"]');
                 $(form).find('input[name="grpCd"]').val(dataRecord.data.grpCd);
               },
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
-                var form = $('form[name="grpMngForm"]');
+                var form = $('form[name="userGrpMngForm"]');
                 $(form).find('input[name="grpCd"]').val(dataRecord.data.grpCd);
-                readGrpMng('U');
+                readUserGrpMng('U');
               }
             }
           },
           dockedItems: [{
             xtype: "pagingtoolbar",
-            store: grpMngStore,
+            store: userGrpMngStore,
             dock: "bottom",
             displayInfo: true
           }],
           enableKeyEvents: true
         });
-        mainGrid = grpMngGrid;
+        mainGrid = userGrpMngGrid;
       });
 
       // 조회
-      function searchGrpMng() {
-        grpMngStore.loadPage(1);
+      function searchUserGrpMng() {
+        userGrpMngStore.loadPage(1);
         $.util.setSearchCondition();
       }
 
       // 상세
-      function readGrpMng(state) {
-        var form = $('form[name="grpMngForm"]');
+      function readUserGrpMng(state) {
+        var form = $('form[name="userGrpMngForm"]');
         var grpCd = state === "U" ? $(form).find('input[name="grpCd"]').val() : "";
         if (state === "U" && grpCd === "") {
           alert("그룹을 선택하세요.");
@@ -248,7 +248,7 @@
           var width = 750;
           $.ajax({
             type: "post",
-            url: "/sys/usermng/grpMngDetail.do",
+            url: "/sys/usermng/userGrpMngDetail.do",
             data: {
               grpCd: grpCd,
               state: state
@@ -262,10 +262,10 @@
       }
 
       // 그룹 엑셀
-      function excelGrpMng() {
-        var form = $('form[name="grpMngSearchForm"]');
+      function excelUserGrpMng() {
+        var form = $('form[name="userGrpMngSearchForm"]');
         $(form).attr({
-          action: "/sys/usermng/grpMngExcel.do"
+          action: "/sys/usermng/userGrpMngExcel.do"
         }).submit();
       }
     </script>
@@ -280,7 +280,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="userMngVO" name="grpMngSearchForm" method="post">
+            <form:form modelAttribute="searchDto" name="userGrpMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-8 col-sm-12 col-xs-12 padding_l25">
@@ -289,12 +289,12 @@
                             </div>
                             <div class="col-md-11 col-sm-12 col-xs-12 padding_none">
                                 <form:input path="grpNm" cssClass="form-control input-sm"
-                                            onkeydown="if(event.keyCode==13){searchGrpMng(); return false;}"/>
+                                            onkeydown="if(event.keyCode==13){searchUserGrpMng(); return false;}"/>
                             </div>
                         </div>
                         <div class="col-md-offset-3 col-md-1 col-sm-12 col-xs-12">
                             <div class="search-btn-area">
-                                <button type="button" onclick="searchGrpMng();" class="btn btn-gray">
+                                <button type="button" onclick="searchUserGrpMng();" class="btn btn-gray">
                                     <i class="fa fa-search"></i>조회
                                 </button>
                             </div>
@@ -303,7 +303,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="userMngVO" name="grpMngForm" method="post">
+            <form:form modelAttribute="searchDto" name="userGrpMngForm" method="post">
                 <form:hidden path="grpCd"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">
@@ -317,7 +317,7 @@
                             <li class="pull-right">
                                 <div class="text-right">
                                     <div class="grid-option-box">
-                                        <button type="button" onclick="excelGrpMng();" class="btn btn-green">
+                                        <button type="button" onclick="excelUserGrpMng();" class="btn btn-green">
                                             <i class="fa fa-file-excel-o" aria-hidden="true"></i><span>EXCEL</span>
                                         </button>
                                         <button type="button" onclick="$.util.screenSlide();"
@@ -330,7 +330,7 @@
                                         </button>
                                         <form:select path="pageSize"
                                                      cssClass="form-control input-sm pull-right"
-                                                     onchange="grpMngStore.loadPage(1);">
+                                                     onchange="userGrpMngStore.loadPage(1);">
                                             <c:forEach var="pageVO" items="${pageList}" varStatus="status">
                                                 <form:option value="${pageVO.comCd}" label="${pageVO.comNm}"/>
                                             </c:forEach>
@@ -339,12 +339,12 @@
                                 </div>
                             </li>
                         </ul>
-                        <div id="grpMngGrid"></div>
+                        <div id="userGrpMngGrid"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readGrpMng('I');" class="btn btn-red">
+                            <button type="button" onclick="readUserGrpMng('I');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readGrpMng('U');" class="btn btn-red">
+                            <button type="button" onclick="readUserGrpMng('U');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                         </div>

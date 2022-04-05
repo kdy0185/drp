@@ -12,8 +12,8 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
@@ -100,8 +100,8 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.searchPageList(anyString(), any())).willReturn(pageList);
 
         // when
-        Page<UserGrpMngListDto> resultList = userGrpMngService.selectGrpMngList(
-            new UserGrpMngSearchDto(0, 20, grpNm));
+        Page<UserGrpMngListDto> resultList = userGrpMngService.selectUserGrpMngList(
+            new UserGrpMngSearchDto(0, 20, null, grpNm));
 
         // then
         assertThat(resultList.getNumberOfElements()).isEqualTo(1);
@@ -116,7 +116,7 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
         // when
-        UserGrpMngDetailDto findDetail = userGrpMngService.selectGrpMngDetail(request);
+        UserGrpMngDetailDto findDetail = userGrpMngService.selectUserGrpMngDetail(request);
 
         // then
         assertThat(findDetail.getGrpCd()).isEqualTo(grpCd);
@@ -133,8 +133,8 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
         // when
-        userGrpMngService.insertGrpMngData(request);
-        String findGrpCd = userGrpMngService.selectGrpMngDetail(request).getGrpCd();
+        userGrpMngService.insertUserGrpMngData(request);
+        String findGrpCd = userGrpMngService.selectUserGrpMngDetail(request).getGrpCd();
 
         // then
         assertThat(findGrpCd).isEqualTo(grpCd);
@@ -150,7 +150,7 @@ class UserGrpMngServiceTest {
         when(userGrpMngRepository.findById(any())).thenReturn(Optional.of(userGrpMng));
 
         // when
-        userGrpMngService.updateGrpMngData(request);
+        userGrpMngService.updateUserGrpMngData(request);
 
         // then
         assertThat(userGrpMng.getGrpNm()).isEqualTo(request.getGrpNm());
@@ -161,7 +161,7 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 삭제 테스트")
     public void deleteGrpMngData() throws Exception {
         // when
-        userGrpMngService.deleteGrpMngData(request);
+        userGrpMngService.deleteUserGrpMngData(request);
 
         // then
         verify(userGrpMngRepository, times(1)).deleteById(request.getGrpCd());

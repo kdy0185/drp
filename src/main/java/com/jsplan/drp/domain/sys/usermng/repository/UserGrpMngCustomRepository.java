@@ -1,7 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,4 +29,12 @@ public interface UserGrpMngCustomRepository {
      * @return UserGrpMngDto (그룹 DTO)
      */
     UserGrpMngDetailDto findByGrpCd(String grpCd);
+
+    /**
+     * <p>사용자 확인</p>
+     *
+     * @param grpCd (그룹 코드)
+     * @return boolean (사용자 존재 여부)
+     */
+    boolean existsUserMngByGrpCd(String grpCd);
 }
