@@ -1,5 +1,7 @@
 package com.jsplan.drp.global.obj.repository;
 
+import com.jsplan.drp.global.obj.entity.BaseListDto;
+import com.jsplan.drp.global.util.RowNumUtil;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.PathBuilder;
@@ -86,7 +88,9 @@ public abstract class Querydsl5RepositorySupport {
      *
      * @return Querydsl (Querydsl 객체)
      */
-    protected Querydsl getQuerydsl() { return querydsl; }
+    protected Querydsl getQuerydsl() {
+        return querydsl;
+    }
 
     /**
      * <p>EntityManager Getter</p>
@@ -118,21 +122,37 @@ public abstract class Querydsl5RepositorySupport {
     }
 
     /**
-     * <p>목록 Query + Count Query + Paging 적용</p>
+     * <p>목록 쿼리 + 카운트 쿼리 + Paging + RowNum 적용</p>
      *
-     * @param pageable (Pageable 객체)
+     * @param pageable     (Pageable 객체)
      * @param contentQuery (Function 객체)
-     * @param countQuery (Function 객체)
+     * @param countQuery   (Function 객체)
      * @return Page (Page 객체)
      */
-    protected <T> Page<T> applyPagination(Pageable pageable,
+    protected <T extends BaseListDto> Page<T> applyPagination(Pageable pageable,
         Function<JPAQueryFactory, JPAQuery<T>> contentQuery,
         Function<JPAQueryFactory, JPAQuery<Long>> countQuery) {
         JPAQuery<T> jpaContentQuery = contentQuery.apply(getQueryFactory());
-        List<T> content = getQuerydsl().applyPagination(pageable,
-            jpaContentQuery).fetch();
+        List<T> content = getQuerydsl().applyPagination(pageable, jpaContentQuery).fetch();
+        content = addRowNum(content, pageable.getPageNumber() + 1, pageable.getPageSize());
+
         JPAQuery<Long> countResult = countQuery.apply(getQueryFactory());
-        return PageableExecutionUtils.getPage(content, pageable,
-            countResult::fetchOne);
+
+        return PageableExecutionUtils.getPage(content, pageable, countResult::fetchOne);
+    }
+
+    /**
+     * <p>RowNum 추가</p>
+     *
+     * @param content  (조회한 목록)
+     * @param pageNo   (현재 페이지 번호)
+     * @param pageSize (페이지당 데이터 출력 수)
+     * @return List (RowNum 추가 목록)
+     */
+    protected <T extends BaseListDto> List<T> addRowNum(List<T> content, long pageNo,
+        int pageSize) {
+        RowNumUtil rowNumUtil = new RowNumUtil(content.size(), pageNo, pageSize);
+        content.forEach(v -> v.setRn(rowNumUtil.getRn()));
+        return content;
     }
 }

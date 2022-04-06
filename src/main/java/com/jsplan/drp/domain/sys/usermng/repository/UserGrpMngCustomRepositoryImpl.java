@@ -3,15 +3,17 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserMng.userMng;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMngDto_UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
-import com.jsplan.drp.global.util.RowNumUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
@@ -39,43 +41,49 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param pageable (페이징 정보)
      * @return Page (페이징 목록)
      */
+    @Override
     public Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable) {
-        Page<UserGrpMngListDto> pageList = applyPagination(pageable, contentQuery ->
-            contentQuery.select(new QUserGrpMngDto_UserGrpMngListDto(
-                    userGrpMng.grpCd,
-                    userGrpMng.grpNm,
-                    userGrpMng.grpDesc,
-                    Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                        userGrpMng.regUser),
-                    userGrpMng.regDate,
-                    Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                        userGrpMng.modUser),
-                    userGrpMng.modDate))
-                .from(userGrpMng)
-                .where(grpNmLike(grpNm))
-                .orderBy(userGrpMng.grpCd.asc()
-                ), countQuery ->
-            countQuery.select(userGrpMng.count())
-                .from(userGrpMng)
-                .where(grpNmLike(grpNm))
+        return applyPagination(pageable,
+            contentQuery -> getContentQuery(grpNm, contentQuery),
+            countQuery -> getCountQuery(grpNm, countQuery)
         );
-
-        return addRowNum(pageable, pageList);
     }
 
     /**
-     * <p>RowNum 추가</p>
+     * <p>그룹 목록 쿼리</p>
      *
-     * @param pageable (페이징 정보)
-     * @param pageList (페이징 목록)
-     * @return Page (페이징 목록)
+     * @param grpNm        (그룹명)
+     * @param contentQuery (쿼리 Factory)
+     * @return JPAQuery (생성된 쿼리문)
      */
-    private Page<UserGrpMngListDto> addRowNum(Pageable pageable,
-        Page<UserGrpMngListDto> pageList) {
-        RowNumUtil rowNumUtil = new RowNumUtil(pageList.getTotalElements(),
-            pageable.getPageNumber() + 1, pageable.getPageSize());
-        pageList.getContent().forEach(v -> v.setRn(rowNumUtil.getRn()));
-        return pageList;
+    private JPAQuery<UserGrpMngListDto> getContentQuery(String grpNm,
+        JPAQueryFactory contentQuery) {
+        return contentQuery.select(new QUserGrpMngListDto(
+                userGrpMng.grpCd,
+                userGrpMng.grpNm,
+                userGrpMng.grpDesc,
+                Expressions.simpleTemplate(String.class, "getUserNm({0})",
+                    userGrpMng.regUser),
+                userGrpMng.regDate,
+                Expressions.simpleTemplate(String.class, "getUserNm({0})",
+                    userGrpMng.modUser),
+                userGrpMng.modDate))
+            .from(userGrpMng)
+            .where(grpNmLike(grpNm))
+            .orderBy(userGrpMng.grpCd.asc());
+    }
+
+    /**
+     * <p>그룹 목록 카운트 쿼리</p>
+     *
+     * @param grpNm      (그룹명)
+     * @param countQuery (쿼리 Factory)
+     * @return JPAQuery (생성된 쿼리문)
+     */
+    private JPAQuery<Long> getCountQuery(String grpNm, JPAQueryFactory countQuery) {
+        return countQuery.select(userGrpMng.count())
+            .from(userGrpMng)
+            .where(grpNmLike(grpNm));
     }
 
     /**
@@ -94,8 +102,9 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param grpCd (그룹 코드)
      * @return UserGrpMngDto (그룹 DTO)
      */
+    @Override
     public UserGrpMngDetailDto findByGrpCd(String grpCd) {
-        return select(new QUserGrpMngDto_UserGrpMngDetailDto(
+        return select(new QUserGrpMngDetailDto(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
             userGrpMng.grpDesc,
@@ -116,11 +125,24 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param grpCd (그룹 코드)
      * @return boolean (사용자 존재 여부)
      */
+    @Override
     public boolean existsUserMngByGrpCd(String grpCd) {
         Long userMngCnt = select(userMng.count())
             .from(userMng)
             .where(userMng.userGrpMng.grpCd.eq(grpCd))
             .fetchOne();
         return userMngCnt != null && userMngCnt > 0;
+    }
+
+    /**
+     * <p>그룹 엑셀 목록</p>
+     *
+     * @param grpNm (그룹명)
+     * @return List (그룹 목록)
+     */
+    @Override
+    public List<UserGrpMngListDto> searchExcelList(String grpNm) {
+        List<UserGrpMngListDto> excelList = getContentQuery(grpNm, getQueryFactory()).fetch();
+        return addRowNum(excelList, 1, excelList.size());
     }
 }

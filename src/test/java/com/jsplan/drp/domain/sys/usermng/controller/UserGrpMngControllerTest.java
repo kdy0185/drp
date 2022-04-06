@@ -7,13 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import java.util.Locale;
 import java.util.Objects;
@@ -131,8 +130,7 @@ class UserGrpMngControllerTest {
                 .param("grpNm", grpNm)
                 .param("grpDesc", grpDesc)
                 .param("state", "U")
-            ).andExpect(model().attribute("detailDto", detailDto))
-            .andExpect(view().name("sys/usermng/userGrpMngDetail"))
+            ).andExpect(view().name("sys/usermng/userGrpMngDetail"))
             .andExpect(status().isOk());
     }
 

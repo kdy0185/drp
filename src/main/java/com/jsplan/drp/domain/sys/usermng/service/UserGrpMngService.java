@@ -4,9 +4,10 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -116,5 +117,15 @@ public class UserGrpMngService {
      */
     private boolean existsUserMngData(UserGrpMngRequest request) {
         return userGrpMngRepository.existsUserMngByGrpCd(request.getGrpCd());
+    }
+
+    /**
+     * <p>그룹 엑셀 목록</p>
+     *
+     * @param searchDto (조회 조건)
+     * @return List (그룹 목록)
+     */
+    public List<UserGrpMngListDto> selectUserGrpMngExcelList(UserGrpMngSearchDto searchDto) {
+        return userGrpMngRepository.searchExcelList(searchDto.getGrpNm());
     }
 }
