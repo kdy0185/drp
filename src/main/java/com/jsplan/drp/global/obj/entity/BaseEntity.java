@@ -8,6 +8,12 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * @Class : BaseEntity
+ * @Author : KDW
+ * @Date : 2022-04-06
+ * @Description : JPA Auditing Entity
+ */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
