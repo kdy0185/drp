@@ -9,6 +9,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * @Class : BaseTimeEntity
+ * @Author : KDW
+ * @Date : 2022-04-06
+ * @Description : JPA Auditing Time Entity
+ */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
