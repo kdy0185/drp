@@ -22,14 +22,14 @@
           url: "/sys/usermng/userGrpMngInsert.do",
           data: $(form).serialize(),
           success: function (res) {
-            if (res.code === "S") {
+            if (res.dataStatus === "SUCCESS") {
               alert("등록 되었습니다.");
               $.util.closeDialog();
               searchUserGrpMng();
-            } else if (res.code === "D") {
+            } else if (res.dataStatus === "DUPLICATE") {
               alert("중복된 그룹 코드입니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + res.code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -49,12 +49,12 @@
           url: "/sys/usermng/userGrpMngUpdate.do",
           data: $(form).serialize(),
           success: function (res) {
-            if (res.code === "S") {
+            if (res.dataStatus === "SUCCESS") {
               alert("수정 되었습니다.");
               $.util.closeDialog();
               searchUserGrpMng();
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + res.code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -72,14 +72,14 @@
         url: "/sys/usermng/userGrpMngDelete.do",
         data: $(form).serialize(),
         success: function (res) {
-          if (res.code === "S") {
+          if (res.dataStatus === "SUCCESS") {
             alert("삭제 되었습니다.");
             $.util.closeDialog();
             searchUserGrpMng();
-          } else if (res.code === "F") {
+          } else if (res.dataStatus === "CONSTRAINT") {
             alert("사용자가 등록된 그룹은 삭제할 수 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + res.code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });

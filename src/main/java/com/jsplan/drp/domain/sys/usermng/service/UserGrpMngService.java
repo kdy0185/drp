@@ -7,6 +7,7 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
+import com.jsplan.drp.global.obj.entity.DataStatus;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -58,10 +59,10 @@ public class UserGrpMngService {
     @Transactional
     public UserGrpMngResponse insertUserGrpMngData(UserGrpMngRequest request) {
         if (validateDupGrpMngData(request)) {
-            return new UserGrpMngResponse(null, "D");
+            return new UserGrpMngResponse(null, DataStatus.DUPLICATE);
         } else {
             UserGrpMng userGrpMng = userGrpMngRepository.save(request.toEntity());
-            return new UserGrpMngResponse(userGrpMng.getGrpCd(), "S");
+            return new UserGrpMngResponse(userGrpMng.getGrpCd(), DataStatus.SUCCESS);
         }
     }
 
@@ -90,7 +91,7 @@ public class UserGrpMngService {
         UserGrpMng userGrpMng = userGrpMngRepository.findById(request.getGrpCd())
             .orElseThrow(NoSuchElementException::new);
         userGrpMng.update(request);
-        return new UserGrpMngResponse(userGrpMng.getGrpCd(), "S");
+        return new UserGrpMngResponse(userGrpMng.getGrpCd(), DataStatus.SUCCESS);
     }
 
     /**
@@ -102,10 +103,10 @@ public class UserGrpMngService {
     @Transactional
     public UserGrpMngResponse deleteUserGrpMngData(UserGrpMngRequest request) {
         if (existsUserMngData(request)) { // 그룹 내 사용자가 존재할 경우
-            return new UserGrpMngResponse(request.getGrpCd(), "F");
+            return new UserGrpMngResponse(request.getGrpCd(), DataStatus.CONSTRAINT);
         } else {
             userGrpMngRepository.deleteById(request.getGrpCd());
-            return new UserGrpMngResponse(request.getGrpCd(), "S");
+            return new UserGrpMngResponse(request.getGrpCd(), DataStatus.SUCCESS);
         }
     }
 

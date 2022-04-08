@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
+import com.jsplan.drp.global.obj.entity.DataStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -14,5 +15,5 @@ import lombok.RequiredArgsConstructor;
 public class UserGrpMngResponse {
 
     private final String grpCd; // 그룹 코드
-    private final String code; // 응답 코드
+    private final DataStatus dataStatus; // 응답 상태
 }
