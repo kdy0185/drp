@@ -1,6 +1,7 @@
 package com.jsplan.drp.global.exception.entity;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @Class : ErrorStatus
@@ -9,6 +10,7 @@ import lombok.Getter;
  * @Description : 예외 정보가 담긴 enum Class
  */
 @Getter
+@RequiredArgsConstructor
 public enum ErrorStatus {
     MESSAGE_NOT_READABLE("M400", "입력 형식이 올바르지 않습니다."),
     METHOD_NOT_VALID("V400", "요청 값이 올바르지 않습니다."),
@@ -17,9 +19,4 @@ public enum ErrorStatus {
 
     private final String code; // 예외 코드
     private final String message; // 예외 메시지
-
-    ErrorStatus(String code, String message) {
-        this.code = code;
-        this.message = message;
-    }
 }
