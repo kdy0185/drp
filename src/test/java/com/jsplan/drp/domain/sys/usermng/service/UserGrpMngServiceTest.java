@@ -85,7 +85,7 @@ class UserGrpMngServiceTest {
         ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate,
             LocalDateTime.class);
 
-        searchDto = UserGrpMngSearchDtoBuilder.build(0, 20, grpNm);
+        searchDto = UserGrpMngSearchDtoBuilder.build(0, 20, null, grpNm);
 
         listDto = new UserGrpMngListDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser, modDate);
         detailDto = new UserGrpMngDetailDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser,

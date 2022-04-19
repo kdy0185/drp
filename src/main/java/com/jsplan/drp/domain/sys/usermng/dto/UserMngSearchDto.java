@@ -1,6 +1,8 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.jsplan.drp.global.obj.entity.UseStatus;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 //@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class UserMngSearchDto {
 
     private int pageNo; // 조회할 페이지 번호
@@ -24,17 +27,5 @@ public class UserMngSearchDto {
 
     public UserMngSearchDto(String searchCd) {
         this.searchCd = searchCd;
-    }
-
-    // Test 전용 생성자
-    UserMngSearchDto(int pageNo, int pageSize, String grpCd, String searchCd,
-        String searchWord,
-        UseStatus useYn) {
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
-        this.grpCd = grpCd;
-        this.searchCd = searchCd;
-        this.searchWord = searchWord;
-        this.useYn = useYn;
     }
 }

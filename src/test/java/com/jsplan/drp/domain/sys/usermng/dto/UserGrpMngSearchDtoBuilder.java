@@ -9,7 +9,7 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 public class UserGrpMngSearchDtoBuilder {
 
     // Test 전용 생성자
-    public static UserGrpMngSearchDto build(int pageNo, int pageSize, String grpNm) {
-        return new UserGrpMngSearchDto(pageNo, pageSize, grpNm);
+    public static UserGrpMngSearchDto build(int pageNo, int pageSize, String grpCd, String grpNm) {
+        return new UserGrpMngSearchDto(pageNo, pageSize, grpCd, grpNm);
     }
 }
