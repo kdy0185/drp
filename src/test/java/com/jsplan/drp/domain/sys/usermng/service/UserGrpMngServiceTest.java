@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDtoBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
@@ -51,6 +52,7 @@ class UserGrpMngServiceTest {
 
     UserGrpMngRequest request;
     UserGrpMng userGrpMng;
+    UserGrpMngSearchDto searchDto;
     UserGrpMngListDto listDto;
     UserGrpMngDetailDto detailDto;
 
@@ -83,6 +85,8 @@ class UserGrpMngServiceTest {
         ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate,
             LocalDateTime.class);
 
+        searchDto = UserGrpMngSearchDtoBuilder.build(0, 20, grpNm);
+
         listDto = new UserGrpMngListDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser, modDate);
         detailDto = new UserGrpMngDetailDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser,
             modDate);
@@ -90,7 +94,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 목록 조회 테스트")
-    public void selectGrpMngList() throws Exception {
+    public void selectUserGrpMngList() throws Exception {
         // given
         List<UserGrpMngListDto> list = new ArrayList<>();
         list.add(listDto);
@@ -100,8 +104,7 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.searchPageList(anyString(), any())).willReturn(pageList);
 
         // when
-        Page<UserGrpMngListDto> resultList = userGrpMngService.selectUserGrpMngList(
-            new UserGrpMngSearchDto(0, 20, null, grpNm));
+        Page<UserGrpMngListDto> resultList = userGrpMngService.selectUserGrpMngList(searchDto);
 
         // then
         assertThat(resultList.getNumberOfElements()).isEqualTo(1);
@@ -111,7 +114,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 상세 조회 테스트")
-    public void selectGrpMngDetail() throws Exception {
+    public void selectUserGrpMngDetail() throws Exception {
         // mocking
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
 
@@ -127,7 +130,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 등록 테스트")
-    public void insertGrpMngData() throws Exception {
+    public void insertUserGrpMngData() throws Exception {
         // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
         given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
@@ -142,7 +145,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 수정 테스트")
-    public void updateGrpMngData() throws Exception {
+    public void updateUserGrpMngData() throws Exception {
         // given
         request = UserGrpMngRequestBuilder.build("GRP_TEST", "그룹 수정", "설명 수정");
 
@@ -159,7 +162,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 삭제 테스트")
-    public void deleteGrpMngData() throws Exception {
+    public void deleteUserGrpMngData() throws Exception {
         // when
         userGrpMngService.deleteUserGrpMngData(request);
 

@@ -127,8 +127,6 @@ class UserGrpMngControllerTest {
         mockMvc.perform(post("/sys/usermng/userGrpMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("grpCd", grpCd)
-                .param("grpNm", grpNm)
-                .param("grpDesc", grpDesc)
                 .param("state", "U")
             ).andExpect(view().name("sys/usermng/userGrpMngDetail"))
             .andExpect(status().isOk());
@@ -147,6 +145,7 @@ class UserGrpMngControllerTest {
                 .param("grpNm", grpNm)
                 .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
     }
 
@@ -178,7 +177,7 @@ class UserGrpMngControllerTest {
                 .param("grpCd", grpCd)
                 .param("grpNm", grpNm)
                 .param("grpDesc", grpDesc)
-            ).andExpect(jsonPath("$.code").value("D"))
+            ).andExpect(jsonPath("$.dataStatus").value("DUPLICATE"))
             .andExpect(status().isOk());
     }
 
@@ -196,6 +195,7 @@ class UserGrpMngControllerTest {
                 .param("grpNm", grpNm)
                 .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
     }
 
@@ -212,6 +212,7 @@ class UserGrpMngControllerTest {
                 .param("grpNm", grpNm)
                 .param("grpDesc", grpDesc)
             ).andExpect(jsonPath("$.grpCd").value(grpCd))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
     }
 }

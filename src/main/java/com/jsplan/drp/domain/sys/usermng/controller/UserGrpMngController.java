@@ -105,7 +105,7 @@ public class UserGrpMngController {
      * <p>그룹 등록</p>
      *
      * @param request (그룹 정보)
-     * @return UserGrpMngResponse (그룹 코드)
+     * @return UserGrpMngResponse (응답 정보)
      */
     @PostMapping(value = "/sys/usermng/userGrpMngInsert.do")
     public @ResponseBody
@@ -117,7 +117,7 @@ public class UserGrpMngController {
      * <p>그룹 수정</p>
      *
      * @param request (그룹 정보)
-     * @return UserGrpMngResponse (그룹 코드)
+     * @return UserGrpMngResponse (응답 정보)
      */
     @PutMapping(value = "/sys/usermng/userGrpMngUpdate.do")
     public @ResponseBody
@@ -129,7 +129,7 @@ public class UserGrpMngController {
      * <p>그룹 삭제</p>
      *
      * @param request (그룹 정보)
-     * @return UserGrpMngResponse (그룹 코드)
+     * @return UserGrpMngResponse (응답 정보)
      */
     @DeleteMapping(value = "/sys/usermng/userGrpMngDelete.do")
     public @ResponseBody
