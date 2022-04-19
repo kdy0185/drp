@@ -2,6 +2,7 @@ package com.jsplan.drp.global.config;
 
 import com.jsplan.drp.global.bean.EnumMapperFactory;
 import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.entity.UseStatus;
 import java.util.LinkedHashMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ public class EnumMapperConfig {
     public EnumMapperFactory createEnumMapperFactory() {
         EnumMapperFactory enumMapperFactory = new EnumMapperFactory(new LinkedHashMap<>());
         enumMapperFactory.put("DataStatus", DataStatus.class);
+        enumMapperFactory.put("UseStatus", UseStatus.class);
         return enumMapperFactory;
     }
 }

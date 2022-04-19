@@ -1,20 +1,23 @@
 package com.jsplan.drp.domain.sys.usermng.entity;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
+import com.jsplan.drp.global.obj.entity.UseStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * @Class : UserMng
@@ -23,7 +26,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * @Description : 사용자 관리 Entity
  */
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "SYS_DRP_USER")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,7 +52,8 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     private String userType; // 사용자 유형
 
     @Column(name = "USE_YN", length = 1)
-    private String useYn; // 사용 여부
+    @Enumerated(EnumType.STRING)
+    private UseStatus useYn; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GRP_CD")
@@ -66,6 +69,19 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         userGrpMng.getUserMng().add(this);
     }
 
+    @Builder
+    public UserMng(String userId, String userNm, String userPw, String mobileNum,
+        String email, String userType, UseStatus useYn, UserGrpMng userGrpMng) {
+        this.userId = userId;
+        this.userNm = userNm;
+        this.userPw = userPw;
+        this.mobileNum = mobileNum;
+        this.email = email;
+        this.userType = userType;
+        this.useYn = useYn;
+        setUserGrpMng(userGrpMng);
+    }
+
     @Override
     public String getId() {
         return userId;
@@ -74,5 +90,20 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     @Override
     public boolean isNew() {
         return getRegDate() == null;
+    }
+
+    // 엔티티 수정
+    public void update(UserMngRequest request) {
+        this.userNm = request.getUserNm();
+        if (request.getUserPw() != null) {
+            this.userPw = request.getUserPw();
+        }
+        this.mobileNum = request.getMobileNum();
+        this.email = request.getEmail();
+        this.userType = request.getUserType();
+        this.useYn = request.getUseYn();
+
+        // FK 변경
+//        setUserGrpMng(UserGrpMng.builder().grpCd(request.getGrpCd()).build());
     }
 }

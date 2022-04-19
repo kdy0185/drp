@@ -27,7 +27,7 @@ public interface UserGrpMngCustomRepository {
      * <p>그룹 상세</p>
      *
      * @param grpCd (그룹 코드)
-     * @return UserGrpMngDto (그룹 DTO)
+     * @return UserGrpMngDetailDto (그룹 DTO)
      */
     UserGrpMngDetailDto findByGrpCd(String grpCd);
 
