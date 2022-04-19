@@ -87,7 +87,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
     }
 
     /**
-     * <p>그룹 목록 조회 조건 : like</p>
+     * <p>그룹 목록 조회 조건 : 그룹명</p>
      *
      * @param grpNm (그룹명)
      * @return BooleanExpression (Boolean 표현식)

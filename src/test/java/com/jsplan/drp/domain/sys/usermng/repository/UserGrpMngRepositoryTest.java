@@ -33,7 +33,7 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 목록 조회 테스트")
-    public void selectGrpMngList() throws Exception {
+    public void selectUserGrpMngList() throws Exception {
         // given
         String grpNm = "사용자";
         PageRequest pageRequest = PageRequest.of(0, 20);
@@ -47,23 +47,23 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 상세 조회 테스트")
-    public void selectGrpMngDetail() throws Exception {
+    public void selectUserGrpMngDetail() throws Exception {
         // given
         String grpCd = "GRP_MNG";
 
         // when
-        UserGrpMngDetailDto userGrpMng = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDto detailDto = userGrpMngRepository.findByGrpCd(grpCd);
 
         // then
-        assertThat(userGrpMng.getGrpNm()).isEqualTo("관리자 그룹");
-        assertThat(userGrpMng.getRegUser()).isEqualTo("시스템 관리자");
-        assertThat(userGrpMng.getRegDate()).isEqualTo("2022-01-25 11:47:06");
+        assertThat(detailDto.getGrpNm()).isEqualTo("관리자 그룹");
+        assertThat(detailDto.getRegUser()).isEqualTo("시스템 관리자");
+        assertThat(detailDto.getRegDate()).isEqualTo("2022-01-25 11:47:06");
     }
 
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 등록 테스트")
-    public void insertGrpMngData() throws Exception {
+    public void insertUserGrpMngData() throws Exception {
         // given
         String grpCd = "GRP_TEST";
         String grpNm = "테스트 그룹";
@@ -82,7 +82,7 @@ class UserGrpMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 수정 테스트")
-    public void updateGrpMngData() throws Exception {
+    public void updateUserGrpMngData() throws Exception {
         // given
         String grpCd = "GRP_MNG";
         String grpNm = "관리자 그룹 수정";
@@ -105,7 +105,7 @@ class UserGrpMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 삭제 테스트")
-    public void deleteGrpMngData() throws Exception {
+    public void deleteUserGrpMngData() throws Exception {
         // given
         String grpCd = "GRP_TEST";
         String grpNm = "테스트 그룹";

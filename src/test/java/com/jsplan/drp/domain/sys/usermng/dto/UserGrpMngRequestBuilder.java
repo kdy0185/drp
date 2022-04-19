@@ -4,7 +4,7 @@ package com.jsplan.drp.domain.sys.usermng.dto;
  * @Class : UserGrpMngRequestBuilder
  * @Author : KDW
  * @Date : 2022-03-23
- * @Description : 그룹 관리 Request Builder
+ * @Description : 그룹 관리 Request DTO Builder
  */
 public class UserGrpMngRequestBuilder {
 

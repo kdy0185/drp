@@ -59,6 +59,7 @@ public class UserGrpMng extends BaseEntity implements Persistable<String> {
         return getRegDate() == null;
     }
 
+    // 엔티티 수정
     public void update(UserGrpMngRequest request) {
         this.grpNm = request.getGrpNm();
         this.grpDesc = request.getGrpDesc();
