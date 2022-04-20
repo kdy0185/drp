@@ -11,8 +11,8 @@ import com.jsplan.drp.global.obj.entity.UseStatus;
 public class UserMngSearchDtoBuilder {
 
     // Test 전용 생성자
-    public static UserMngSearchDto build(int pageNo, int pageSize, String grpCd, String searchCd,
-        String searchWord, UseStatus useYn) {
-        return new UserMngSearchDto(pageNo, pageSize, grpCd, searchCd, searchWord, useYn);
+    public static UserMngSearchDto build(int pageNo, int pageSize, String grpCd, String userId,
+        String searchCd, String searchWord, UseStatus useYn) {
+        return new UserMngSearchDto(pageNo, pageSize, grpCd, userId, searchCd, searchWord, useYn);
     }
 }

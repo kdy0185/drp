@@ -3,6 +3,7 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,13 +31,13 @@ public class UserMngRequest {
     @NotBlank(message = "{js.valid.msg.required}")
     private String userNm; // 성명
 
-    @Pattern(regexp = "^.*(?=^.{8,16}$)(?=.*\\d)(?=.*[a-zA-Z]).*$", message = "{js.valid.msg.pwCheck}")
+    @Pattern(regexp = "^((?=^.{8,16}$)(?=.*\\d)(?=.*[a-zA-Z]).*)?$", message = "{js.valid.msg.pwCheck}")
     private String userPw; // 비밀번호
 
-    @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$", message = "{js.valid.msg.mobileNum}")
+    @Pattern(regexp = "^(01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4}))?$", message = "{js.valid.msg.mobileNum}")
     private String mobileNum; // 휴대폰 번호
 
-    @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", message = "{js.valid.msg.email}")
+    @Email(message = "{js.valid.msg.email}")
     private String email; // 이메일
 
     @NotBlank(message = "{js.valid.msg.required}")

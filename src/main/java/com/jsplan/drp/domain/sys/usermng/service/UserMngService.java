@@ -8,6 +8,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
 import com.jsplan.drp.global.obj.entity.DataStatus;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +104,11 @@ public class UserMngService {
      */
     @Transactional
     public UserMngResponse updateUserMngData(UserMngRequest request) {
+        // 1. 사용자 등록
+        // BCrypt 패스워드 암호화
+        String encodePw = passwordEncoder.encode(request.getUserPw());
+        request.setUserPw(encodePw);
+
         UserMng userMng = userMngRepository.findById(request.getUserId())
             .orElseThrow(NoSuchElementException::new);
         userMng.update(request);
@@ -119,5 +125,16 @@ public class UserMngService {
     public UserMngResponse deleteUserMngData(UserMngRequest request) {
         userMngRepository.deleteById(request.getUserId());
         return new UserMngResponse(request.getUserId(), DataStatus.SUCCESS);
+    }
+
+    /**
+     * <p>사용자 엑셀 목록</p>
+     *
+     * @param searchDto (조회 조건)
+     * @return List (사용자 목록)
+     */
+    public List<UserMngListDto> selectUserMngExcelList(UserMngSearchDto searchDto) {
+        return userMngRepository.searchExcelList(searchDto.getGrpCd(), searchDto.getSearchCd(),
+            searchDto.getSearchWord(), searchDto.getUseYn());
     }
 }

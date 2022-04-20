@@ -3,6 +3,7 @@ package com.jsplan.drp.domain.sys.usermng.entity;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.util.StringUtil;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -95,7 +96,7 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     // 엔티티 수정
     public void update(UserMngRequest request) {
         this.userNm = request.getUserNm();
-        if (request.getUserPw() != null) {
+        if (!StringUtil.isBlank(request.getUserPw())) {
             this.userPw = request.getUserPw();
         }
         this.mobileNum = request.getMobileNum();

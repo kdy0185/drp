@@ -14,6 +14,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
@@ -159,5 +160,22 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
             .from(userMng)
             .where(userMng.userId.eq(userId))
             .fetchOne();
+    }
+
+    /**
+     * <p>사용자 엑셀 목록</p>
+     *
+     * @param grpCd      (그룹 코드)
+     * @param searchCd   (검색 조건)
+     * @param searchWord (검색어)
+     * @param useYn      (사용 여부)
+     * @return List (사용자 목록)
+     */
+    @Override
+    public List<UserMngListDto> searchExcelList(String grpCd, String searchCd,
+        String searchWord, UseStatus useYn) {
+        List<UserMngListDto> excelList = getContentQuery(grpCd, searchCd, searchWord, useYn,
+            getQueryFactory()).fetch();
+        return addRowNum(excelList, 1, excelList.size());
     }
 }

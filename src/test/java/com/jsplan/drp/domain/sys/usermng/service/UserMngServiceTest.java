@@ -93,7 +93,7 @@ class UserMngServiceTest {
         ReflectionTestUtils.setField(userMng, BaseTimeEntity.class, "modDate", modDate,
             LocalDateTime.class);
 
-        searchDto = UserMngSearchDtoBuilder.build(0, 20, grpCd, "userNm", "", useYn);
+        searchDto = UserMngSearchDtoBuilder.build(0, 20, grpCd, null, "userNm", "", useYn);
 
         listDto = new UserMngListDto(grpCd, grpNm, userId, userNm, mobileNum, email, userType,
             useYn, regDate, modDate);

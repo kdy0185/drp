@@ -20,6 +20,8 @@ public class UserMngDetailDto {
     private String grpCd; // 그룹 코드
     private String userId; // 사용자 아이디
     private String userNm; // 성명
+    private String userPw; // 비밀번호
+    private String userPwDup; // 비밀번호 확인
     private String mobileNum; // 휴대폰 번호
     private String email; // 이메일
     private String userType; // 사용자 유형

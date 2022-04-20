@@ -21,6 +21,7 @@ public class UserMngSearchDto {
     private int pageNo; // 조회할 페이지 번호
     private int pageSize; // 페이지당 데이터 출력 수
     private String grpCd; // 그룹 코드
+    private String userId; // 사용자 아이디
     private String searchCd; // 검색 조건
     private String searchWord; // 검색어
     private UseStatus useYn; // 사용 여부

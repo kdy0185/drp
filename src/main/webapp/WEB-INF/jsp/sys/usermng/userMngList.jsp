@@ -88,14 +88,15 @@
           url: "/sys/usermng/userMngSearch.do",
           reader: {
             type: "json",
-            root: "userMngList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
         listeners: {
           load: function (dataStore) {
-            if (dataStore.pageSize > dataStore.totalCount) dataStore.pageSize = dataStore.totalCount;
+            if (dataStore.pageSize
+                > dataStore.totalCount) dataStore.pageSize = dataStore.totalCount;
             var textPoint = $("#userMngGrid").prev().find(".sub-title-info");
             textPoint.empty();
             var em = '<em class="sub-title-info-em">' + dataStore.pageSize + '</em>건 / 전체 '
@@ -115,13 +116,15 @@
         var grpCd = $('select[name="grpCd"] option:selected').val();
         var searchCd = $('select[name="searchCd"] option:selected').val();
         var searchWord = $('input[name="searchWord"]').val();
+        var useYn = $('select[name="useYn"] option:selected').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           grpCd: grpCd,
           searchCd: searchCd,
-          searchWord: searchWord
+          searchWord: searchWord,
+          useYn: useYn
         };
       }, mainGrid);
 
@@ -259,12 +262,10 @@
             listeners: {
               cellclick: function (grid, htmlElement, columnIndex, dataRecord) {
                 var form = $('form[name="userMngForm"]');
-                $(form).find('input[name="grpCd"]').val(dataRecord.data.grpCd);
                 $(form).find('input[name="userId"]').val(dataRecord.data.userId);
               },
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
                 var form = $('form[name="userMngForm"]');
-                $(form).find('input[name="grpCd"]').val(dataRecord.data.grpCd);
                 $(form).find('input[name="userId"]').val(dataRecord.data.userId);
                 readUserMng('U');
               }
@@ -292,7 +293,6 @@
       function readUserMng(state) {
         var form = $('form[name="userMngForm"]');
         var userMngCnt = mainGrid.getSelectionModel().getCount();
-        var grpCd = state === "U" ? $(form).find('input[name="grpCd"]').val() : "";
         var userId = state === "U" ? $(form).find('input[name="userId"]').val() : "";
         if (state === "U" && userMngCnt === 0) {
           alert("사용자를 선택하세요.");
@@ -305,7 +305,6 @@
             type: "post",
             url: "/sys/usermng/userMngDetail.do",
             data: {
-              grpCd: grpCd,
               userId: userId,
               state: state
             },
@@ -365,7 +364,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="userMngVO" name="userMngSearchForm" method="post">
+            <form:form modelAttribute="searchDto" name="userMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12 padding_l25">
@@ -419,8 +418,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="userMngVO" name="userMngForm" method="post">
-                <form:hidden path="grpCd"/>
+            <form:form modelAttribute="searchDto" name="userMngForm" method="post">
                 <form:hidden path="userId"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">

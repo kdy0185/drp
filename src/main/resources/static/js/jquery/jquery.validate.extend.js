@@ -6,22 +6,26 @@
  */
 // Validation Rules 추가
 $.validator.addMethod("idDupCheck", function (value, element) {
-  var result = $.ajax({
+  var result;
+  $.ajax({
     type: "post",
     async: false,
     url: "/sys/usermng/userMngIdDupCheck.do",
     data: {
       userId: value
+    },
+    success: function (res) {
+      result = res.dataStatus;
     }
-  }).responseText;
-  return result === "S" && /^[A-Za-z0-9_-]{6,20}$/.test(value);
+  });
+  return result === "SUCCESS" && /^[A-Za-z0-9_-]{6,20}$/.test(value);
 });
 $.validator.addMethod("pwCheck", function (value, element) {
   return this.optional(element)
-      || /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z]).*$/.test(value);
+      || /^(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z]).*$/.test(value);
 });
 $.validator.addMethod("pwCheckReq", function (value, element) {
-  return !$.isEmpty(value) && /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z]).*$/.test(value);
+  return !$.isEmpty(value) && /^(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z]).*$/.test(value);
 });
 $.validator.addMethod("pwEqualTo", function (value, element) {
   return value === $(element).closest("form").find('input:password:first').val();
@@ -66,7 +70,7 @@ $.validator.addMethod("mobileNum", function (value, element) {
 
 // Validation Message 지정
 $.extend($.validator.messages, {
-  idDupCheck: $.msg("js.valid.msg.idDupChk"),
+  idDupCheck: $.msg("js.valid.msg.idDupCheck"),
   required: $.msg("js.valid.msg.required"),
   pwCheck: $.msg("js.valid.msg.pwCheck"),
   pwCheckReq: $.msg("js.valid.msg.pwCheckReq"),
