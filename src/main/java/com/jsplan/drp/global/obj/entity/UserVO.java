@@ -27,7 +27,7 @@ public class UserVO implements UserDetails {
 	private String grpCd; // 그룹 코드
 	private String userId; // 아이디
 	private String userPw; // 비밀번호
-	private String saveIdChk; // 아이디 저장
+	private String saveIdCheck; // 아이디 저장
 	private String autoLogin; // 자동 로그인
 	private String loginUrl; // 로그인 후 이동 URL
 
@@ -57,12 +57,12 @@ public class UserVO implements UserDetails {
 		this.userPw = userPw;
 	}
 
-	public String getSaveIdChk() {
-		return saveIdChk;
+	public String getSaveIdCheck() {
+		return saveIdCheck;
 	}
 
-	public void setSaveIdChk(String saveIdChk) {
-		this.saveIdChk = saveIdChk;
+	public void setSaveIdCheck(String saveIdCheck) {
+		this.saveIdCheck = saveIdCheck;
 	}
 
 	public String getAutoLogin() {

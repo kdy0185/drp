@@ -18,7 +18,7 @@ spring:
       on-profile: local
   datasource:
     driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:sqlserver://175.119.214.148:1433;databaseName=DRP
+    url: jdbc:log4jdbc:sqlserver://218.234.210.114:1433;databaseName=DRP
     username: sa
     password: y^2l1n9cC6
   jpa:
@@ -78,7 +78,7 @@ spring:
       on-profile: dev
   datasource:
     driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:sqlserver://175.119.214.148:1433;databaseName=DRP
+    url: jdbc:log4jdbc:sqlserver://218.234.210.114:1433;databaseName=DRP
     username: sa
     password: y^2l1n9cC6
   servlet:
