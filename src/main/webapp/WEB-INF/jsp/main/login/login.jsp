@@ -42,11 +42,11 @@
       function getCookie() {
         var form = $('form[name="loginForm"]');
         var userId = $(form).find('input[name="userId"]');
-        var saveIdChk = $(form).find('input[name="saveIdChk"]');
+        var saveIdCheck = $(form).find('input[name="saveIdCheck"]');
         var cookieUserId = $.cookie("cookieUserId");
         if (cookieUserId != null) {
           if ("${param.failure}" !== "true") $(userId).val(cookieUserId);
-          $(saveIdChk).prop("checked", true);
+          $(saveIdCheck).prop("checked", true);
         }
       }
 
@@ -93,8 +93,8 @@
             </p>
             <div class="autologin">
                 <span>
-                    <input type="checkbox" name="saveIdChk" id="saveIdChk">
-                    <label for="saveIdChk">아이디 저장</label>
+                    <input type="checkbox" name="saveIdCheck" id="saveIdCheck">
+                    <label for="saveIdCheck">아이디 저장</label>
                 </span>
                 <span>
                     <input type="checkbox" name="autoLogin" id="autoLogin">
