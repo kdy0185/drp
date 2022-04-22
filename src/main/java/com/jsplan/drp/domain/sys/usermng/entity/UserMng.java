@@ -1,9 +1,13 @@
 package com.jsplan.drp.domain.sys.usermng.entity;
 
+import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,10 +42,10 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     @Column(name = "USER_ID", length = 100)
     private String userId; // 사용자 아이디
 
-    @Column(name = "USER_NM")
+    @Column(name = "USER_NM", nullable = false)
     private String userNm; // 성명
 
-    @Column(name = "USER_PW", length = 68)
+    @Column(name = "USER_PW", nullable = false, length = 68)
     private String userPw; // 비밀번호
 
     @Column(name = "MOBILE_NUM", length = 50)
@@ -49,10 +54,10 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     @Column(name = "EMAIL", length = 100)
     private String email; // 이메일
 
-    @Column(name = "USER_TYPE", length = 1)
+    @Column(name = "USER_TYPE", nullable = false, length = 1)
     private String userType; // 사용자 유형
 
-    @Column(name = "USE_YN", length = 1)
+    @Column(name = "USE_YN", nullable = false, length = 1)
     @Enumerated(EnumType.STRING)
     private UseStatus useYn; // 사용 여부
 
@@ -60,19 +65,12 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     @JoinColumn(name = "GRP_CD")
     private UserGrpMng userGrpMng; // 그룹 엔티티
 
-    // 연관관계 편의 메서드
-    public void setUserGrpMng(UserGrpMng userGrpMng) {
-        // 기존 그룹 엔티티 정보 제거
-        if (this.userGrpMng != null) {
-            this.userGrpMng.getUserMng().remove(this);
-        }
-        this.userGrpMng = userGrpMng;
-        userGrpMng.getUserMng().add(this);
-    }
+    @OneToMany(mappedBy = "userMng", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAuthMng> userAuthMng = new ArrayList<>(); // 사용자 권한 매핑 엔티티
 
     @Builder
-    public UserMng(String userId, String userNm, String userPw, String mobileNum,
-        String email, String userType, UseStatus useYn, UserGrpMng userGrpMng) {
+    public UserMng(String userId, String userNm, String userPw, String mobileNum, String email,
+        String userType, UseStatus useYn, UserGrpMng userGrpMng, String userAuthMng) {
         this.userId = userId;
         this.userNm = userNm;
         this.userPw = userPw;
@@ -81,6 +79,7 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.userType = userType;
         this.useYn = useYn;
         setUserGrpMng(userGrpMng);
+        setUserAuthMng(userAuthMng);
     }
 
     @Override
@@ -93,6 +92,47 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         return getRegDate() == null;
     }
 
+    // 그룹 정보 설정
+    private void setUserGrpMng(UserGrpMng userGrpMng) {
+        removeUserGrpMng();
+        this.userGrpMng = userGrpMng;
+        userGrpMng.getUserMng().add(this);
+    }
+
+    // 기존 그룹 정보 제거
+    private void removeUserGrpMng() {
+        if (this.userGrpMng != null) {
+            this.userGrpMng.getUserMng().remove(this);
+        }
+    }
+
+    // 권한 정보 설정
+    private void setUserAuthMng(String authCdList) {
+        removeUserAuthMng();
+
+        String[] arrAuthCd = StringUtil.split(authCdList);
+        for (String authCd : arrAuthCd) {
+            addUserAuthMng(authCd);
+        }
+
+        // 기본 인증 권한 설정
+        addUserAuthMng("IS_AUTHENTICATED_FULLY");
+    }
+
+    // 기존 권한 정보 제거
+    private void removeUserAuthMng() {
+        if (this.userAuthMng.size() > 0) {
+            this.userAuthMng.clear();
+        }
+    }
+
+    // 권한 매핑 정보 추가
+    private void addUserAuthMng(String authCd) {
+        UserAuthMng userAuthMng = UserAuthMng.createUserAuthMng(this,
+            AuthMng.builder().authCd(authCd).build());
+        this.userAuthMng.add(userAuthMng);
+    }
+
     // 엔티티 수정
     public void update(UserMngRequest request) {
         this.userNm = request.getUserNm();
@@ -103,8 +143,6 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.email = request.getEmail();
         this.userType = request.getUserType();
         this.useYn = request.getUseYn();
-
-        // FK 변경
-//        setUserGrpMng(UserGrpMng.builder().grpCd(request.getGrpCd()).build());
+        setUserAuthMng(request.getAuthCd());
     }
 }

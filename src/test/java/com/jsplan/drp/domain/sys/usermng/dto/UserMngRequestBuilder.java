@@ -12,7 +12,8 @@ public class UserMngRequestBuilder {
 
     // Test 전용 생성자
     public static UserMngRequest build(String grpCd, String userId, String userNm, String userPw,
-        String mobileNum, String email, String userType, UseStatus useYn) {
-        return new UserMngRequest(grpCd, userId, userNm, userPw, mobileNum, email, userType, useYn);
+        String mobileNum, String email, String userType, UseStatus useYn, String authCd) {
+        return new UserMngRequest(grpCd, userId, userNm, userPw, mobileNum, email, userType, useYn,
+            authCd);
     }
 }

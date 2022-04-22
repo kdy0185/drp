@@ -11,46 +11,46 @@
 
 <script type="text/javascript">
   // Ext Tree Store 정의 - 권한
-  // var userAuthMngStore = Ext.create("Ext.data.TreeStore", {
-  //   root: {
-  //     id: "",
-  //     text: "root",
-  //     leaf: false,
-  //     expanded: true
-  //   },
-  //   nodeParam: "authCd",
-  //   proxy: {
-  //     type: "ajax",
-  //     url: "/sys/usermng/userAuthMngSearch.do",
-  //     reader: {
-  //       type: "json",
-  //       root: "userAuthMngList"
-  //     },
-  //   },
-  //   listeners: {
-  //     beforeload: function (store, operation, eOpts) {
-  //       var form = $('form[name="userMngDetailForm"]');
-  //       operation.params.userId = $(form).find('input[name="userId"]').val();
-  //       operation.params.authCd = operation.node.get("authCd");
-  //     }
-  //   }
-  // });
-  //
-  // Ext.onReady(function () {
-  //   // Ext Tree 정의 - 권한
-  //   var userAuthMngTree = Ext.create("Ext.tree.Panel", {
-  //     rootVisible: false,
-  //     multiSelect: true,
-  //     store: userAuthMngStore,
-  //     height: comPopTreeHeight,
-  //     renderTo: "userAuthMngTree",
-  //     viewConfig: {
-  //       stripeRows: true
-  //     }
-  //   });
-  //
-  //   mainTree = userAuthMngTree;
-  // });
+  var userAuthMngStore = Ext.create("Ext.data.TreeStore", {
+    root: {
+      id: "",
+      text: "root",
+      leaf: false,
+      expanded: true
+    },
+    nodeParam: "authCd",
+    proxy: {
+      type: "ajax",
+      url: "/sys/usermng/userAuthMngSearch.do",
+      reader: {
+        type: "json",
+        root: "userAuthMngList"
+      },
+    },
+    listeners: {
+      beforeload: function (store, operation, eOpts) {
+        var form = $('form[name="userMngDetailForm"]');
+        operation.params.userId = $(form).find('input[name="userId"]').val();
+        operation.params.authCd = operation.node.get("authCd");
+      }
+    }
+  });
+
+  Ext.onReady(function () {
+    // Ext Tree 정의 - 권한
+    var userAuthMngTree = Ext.create("Ext.tree.Panel", {
+      rootVisible: false,
+      multiSelect: true,
+      store: userAuthMngStore,
+      height: comPopTreeHeight,
+      renderTo: "userAuthMngTree",
+      viewConfig: {
+        stripeRows: true
+      }
+    });
+
+    mainTree = userAuthMngTree;
+  });
 
   // 등록
   function insertUserMng() {

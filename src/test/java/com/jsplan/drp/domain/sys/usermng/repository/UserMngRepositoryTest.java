@@ -2,6 +2,7 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
@@ -9,6 +10,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +36,7 @@ class UserMngRepositoryTest {
     UserMngRepository userMngRepository;
 
     UserMngRequest request;
-    String grpCd, userId, userNm, userPw, mobileNum, email, userType;
+    String grpCd, userId, userNm, userPw, mobileNum, email, userType, authCd;
     UseStatus useYn;
 
     @BeforeEach
@@ -51,9 +53,10 @@ class UserMngRepositoryTest {
         email = "test@mail.com";
         userType = "T";
         useYn = UseStatus.Y;
+        authCd = "AUTH_NORMAL";
 
         request = UserMngRequestBuilder.build(grpCd, userId, userNm, userPw, mobileNum, email,
-            userType, useYn);
+            userType, useYn, authCd);
     }
 
     @Test
@@ -89,6 +92,25 @@ class UserMngRepositoryTest {
     }
 
     @Test
+    @DisplayName("사용자 권한 목록 조회 테스트")
+    public void selectUserAuthMngList() throws Exception {
+        // given
+        String userId = "075082,424981,784252,885235";
+        List<String> userIdList = List.of(userId.split(","));
+
+        // when
+        List<UserAuthMngListDto> authMngList = userMngRepository.searchUserAuthMngList(userIdList,
+            "AUTH_ADMIN");
+
+        // then
+        for (UserAuthMngListDto listDto : authMngList) {
+            System.out.println("===================================");
+            System.out.println(listDto.toString());
+            System.out.println("===================================");
+        }
+    }
+
+    @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("사용자 등록 테스트")
     public void insertUserMngData() throws Exception {
@@ -114,7 +136,7 @@ class UserMngRepositoryTest {
 
         // when
         UserMngRequest request = UserMngRequestBuilder.build(null, userId, userNm, null, null,
-            email, userType, useYn);
+            email, userType, useYn, authCd);
         UserMng userMng = userMngRepository.findById(request.getUserId()).orElseThrow(
             NoSuchElementException::new);
         userMng.update(request);

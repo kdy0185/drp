@@ -2,12 +2,14 @@ package com.jsplan.drp.domain.sys.usermng.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import net.sf.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +64,7 @@ class UserMngServiceTest {
     UserMngListDto listDto;
     UserMngDetailDto detailDto;
 
-    String grpCd, grpNm, userId, userNm, userPw, mobileNum, email, userType;
+    String grpCd, grpNm, userId, userNm, userPw, mobileNum, email, userType, authCd;
     UseStatus useYn;
     LocalDateTime regDate, modDate;
 
@@ -75,19 +78,20 @@ class UserMngServiceTest {
         grpNm = "사용자 그룹";
         userId = "123456";
         userNm = "테스트";
-        userPw = "{bcrypt}$2a$10$gAlQx3W6H27NoAWBCDOSsexy5JH.1tlhB4Z7mqAt8fS/WofiNW69m";
+        userPw = "123456";
         mobileNum = "010-0000-0000";
         email = "test@mail.com";
         userType = "T";
         useYn = UseStatus.Y;
+        authCd = "AUTH_NORMAL";
         regDate = LocalDateTime.now();
         modDate = LocalDateTime.now();
 
         request = UserMngRequestBuilder.build(grpCd, userId, userNm, userPw, mobileNum, email,
-            userType, useYn);
+            userType, useYn, authCd);
         userMng = UserMng.builder().userId(userId).userNm(userNm).userPw(userPw)
             .mobileNum(mobileNum).email(email).userType(userType).useYn(useYn)
-            .userGrpMng(UserGrpMng.builder().grpCd(grpCd).build()).build();
+            .userGrpMng(UserGrpMng.builder().grpCd(grpCd).build()).userAuthMng(authCd).build();
         ReflectionTestUtils.setField(userMng, BaseTimeEntity.class, "regDate", regDate,
             LocalDateTime.class);
         ReflectionTestUtils.setField(userMng, BaseTimeEntity.class, "modDate", modDate,
@@ -139,6 +143,29 @@ class UserMngServiceTest {
     }
 
     @Test
+    @DisplayName("사용자 권한 목록 조회 테스트")
+    public void selectUserAuthMngList() throws Exception {
+        // given
+        request.setUserId("075082,424981,784252,885235");
+        request.setAuthCd("AUTH_ADMIN");
+
+        List<UserAuthMngListDto> userAuthMngList = new ArrayList<>();
+        userAuthMngList.add(new UserAuthMngListDto("AUTH_NORMAL", "일반 회원 권한", "Y", "N"));
+
+        // mocking
+        given(userMngRepository.searchUserAuthMngList(anyList(), anyString())).willReturn(
+            userAuthMngList);
+
+        // when
+        JSONArray authArray = userMngService.selectUserAuthMngList(request);
+
+        // then
+        assertThat(authArray.getJSONObject(0).get("id")).isEqualTo("AUTH_NORMAL");
+        assertThat(authArray.getJSONObject(0).get("leaf")).isEqualTo(false);
+        assertThat(authArray.getJSONObject(0).get("checked")).isEqualTo(true);
+    }
+
+    @Test
     @DisplayName("사용자 등록 테스트")
     public void insertUserMngData() throws Exception {
         // mocking
@@ -159,7 +186,7 @@ class UserMngServiceTest {
     public void updateUserMngData() throws Exception {
         // given
         request = UserMngRequestBuilder.build(grpCd, userId, "이름 수정", userPw, mobileNum,
-            "test2@mail.com", userType, useYn);
+            "test2@mail.com", userType, useYn, authCd);
 
         // mocking
         when(userMngRepository.findById(any())).thenReturn(Optional.of(userMng));

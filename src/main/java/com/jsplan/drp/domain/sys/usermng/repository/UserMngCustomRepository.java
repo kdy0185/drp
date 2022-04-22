@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
 import com.jsplan.drp.global.obj.entity.UseStatus;
@@ -35,6 +36,15 @@ public interface UserMngCustomRepository {
      * @return UserMngDetailDto (사용자 DTO)
      */
     UserMngDetailDto findByUserId(String userId);
+
+    /**
+     * <p>사용자 권한 목록</p>
+     *
+     * @param userIdList (사용자 아이디 목록)
+     * @param authCd (권한 코드)
+     * @return List (권한 목록)
+     */
+    List<UserAuthMngListDto> searchUserAuthMngList(List<String> userIdList, String authCd);
 
     /**
      * <p>사용자 엑셀 목록</p>

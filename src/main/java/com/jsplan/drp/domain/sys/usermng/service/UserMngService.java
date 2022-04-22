@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.service;
 
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
@@ -12,6 +13,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +57,33 @@ public class UserMngService {
     }
 
     /**
+     * <p>사용자 권한 목록</p>
+     *
+     * @param request (권한 정보)
+     * @return JSONArray (권한 목록)
+     */
+    public JSONArray selectUserAuthMngList(UserMngRequest request) {
+        JSONArray authArray = new JSONArray();
+        JSONObject authObject;
+        List<String> userIdList = List.of(request.getUserId().split(","));
+
+        // 하위 권한 조회
+        List<UserAuthMngListDto> userAuthMngList = userMngRepository.searchUserAuthMngList(
+            userIdList, request.getAuthCd());
+        for (UserAuthMngListDto listDto : userAuthMngList) {
+            authObject = new JSONObject();
+            authObject.put("id", listDto.getAuthCd());
+            authObject.put("text", listDto.getAuthNm());
+            authObject.put("leaf", "Y".equals(listDto.getLastYn()));
+            authObject.put("expanded", !"Y".equals(listDto.getLastYn()));
+            authObject.put("checked", "Y".equals(listDto.getAuthYn()));
+            authArray.add(authObject);
+        }
+
+        return authArray;
+    }
+
+    /**
      * <p>사용자 아이디 중복 체크</p>
      *
      * @param request (사용자 정보)
@@ -75,12 +105,12 @@ public class UserMngService {
         if (validateDupMngData(request)) {
             return new UserMngResponse(null, DataStatus.DUPLICATE);
         } else {
-            // 1. 사용자 등록
             // BCrypt 패스워드 암호화
             String encodePw = passwordEncoder.encode(request.getUserPw());
             request.setUserPw(encodePw);
 
             UserMng userMng = userMngRepository.save(request.toEntity());
+
             return new UserMngResponse(userMng.getUserId(), DataStatus.SUCCESS);
         }
     }
@@ -104,7 +134,6 @@ public class UserMngService {
      */
     @Transactional
     public UserMngResponse updateUserMngData(UserMngRequest request) {
-        // 1. 사용자 등록
         // BCrypt 패스워드 암호화
         String encodePw = passwordEncoder.encode(request.getUserPw());
         request.setUserPw(encodePw);

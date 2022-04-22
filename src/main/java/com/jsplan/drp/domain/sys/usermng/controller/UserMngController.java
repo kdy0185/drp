@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -165,6 +167,33 @@ public class UserMngController {
     public @ResponseBody
     UserMngResponse userMngDelete(@ModelAttribute UserMngRequest request) {
         return userMngService.deleteUserMngData(request);
+    }
+
+    /**
+     * <p>권한 설정 팝업</p>
+     *
+     * @param request (권한 정보)
+     * @return ModelAndView (권한 설정 페이지 정보)
+     */
+    @PostMapping(value = "/sys/usermng/userAuthMngPop.do")
+    public ModelAndView userAuthMngPop(@ModelAttribute UserMngRequest request) {
+        return new ModelAndView("sys/usermng/userAuthMngPop");
+    }
+
+    /**
+     * <p>권한 목록 조회</p>
+     *
+     * @param request (권한 정보)
+     * @return JSONObject (권한 목록)
+     */
+    @GetMapping(value = "/sys/usermng/userAuthMngSearch.do")
+    public @ResponseBody
+    JSONObject userAuthMngSearch(@ModelAttribute UserMngRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray userAuthMngList = userMngService.selectUserAuthMngList(request);
+        jsonObject.put("userAuthMngList", userAuthMngList);
+
+        return jsonObject;
     }
 
     /**

@@ -58,7 +58,7 @@ class UserMngControllerTest {
 
     UserMngRequest request;
     UserMngDetailDto detailDto;
-    String grpCd, userId, userNm, userPw, mobileNum, email, userType;
+    String grpCd, userId, userNm, userPw, mobileNum, email, userType, authCd;
     UseStatus useYn;
 
     @BeforeEach
@@ -81,9 +81,10 @@ class UserMngControllerTest {
         email = "test@mail.com";
         userType = "T";
         useYn = UseStatus.Y;
+        authCd = "AUTH_NORMAL";
 
         request = UserMngRequestBuilder.build(grpCd, userId, userNm, userPw, mobileNum, email,
-            userType, useYn);
+            userType, useYn, authCd);
         userMngService.insertUserMngData(request);
         detailDto = userMngService.selectUserMngDetail(request);
     }
@@ -167,6 +168,7 @@ class UserMngControllerTest {
                 .param("email", email)
                 .param("userType", userType)
                 .param("useYn", useYn.getCode())
+                .param("authCd", authCd)
             ).andExpect(jsonPath("$.userId").value(userId))
             .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
@@ -187,6 +189,7 @@ class UserMngControllerTest {
                 .param("email", "")
                 .param("userType", userType)
                 .param("useYn", useYn.getCode())
+                .param("authCd", authCd)
         ).andExpect(
             result -> assertTrue(
                 Objects.requireNonNull(result.getResolvedException()).getClass()
@@ -210,6 +213,7 @@ class UserMngControllerTest {
                 .param("email", email)
                 .param("userType", userType)
                 .param("useYn", useYn.getCode())
+                .param("authCd", authCd)
             ).andExpect(jsonPath("$.dataStatus").value("DUPLICATE"))
             .andExpect(status().isOk());
     }
@@ -227,9 +231,11 @@ class UserMngControllerTest {
                 .param("grpCd", grpCd)
                 .param("userId", userId)
                 .param("userNm", userNm)
+                .param("userPw", "")
                 .param("email", email)
                 .param("userType", userType)
                 .param("useYn", useYn.getCode())
+                .param("authCd", authCd)
             ).andExpect(jsonPath("$.userId").value(userId))
             .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
@@ -247,6 +253,22 @@ class UserMngControllerTest {
                 .param("userId", userId)
             ).andExpect(jsonPath("$.userId").value(userId))
             .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(10)
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
+    @DisplayName("사용자 권한 목록 조회 테스트")
+    public void selectUserAuthMngList() throws Exception {
+        mockMvc.perform(get("/sys/usermng/userAuthMngSearch.do")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userId", "075082,424981,784252,885235")
+                .param("authCd", "AUTH_ADMIN")
+            ).andExpect(jsonPath("$.userAuthMngList").isArray())
+            .andExpect(jsonPath("$.userAuthMngList[0].id").value("AUTH_NORMAL"))
+            .andExpect(jsonPath("$.userAuthMngList[0].leaf").value(false))
+            .andExpect(jsonPath("$.userAuthMngList[0].checked").value(true))
             .andExpect(status().isOk());
     }
 }

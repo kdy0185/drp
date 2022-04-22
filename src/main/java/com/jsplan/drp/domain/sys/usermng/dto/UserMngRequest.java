@@ -46,11 +46,13 @@ public class UserMngRequest {
     @NotNull(message = "{js.valid.msg.required}")
     private UseStatus useYn; // 사용 여부
 
+    private String authCd; // 권한 코드
+
     private String state; // 등록/수정 (등록 : I, 수정 : U)
 
     // Test 전용 생성자
     UserMngRequest(String grpCd, String userId, String userNm, String userPw,
-        String mobileNum, String email, String userType, UseStatus useYn) {
+        String mobileNum, String email, String userType, UseStatus useYn, String authCd) {
         this.grpCd = grpCd;
         this.userId = userId;
         this.userNm = userNm;
@@ -59,6 +61,7 @@ public class UserMngRequest {
         this.email = email;
         this.userType = userType;
         this.useYn = useYn;
+        this.authCd = authCd;
     }
 
     // Request DTO → Entity 변환
@@ -72,6 +75,7 @@ public class UserMngRequest {
             .userType(userType)
             .useYn(useYn)
             .userGrpMng(UserGrpMng.builder().grpCd(grpCd).build())
+            .userAuthMng(authCd)
             .build();
     }
 }
