@@ -14,7 +14,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-//@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class UserMngSearchDto {
 
