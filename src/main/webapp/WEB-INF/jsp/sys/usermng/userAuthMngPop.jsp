@@ -55,34 +55,37 @@
   // 권한 적용
   function selectAuth() {
     var form = $('form[name="userAuthMngForm"]');
-    var userAuthItems = mainTree.view.getChecked();
-    var authCd = "";
-    $(userAuthItems).each(function (i) {
-      authCd += userAuthItems[i].data.id + ",";
-    });
 
     if (confirm("선택한 권한을 적용 하시겠습니까?")) {
-      $(form).find('input[name="authCd"]').val(authCd);
+      $(form).find('input[name="authCd"]').val(getAuthCd());
       $.ajax({
-        type: "post",
+        type: "put",
         url: "/sys/usermng/userAuthMngUpdate.do",
         data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("적용 되었습니다.");
             $.util.closeSubDialog();
-          } else if (code === "N") {
-            alert("수정된 데이터가 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
+
+  // 권한 조회
+  function getAuthCd() {
+    var userAuthItems = mainTree.view.getChecked();
+    var authCd = "";
+    $(userAuthItems).each(function (i) {
+      authCd += userAuthItems[i].data.id + ",";
+    });
+    return authCd;
+  }
 </script>
 
-<form:form modelAttribute="userMngVO" name="userAuthMngForm" method="post">
+<form:form modelAttribute="detailDto" name="userAuthMngForm" method="post">
     <form:hidden path="userId"/>
     <form:hidden path="authCd"/>
     <div class="container-fluid">

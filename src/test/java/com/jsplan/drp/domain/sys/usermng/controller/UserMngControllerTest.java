@@ -29,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -269,6 +270,23 @@ class UserMngControllerTest {
             .andExpect(jsonPath("$.userAuthMngList[0].id").value("AUTH_NORMAL"))
             .andExpect(jsonPath("$.userAuthMngList[0].leaf").value(false))
             .andExpect(jsonPath("$.userAuthMngList[0].checked").value(true))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @Order(11)
+    @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
+    @DisplayName("권한 설정 적용 테스트")
+    public void userAuthMngUpdate() throws Exception {
+        String userIdList = "078869,204520";
+        String authCdList = "AUTH_SNS";
+
+        mockMvc.perform(put("/sys/usermng/userAuthMngUpdate.do")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("userId", userIdList)
+                .param("authCd", authCdList)
+            ).andExpect(jsonPath("$.userId").value(userIdList))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
             .andExpect(status().isOk());
     }
 }

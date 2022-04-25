@@ -208,4 +208,22 @@ class UserMngServiceTest {
         // then
         verify(userMngRepository, times(1)).deleteById(request.getUserId());
     }
+
+    @Test
+    @DisplayName("권한 설정 적용 테스트")
+    public void updateUserAuthMngData() throws Exception {
+        // given
+        String userIdList = "123456";
+        String authCdList = "AUTH_NORMAL";
+
+        // mocking
+        when(userMngRepository.findById(any())).thenReturn(Optional.of(userMng));
+
+        // when
+        userMngService.updateUserAuthMngData(userIdList, authCdList);
+
+        // then
+        assertThat(userMng.getUserId()).isEqualTo(userIdList);
+        assertThat(userMng.getUserAuthMng().get(0).getAuthMng().getAuthCd()).isEqualTo(authCdList);
+    }
 }

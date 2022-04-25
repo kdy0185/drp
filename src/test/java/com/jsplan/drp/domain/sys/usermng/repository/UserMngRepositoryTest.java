@@ -139,7 +139,7 @@ class UserMngRepositoryTest {
             email, userType, useYn, authCd);
         UserMng userMng = userMngRepository.findById(request.getUserId()).orElseThrow(
             NoSuchElementException::new);
-        userMng.update(request);
+        userMng.updateUserMng(request);
         userMngRepository.flush();
 
         // then

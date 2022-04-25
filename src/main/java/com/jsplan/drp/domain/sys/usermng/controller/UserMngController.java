@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -83,8 +84,8 @@ public class UserMngController {
      * @return Page (페이징 목록)
      */
     @GetMapping(value = "/sys/usermng/userMngSearch.do")
-    public @ResponseBody
-    Page<UserMngListDto> userMngSearch(@ModelAttribute UserMngSearchDto searchDto) {
+    public @ResponseBody Page<UserMngListDto> userMngSearch(
+        @ModelAttribute UserMngSearchDto searchDto) {
         return userMngService.selectUserMngList(searchDto);
     }
 
@@ -128,8 +129,7 @@ public class UserMngController {
      * @return UserMngResponse (응답 정보)
      */
     @PostMapping(value = "/sys/usermng/userMngIdDupCheck.do")
-    public @ResponseBody
-    UserMngResponse userMngIdDupCheck(@ModelAttribute UserMngRequest request) {
+    public @ResponseBody UserMngResponse userMngIdDupCheck(@ModelAttribute UserMngRequest request) {
         return userMngService.selectUserMngDupCnt(request);
     }
 
@@ -140,8 +140,8 @@ public class UserMngController {
      * @return UserMngResponse (응답 정보)
      */
     @PostMapping(value = "/sys/usermng/userMngInsert.do")
-    public @ResponseBody
-    UserMngResponse userMngInsert(@ModelAttribute @Valid UserMngRequest request) {
+    public @ResponseBody UserMngResponse userMngInsert(
+        @ModelAttribute @Valid UserMngRequest request) {
         return userMngService.insertUserMngData(request);
     }
 
@@ -152,8 +152,8 @@ public class UserMngController {
      * @return UserMngResponse (응답 정보)
      */
     @PutMapping(value = "/sys/usermng/userMngUpdate.do")
-    public @ResponseBody
-    UserMngResponse userMngUpdate(@ModelAttribute @Valid UserMngRequest request) {
+    public @ResponseBody UserMngResponse userMngUpdate(
+        @ModelAttribute @Valid UserMngRequest request) {
         return userMngService.updateUserMngData(request);
     }
 
@@ -164,8 +164,7 @@ public class UserMngController {
      * @return UserMngResponse (응답 정보)
      */
     @DeleteMapping(value = "/sys/usermng/userMngDelete.do")
-    public @ResponseBody
-    UserMngResponse userMngDelete(@ModelAttribute UserMngRequest request) {
+    public @ResponseBody UserMngResponse userMngDelete(@ModelAttribute UserMngRequest request) {
         return userMngService.deleteUserMngData(request);
     }
 
@@ -177,7 +176,9 @@ public class UserMngController {
      */
     @PostMapping(value = "/sys/usermng/userAuthMngPop.do")
     public ModelAndView userAuthMngPop(@ModelAttribute UserMngRequest request) {
-        return new ModelAndView("sys/usermng/userAuthMngPop");
+        ModelAndView mav = new ModelAndView("sys/usermng/userAuthMngPop");
+        mav.addObject("detailDto", new UserMngDetailDto(request.getUserId()));
+        return mav;
     }
 
     /**
@@ -187,13 +188,25 @@ public class UserMngController {
      * @return JSONObject (권한 목록)
      */
     @GetMapping(value = "/sys/usermng/userAuthMngSearch.do")
-    public @ResponseBody
-    JSONObject userAuthMngSearch(@ModelAttribute UserMngRequest request) {
+    public @ResponseBody JSONObject userAuthMngSearch(@ModelAttribute UserMngRequest request) {
         JSONObject jsonObject = new JSONObject();
         JSONArray userAuthMngList = userMngService.selectUserAuthMngList(request);
         jsonObject.put("userAuthMngList", userAuthMngList);
 
         return jsonObject;
+    }
+
+    /**
+     * <p>권한 설정 적용</p>
+     *
+     * @param userIdList (사용자 아이디 목록)
+     * @param authCdList (권한 목록)
+     * @return UserMngResponse (응답 정보)
+     */
+    @PutMapping(value = "/sys/usermng/userAuthMngUpdate.do")
+    public @ResponseBody UserMngResponse userAuthMngUpdate(
+        @RequestParam("userId") String userIdList, @RequestParam("authCd") String authCdList) {
+        return userMngService.updateUserAuthMngData(userIdList, authCdList);
     }
 
     /**

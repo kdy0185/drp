@@ -9,6 +9,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
 import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -140,7 +141,7 @@ public class UserMngService {
 
         UserMng userMng = userMngRepository.findById(request.getUserId())
             .orElseThrow(NoSuchElementException::new);
-        userMng.update(request);
+        userMng.updateUserMng(request);
         return new UserMngResponse(userMng.getUserId(), DataStatus.SUCCESS);
     }
 
@@ -154,6 +155,23 @@ public class UserMngService {
     public UserMngResponse deleteUserMngData(UserMngRequest request) {
         userMngRepository.deleteById(request.getUserId());
         return new UserMngResponse(request.getUserId(), DataStatus.SUCCESS);
+    }
+
+    /**
+     * <p>권한 설정 적용</p>
+     *
+     * @param userIdList (사용자 아이디 목록)
+     * @param authCdList (권한 목록)
+     * @return UserMngResponse (응답 정보)
+     */
+    @Transactional
+    public UserMngResponse updateUserAuthMngData(String userIdList, String authCdList) {
+        for (String userId : StringUtil.split(userIdList)) {
+            UserMng userMng = userMngRepository.findById(userId)
+                .orElseThrow(NoSuchElementException::new);
+            userMng.updateUserAuthMng(authCdList);
+        }
+        return new UserMngResponse(userIdList, DataStatus.SUCCESS);
     }
 
     /**

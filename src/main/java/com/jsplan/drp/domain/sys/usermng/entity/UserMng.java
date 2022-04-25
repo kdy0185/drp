@@ -6,6 +6,7 @@ import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -92,34 +93,28 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         return getRegDate() == null;
     }
 
-    // 그룹 정보 설정
+    // 그룹 설정
     private void setUserGrpMng(UserGrpMng userGrpMng) {
         removeUserGrpMng();
         this.userGrpMng = userGrpMng;
         userGrpMng.getUserMng().add(this);
     }
 
-    // 기존 그룹 정보 제거
+    // 기존 그룹 제거
     private void removeUserGrpMng() {
         if (this.userGrpMng != null) {
             this.userGrpMng.getUserMng().remove(this);
         }
     }
 
-    // 권한 정보 설정
+    // 권한 설정
     private void setUserAuthMng(String authCdList) {
         removeUserAuthMng();
-
-        String[] arrAuthCd = StringUtil.split(authCdList);
-        for (String authCd : arrAuthCd) {
-            addUserAuthMng(authCd);
-        }
-
-        // 기본 인증 권한 설정
-        addUserAuthMng("IS_AUTHENTICATED_FULLY");
+        Arrays.asList(StringUtil.split(authCdList)).forEach(this::addUserAuthMng);
+        addUserAuthMng("IS_AUTHENTICATED_FULLY"); // 기본 인증 권한 설정
     }
 
-    // 기존 권한 정보 제거
+    // 기존 권한 제거
     private void removeUserAuthMng() {
         if (this.userAuthMng.size() > 0) {
             this.userAuthMng.clear();
@@ -133,8 +128,8 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.userAuthMng.add(userAuthMng);
     }
 
-    // 엔티티 수정
-    public void update(UserMngRequest request) {
+    // 사용자 수정
+    public void updateUserMng(UserMngRequest request) {
         this.userNm = request.getUserNm();
         if (!StringUtil.isBlank(request.getUserPw())) {
             this.userPw = request.getUserPw();
@@ -144,5 +139,10 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.userType = request.getUserType();
         this.useYn = request.getUseYn();
         setUserAuthMng(request.getAuthCd());
+    }
+
+    // 권한 매핑 정보 수정
+    public void updateUserAuthMng(String authCdList) {
+        setUserAuthMng(authCdList);
     }
 }

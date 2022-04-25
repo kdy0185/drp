@@ -60,7 +60,7 @@
     if ($(form).valid()) {
       if (confirm("등록 하시겠습니까?")) {
         $(form).find('select[name="grpCd"]').removeAttr("disabled");
-        // $(form).find('input[name="authCd"]').val(authCd);
+        $(form).find('input[name="authCd"]').val(getAuthCd());
         $.ajax({
           type: "post",
           url: "/sys/usermng/userMngInsert.do",
@@ -84,18 +84,12 @@
   // 수정
   function updateUserMng() {
     var form = $('form[name="userMngDetailForm"]');
-    // var userAuthItems = mainTree.view.getChecked();
-    // var authCd = "";
-    // $(userAuthItems).each(function (i) {
-    //   authCd += userAuthItems[i].data.id + ",";
-    // });
-
     $(form).validateForm();
 
     if ($(form).valid()) {
       if (confirm("수정 하시겠습니까?")) {
         $(form).find('select[name="grpCd"]').removeAttr("disabled");
-        // $(form).find('input[name="authCd"]').val(authCd);
+        $(form).find('input[name="authCd"]').val(getAuthCd());
         $.ajax({
           type: "put",
           url: "/sys/usermng/userMngUpdate.do",
@@ -136,11 +130,21 @@
       });
     }
   }
+
+  // 권한 조회
+  function getAuthCd() {
+    var userAuthItems = mainTree.view.getChecked();
+    var authCd = "";
+    $(userAuthItems).each(function (i) {
+      authCd += userAuthItems[i].data.id + ",";
+    });
+    return authCd;
+  }
 </script>
 
 <form:form modelAttribute="detailDto" name="userMngDetailForm" method="post">
     <form:hidden path="state"/>
-<%--    <form:hidden path="authCd"/>--%>
+    <form:hidden path="authCd"/>
     <table class="table blue-base-table">
         <colgroup>
             <col style="width: 15%"/>
