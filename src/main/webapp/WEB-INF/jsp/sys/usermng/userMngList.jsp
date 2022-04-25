@@ -364,7 +364,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="searchDto" name="userMngSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="userMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12 padding_l25">
@@ -418,7 +418,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="searchDto" name="userMngForm" method="post">
+            <form:form modelAttribute="searchDTO" name="userMngForm" method="post">
                 <form:hidden path="userId"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">

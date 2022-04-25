@@ -1,10 +1,10 @@
 package com.jsplan.drp.domain.sys.usermng.controller;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.ComsVO;
@@ -61,7 +61,7 @@ public class UserGrpMngController {
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
-            mav.addObject("searchDto", new UserGrpMngSearchDto());
+            mav.addObject("searchDTO", new UserGrpMngSearchDTO());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,13 +72,13 @@ public class UserGrpMngController {
     /**
      * <p>그룹 조회</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return Page (페이징 목록)
      */
     @GetMapping(value = "/sys/usermng/userGrpMngSearch.do")
     public @ResponseBody
-    Page<UserGrpMngListDto> userGrpMngSearch(@ModelAttribute UserGrpMngSearchDto searchDto) {
-        return userGrpMngService.selectUserGrpMngList(searchDto);
+    Page<UserGrpMngListDTO> userGrpMngSearch(@ModelAttribute UserGrpMngSearchDTO searchDTO) {
+        return userGrpMngService.selectUserGrpMngList(searchDTO);
     }
 
     /**
@@ -90,14 +90,14 @@ public class UserGrpMngController {
     @PostMapping(value = "/sys/usermng/userGrpMngDetail.do")
     public ModelAndView userGrpMngDetail(@ModelAttribute UserGrpMngRequest request) {
         ModelAndView mav = new ModelAndView("sys/usermng/userGrpMngDetail");
-        UserGrpMngDetailDto detailDto = new UserGrpMngDetailDto();
+        UserGrpMngDetailDTO detailDTO = new UserGrpMngDetailDTO();
 
         if ("U".equals(request.getState())) {
-            detailDto = userGrpMngService.selectUserGrpMngDetail(request);
+            detailDTO = userGrpMngService.selectUserGrpMngDetail(request);
         }
 
-        detailDto.setState(request.getState());
-        mav.addObject("detailDto", detailDto);
+        detailDTO.setState(request.getState());
+        mav.addObject("detailDTO", detailDTO);
         return mav;
     }
 
@@ -140,18 +140,18 @@ public class UserGrpMngController {
     /**
      * <p>그룹 엑셀 출력</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @param map (엑셀 출력 정보)
      * @return ExcelUtil (엑셀 다운로드)
      */
     @PostMapping(value = "/sys/usermng/userGrpMngExcel.do")
-    public ExcelUtil userGrpMngExcel(@ModelAttribute UserGrpMngSearchDto searchDto, ModelMap map) {
+    public ExcelUtil userGrpMngExcel(@ModelAttribute UserGrpMngSearchDTO searchDTO, ModelMap map) {
         List<String> colName = new ArrayList<>();
         List<Integer> colWidth = new ArrayList<>();
         List<String[]> colValue = new ArrayList<>();
 
         // 데이터 조회
-        List<UserGrpMngListDto> excelList = userGrpMngService.selectUserGrpMngExcelList(searchDto);
+        List<UserGrpMngListDTO> excelList = userGrpMngService.selectUserGrpMngExcelList(searchDTO);
 
         // 컬럼명 설정
         colName.add("순번");
@@ -174,15 +174,15 @@ public class UserGrpMngController {
         colWidth.add(4000);
 
         // 데이터 설정
-        for (UserGrpMngListDto listDto : excelList) {
-            String rn = String.valueOf(listDto.getRn());
-            String grpCd = listDto.getGrpCd();
-            String grpNm = listDto.getGrpNm();
-            String grpDesc = listDto.getGrpDesc();
-            String regUser = listDto.getRegUser();
-            String regDate = listDto.getRegDate();
-            String modUser = listDto.getModUser();
-            String modDate = listDto.getModDate();
+        for (UserGrpMngListDTO listDTO : excelList) {
+            String rn = String.valueOf(listDTO.getRn());
+            String grpCd = listDTO.getGrpCd();
+            String grpNm = listDTO.getGrpNm();
+            String grpDesc = listDTO.getGrpDesc();
+            String regUser = listDTO.getRegUser();
+            String regDate = listDTO.getRegDate();
+            String modUser = listDTO.getModUser();
+            String modDate = listDTO.getModDate();
             String[] arr = {rn, grpCd, grpNm, grpDesc, regUser, regDate, modUser, modDate};
             colValue.add(arr);
         }

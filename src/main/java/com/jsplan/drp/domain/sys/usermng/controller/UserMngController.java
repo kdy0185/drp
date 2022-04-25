@@ -1,10 +1,10 @@
 package com.jsplan.drp.domain.sys.usermng.controller;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.ComsVO;
@@ -69,7 +69,7 @@ public class UserMngController {
             mav.addObject("grpList", grpList);
 
             // 기본 검색 조건 설정
-            mav.addObject("searchDto", new UserMngSearchDto("userNm"));
+            mav.addObject("searchDTO", new UserMngSearchDTO("userNm"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,13 +80,13 @@ public class UserMngController {
     /**
      * <p>사용자 조회</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return Page (페이징 목록)
      */
     @GetMapping(value = "/sys/usermng/userMngSearch.do")
-    public @ResponseBody Page<UserMngListDto> userMngSearch(
-        @ModelAttribute UserMngSearchDto searchDto) {
-        return userMngService.selectUserMngList(searchDto);
+    public @ResponseBody Page<UserMngListDTO> userMngSearch(
+        @ModelAttribute UserMngSearchDTO searchDTO) {
+        return userMngService.selectUserMngList(searchDTO);
     }
 
     /**
@@ -98,7 +98,7 @@ public class UserMngController {
     @PostMapping(value = "/sys/usermng/userMngDetail.do")
     public ModelAndView userMngDetail(@ModelAttribute UserMngRequest request) {
         ModelAndView mav = new ModelAndView("sys/usermng/userMngDetail");
-        UserMngDetailDto detailDto = new UserMngDetailDto();
+        UserMngDetailDTO detailDTO = new UserMngDetailDTO();
 
         try {
             // 공통 코드 : 그룹
@@ -110,11 +110,11 @@ public class UserMngController {
             mav.addObject("userTypeList", userTypeList);
 
             if ("U".equals(request.getState())) {
-                detailDto = userMngService.selectUserMngDetail(request);
+                detailDTO = userMngService.selectUserMngDetail(request);
             }
 
-            detailDto.setState(request.getState());
-            mav.addObject("detailDto", detailDto);
+            detailDTO.setState(request.getState());
+            mav.addObject("detailDTO", detailDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,7 +177,7 @@ public class UserMngController {
     @PostMapping(value = "/sys/usermng/userAuthMngPop.do")
     public ModelAndView userAuthMngPop(@ModelAttribute UserMngRequest request) {
         ModelAndView mav = new ModelAndView("sys/usermng/userAuthMngPop");
-        mav.addObject("detailDto", new UserMngDetailDto(request.getUserId()));
+        mav.addObject("detailDTO", new UserMngDetailDTO(request.getUserId()));
         return mav;
     }
 
@@ -212,18 +212,18 @@ public class UserMngController {
     /**
      * <p>사용자 엑셀 출력</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @param map       (엑셀 출력 정보)
      * @return ExcelUtil (엑셀 다운로드)
      */
     @PostMapping(value = "/sys/usermng/userMngExcel.do")
-    public ExcelUtil userMngExcel(@ModelAttribute UserMngSearchDto searchDto, ModelMap map) {
+    public ExcelUtil userMngExcel(@ModelAttribute UserMngSearchDTO searchDTO, ModelMap map) {
         List<String> colName = new ArrayList<String>();
         List<Integer> colWidth = new ArrayList<Integer>();
         List<String[]> colValue = new ArrayList<String[]>();
 
         // 데이터 조회
-        List<UserMngListDto> excelList = userMngService.selectUserMngExcelList(searchDto);
+        List<UserMngListDTO> excelList = userMngService.selectUserMngExcelList(searchDTO);
 
         // 컬럼명 설정
         colName.add("순번");
@@ -252,18 +252,18 @@ public class UserMngController {
         colWidth.add(6000);
 
         // 데이터 설정
-        for (UserMngListDto listDto : excelList) {
-            String rn = String.valueOf(listDto.getRn());
-            String grpCd = listDto.getGrpCd();
-            String grpNm = listDto.getGrpNm();
-            String userId = listDto.getUserId();
-            String userNm = listDto.getUserNm();
-            String mobileNum = listDto.getMobileNum();
-            String email = listDto.getEmail();
-            String userType = listDto.getUserType();
-            String useYn = listDto.getUseYn();
-            String regDate = listDto.getRegDate();
-            String modDate = listDto.getModDate();
+        for (UserMngListDTO listDTO : excelList) {
+            String rn = String.valueOf(listDTO.getRn());
+            String grpCd = listDTO.getGrpCd();
+            String grpNm = listDTO.getGrpNm();
+            String userId = listDTO.getUserId();
+            String userNm = listDTO.getUserNm();
+            String mobileNum = listDTO.getMobileNum();
+            String email = listDTO.getEmail();
+            String userType = listDTO.getUserType();
+            String useYn = listDTO.getUseYn();
+            String regDate = listDTO.getRegDate();
+            String modDate = listDTO.getModDate();
             String[] arr = {rn, grpCd, grpNm, userId, userNm, mobileNum, email, userType, useYn,
                 regDate, modDate};
             colValue.add(arr);

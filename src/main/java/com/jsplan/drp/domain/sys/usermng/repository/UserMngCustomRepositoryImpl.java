@@ -6,11 +6,11 @@ import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserMng.userMng;
 
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
-import com.jsplan.drp.domain.sys.usermng.dto.QUserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.QUserMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
@@ -51,7 +51,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return Page (페이징 목록)
      */
     @Override
-    public Page<UserMngListDto> searchPageList(String grpCd, String searchCd,
+    public Page<UserMngListDTO> searchPageList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, Pageable pageable) {
         return applyPagination(pageable,
             contentQuery -> getContentQuery(grpCd, searchCd, searchWord, useYn, contentQuery),
@@ -69,9 +69,9 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @param contentQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<UserMngListDto> getContentQuery(String grpCd, String searchCd,
+    private JPAQuery<UserMngListDTO> getContentQuery(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, JPAQueryFactory contentQuery) {
-        return contentQuery.select(new QUserMngListDto(
+        return contentQuery.select(new QUserMngListDTO(
                 userMng.userGrpMng.grpCd,
                 userMng.userGrpMng.grpNm,
                 userMng.userId,
@@ -149,10 +149,10 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * <p>사용자 상세</p>
      *
      * @param userId (사용자 아이디)
-     * @return UserMngDetailDto (사용자 DTO)
+     * @return UserMngDetailDTO (사용자 DTO)
      */
-    public UserMngDetailDto findByUserId(String userId) {
-        return select(new QUserMngDetailDto(
+    public UserMngDetailDTO findByUserId(String userId) {
+        return select(new QUserMngDetailDTO(
             userMng.userGrpMng.grpCd,
             userMng.userId,
             userMng.userNm,
@@ -175,14 +175,14 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return List (권한 목록)
      */
     @Override
-    public List<UserAuthMngListDto> searchUserAuthMngList(List<String> userIdList, String authCd) {
+    public List<UserAuthMngListDTO> searchUserAuthMngList(List<String> userIdList, String authCd) {
         List<AuthMng> authMngList = selectFrom(authMng)
             .where(authMng.useYn.eq(UseStatus.Y), upperAuthCdEq(authCd))
             .orderBy(authMng.authOrd.asc())
             .fetch();
 
         return authMngList.stream()
-            .map(v -> new UserAuthMngListDto(v.getAuthCd(), v.getAuthNm(),
+            .map(v -> new UserAuthMngListDTO(v.getAuthCd(), v.getAuthNm(),
                 getAuthYn(userIdList, v.getAuthCd()), v.getLastYn()))
             .collect(Collectors.toList());
     }
@@ -225,9 +225,9 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return List (사용자 목록)
      */
     @Override
-    public List<UserMngListDto> searchExcelList(String grpCd, String searchCd,
+    public List<UserMngListDTO> searchExcelList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn) {
-        List<UserMngListDto> excelList = getContentQuery(grpCd, searchCd, searchWord, useYn,
+        List<UserMngListDTO> excelList = getContentQuery(grpCd, searchCd, searchWord, useYn,
             getQueryFactory()).fetch();
         return addRowNum(excelList, 1, excelList.size());
     }

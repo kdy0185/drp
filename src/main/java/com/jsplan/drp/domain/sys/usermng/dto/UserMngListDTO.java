@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
-import com.jsplan.drp.global.obj.entity.BaseListDto;
+import com.jsplan.drp.global.obj.entity.BaseListDTO;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
@@ -9,14 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * @Class : UserMngListDto
+ * @Class : UserMngListDTO
  * @Author : KDW
  * @Date : 2022-04-08
  * @Description : 사용자 목록 DTO
  */
 @Getter
 @NoArgsConstructor
-public class UserMngListDto extends BaseListDto {
+public class UserMngListDTO extends BaseListDTO {
 
     private String grpCd; // 그룹 코드
     private String grpNm; // 그룹명
@@ -30,7 +30,7 @@ public class UserMngListDto extends BaseListDto {
     private String modDate; // 수정 일시
 
     @QueryProjection
-    public UserMngListDto(String grpCd, String grpNm, String userId, String userNm,
+    public UserMngListDTO(String grpCd, String grpNm, String userId, String userNm,
         String mobileNum, String email, String userType, UseStatus useYn,
         LocalDateTime regDate, LocalDateTime modDate) {
         this.grpCd = grpCd;

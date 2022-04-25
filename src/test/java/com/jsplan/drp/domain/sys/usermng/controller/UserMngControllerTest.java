@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
@@ -29,7 +29,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -58,7 +57,7 @@ class UserMngControllerTest {
     UserMngService userMngService;
 
     UserMngRequest request;
-    UserMngDetailDto detailDto;
+    UserMngDetailDTO detailDTO;
     String grpCd, userId, userNm, userPw, mobileNum, email, userType, authCd;
     UseStatus useYn;
 
@@ -87,7 +86,7 @@ class UserMngControllerTest {
         request = UserMngRequestBuilder.build(grpCd, userId, userNm, userPw, mobileNum, email,
             userType, useYn, authCd);
         userMngService.insertUserMngData(request);
-        detailDto = userMngService.selectUserMngDetail(request);
+        detailDTO = userMngService.selectUserMngDetail(request);
     }
 
     @AfterEach
@@ -279,7 +278,7 @@ class UserMngControllerTest {
     @DisplayName("권한 설정 적용 테스트")
     public void userAuthMngUpdate() throws Exception {
         String userIdList = "078869,204520";
-        String authCdList = "AUTH_SNS";
+        String authCdList = "AUTH_NORMAL";
 
         mockMvc.perform(put("/sys/usermng/userAuthMngUpdate.do")
                 .contentType(MediaType.APPLICATION_JSON)

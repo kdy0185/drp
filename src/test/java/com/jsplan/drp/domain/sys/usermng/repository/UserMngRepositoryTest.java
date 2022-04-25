@@ -2,9 +2,9 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
@@ -70,7 +70,7 @@ class UserMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 200);
 
         // when
-        Page<UserMngListDto> pageList = userMngRepository.searchPageList(grpCd, searchCd,
+        Page<UserMngListDTO> pageList = userMngRepository.searchPageList(grpCd, searchCd,
             searchWord, useYn, pageRequest);
 
         // then
@@ -84,11 +84,11 @@ class UserMngRepositoryTest {
         String userId = "sys_app";
 
         // when
-        UserMngDetailDto detailDto = userMngRepository.findByUserId(userId);
+        UserMngDetailDTO detailDTO = userMngRepository.findByUserId(userId);
 
         // then
-        assertThat(detailDto.getUserNm()).isEqualTo("시스템 관리자");
-        assertThat(detailDto.getEmail()).isEqualTo("system@mail.com");
+        assertThat(detailDTO.getUserNm()).isEqualTo("시스템 관리자");
+        assertThat(detailDTO.getEmail()).isEqualTo("system@mail.com");
     }
 
     @Test
@@ -99,13 +99,13 @@ class UserMngRepositoryTest {
         List<String> userIdList = List.of(userId.split(","));
 
         // when
-        List<UserAuthMngListDto> authMngList = userMngRepository.searchUserAuthMngList(userIdList,
+        List<UserAuthMngListDTO> authMngList = userMngRepository.searchUserAuthMngList(userIdList,
             "AUTH_ADMIN");
 
         // then
-        for (UserAuthMngListDto listDto : authMngList) {
+        for (UserAuthMngListDTO listDTO : authMngList) {
             System.out.println("===================================");
-            System.out.println(listDto.toString());
+            System.out.println(listDTO.toString());
             System.out.println("===================================");
         }
     }
@@ -156,9 +156,9 @@ class UserMngRepositoryTest {
         userMngRepository.saveAndFlush(request.toEntity());
 
         userMngRepository.deleteById(userId);
-        UserMngDetailDto detailDto = userMngRepository.findByUserId(userId);
+        UserMngDetailDTO detailDTO = userMngRepository.findByUserId(userId);
 
         // then
-        assertThat(detailDto).isNull();
+        assertThat(detailDTO).isNull();
     }
 }

@@ -86,7 +86,7 @@
     }
   }
 </script>
-<form:form modelAttribute="detailDto" name="userGrpMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="userGrpMngDetailForm" method="post">
     <form:hidden path="state"/>
     <table class="table blue-base-table">
         <colgroup>
@@ -100,7 +100,7 @@
             <th class="top-line"><span class="star-mark">그룹 코드</span></th>
             <td class="top-line">
                 <form:input path="grpCd" cssClass="form-control input-sm width_66 required"
-                            readonly="${detailDto.state eq 'I' ? false : true}"/>
+                            readonly="${detailDTO.state eq 'I' ? false : true}"/>
             </td>
             <th class="top-line"><span class="star-mark">그룹명</span></th>
             <td class="top-line">
@@ -137,12 +137,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${detailDto.state eq 'I'}">
+        <c:if test="${detailDTO.state eq 'I'}">
             <button type="button" onclick="insertUserGrpMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${detailDto.state eq 'U'}">
+        <c:if test="${detailDTO.state eq 'U'}">
             <button type="button" onclick="updateUserGrpMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>

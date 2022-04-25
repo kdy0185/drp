@@ -1,7 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,15 +21,15 @@ public interface UserGrpMngCustomRepository {
      * @param pageable (페이징 정보)
      * @return Page (페이징 목록)
      */
-    Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable);
+    Page<UserGrpMngListDTO> searchPageList(String grpNm, Pageable pageable);
 
     /**
      * <p>그룹 상세</p>
      *
      * @param grpCd (그룹 코드)
-     * @return UserGrpMngDetailDto (그룹 DTO)
+     * @return UserGrpMngDetailDTO (그룹 DTO)
      */
-    UserGrpMngDetailDto findByGrpCd(String grpCd);
+    UserGrpMngDetailDTO findByGrpCd(String grpCd);
 
     /**
      * <p>사용자 확인</p>
@@ -45,5 +45,5 @@ public interface UserGrpMngCustomRepository {
      * @param grpNm    (그룹명)
      * @return List (그룹 목록)
      */
-    List<UserGrpMngListDto> searchExcelList(String grpNm);
+    List<UserGrpMngListDTO> searchExcelList(String grpNm);
 }

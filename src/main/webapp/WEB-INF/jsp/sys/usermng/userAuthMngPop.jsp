@@ -85,7 +85,7 @@
   }
 </script>
 
-<form:form modelAttribute="detailDto" name="userAuthMngForm" method="post">
+<form:form modelAttribute="detailDTO" name="userAuthMngForm" method="post">
     <form:hidden path="userId"/>
     <form:hidden path="authCd"/>
     <div class="container-fluid">

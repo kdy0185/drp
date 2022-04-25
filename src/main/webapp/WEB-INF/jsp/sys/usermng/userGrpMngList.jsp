@@ -280,7 +280,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="searchDto" name="userGrpMngSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="userGrpMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-8 col-sm-12 col-xs-12 padding_l25">
@@ -303,7 +303,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="searchDto" name="userGrpMngForm" method="post">
+            <form:form modelAttribute="searchDTO" name="userGrpMngForm" method="post">
                 <form:hidden path="grpCd"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">

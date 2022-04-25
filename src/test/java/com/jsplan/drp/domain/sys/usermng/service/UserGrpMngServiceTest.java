@@ -10,11 +10,11 @@ import static org.mockito.Mockito.when;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDtoBuilder;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTOBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
@@ -52,9 +52,9 @@ class UserGrpMngServiceTest {
 
     UserGrpMngRequest request;
     UserGrpMng userGrpMng;
-    UserGrpMngSearchDto searchDto;
-    UserGrpMngListDto listDto;
-    UserGrpMngDetailDto detailDto;
+    UserGrpMngSearchDTO searchDTO;
+    UserGrpMngListDTO listDTO;
+    UserGrpMngDetailDTO detailDTO;
 
     String grpCd, grpNm, grpDesc, regUser, modUser;
     LocalDateTime regDate, modDate;
@@ -85,10 +85,10 @@ class UserGrpMngServiceTest {
         ReflectionTestUtils.setField(userGrpMng, BaseTimeEntity.class, "modDate", modDate,
             LocalDateTime.class);
 
-        searchDto = UserGrpMngSearchDtoBuilder.build(0, 20, null, grpNm);
+        searchDTO = UserGrpMngSearchDTOBuilder.build(0, 20, null, grpNm);
 
-        listDto = new UserGrpMngListDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser, modDate);
-        detailDto = new UserGrpMngDetailDto(grpCd, grpNm, grpDesc, regUser, regDate, modUser,
+        listDTO = new UserGrpMngListDTO(grpCd, grpNm, grpDesc, regUser, regDate, modUser, modDate);
+        detailDTO = new UserGrpMngDetailDTO(grpCd, grpNm, grpDesc, regUser, regDate, modUser,
             modDate);
     }
 
@@ -96,15 +96,15 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 목록 조회 테스트")
     public void selectUserGrpMngList() throws Exception {
         // given
-        List<UserGrpMngListDto> list = new ArrayList<>();
-        list.add(listDto);
-        Page<UserGrpMngListDto> pageList = new PageImpl<>(list);
+        List<UserGrpMngListDTO> list = new ArrayList<>();
+        list.add(listDTO);
+        Page<UserGrpMngListDTO> pageList = new PageImpl<>(list);
 
         // mocking
         given(userGrpMngRepository.searchPageList(anyString(), any())).willReturn(pageList);
 
         // when
-        Page<UserGrpMngListDto> resultList = userGrpMngService.selectUserGrpMngList(searchDto);
+        Page<UserGrpMngListDTO> resultList = userGrpMngService.selectUserGrpMngList(searchDTO);
 
         // then
         assertThat(resultList.getNumberOfElements()).isEqualTo(1);
@@ -116,10 +116,10 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 상세 조회 테스트")
     public void selectUserGrpMngDetail() throws Exception {
         // mocking
-        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
+        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDTO);
 
         // when
-        UserGrpMngDetailDto findDetail = userGrpMngService.selectUserGrpMngDetail(request);
+        UserGrpMngDetailDTO findDetail = userGrpMngService.selectUserGrpMngDetail(request);
 
         // then
         assertThat(findDetail.getGrpCd()).isEqualTo(grpCd);
@@ -133,7 +133,7 @@ class UserGrpMngServiceTest {
     public void insertUserGrpMngData() throws Exception {
         // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
-        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDto);
+        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDTO);
 
         // when
         userGrpMngService.insertUserGrpMngData(request);

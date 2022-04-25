@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @Class : UserMngSearchDto
+ * @Class : UserMngSearchDTO
  * @Author : KDW
  * @Date : 2022-04-08
  * @Description : 사용자 관리 Search DTO
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class UserMngSearchDto {
+public class UserMngSearchDTO {
 
     private int pageNo; // 조회할 페이지 번호
     private int pageSize; // 페이지당 데이터 출력 수
@@ -25,7 +25,7 @@ public class UserMngSearchDto {
     private String searchWord; // 검색어
     private UseStatus useYn; // 사용 여부
 
-    public UserMngSearchDto(String searchCd) {
+    public UserMngSearchDTO(String searchCd) {
         this.searchCd = searchCd;
     }
 }

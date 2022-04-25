@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * @Class : UserAuthMngListDto
+ * @Class : UserAuthMngListDTO
  * @Author : KDW
  * @Date : 2022-04-21
  * @Description : 사용자 권한 목록 DTO
@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {"authCd", "authNm", "authYn", "lastYn"})
-public class UserAuthMngListDto {
+public class UserAuthMngListDTO {
 
     private String authCd; // 권한 코드
     private String authNm; // 권한명

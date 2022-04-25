@@ -9,13 +9,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDtoBuilder;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTOBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
@@ -60,9 +60,9 @@ class UserMngServiceTest {
 
     UserMngRequest request;
     UserMng userMng;
-    UserMngSearchDto searchDto;
-    UserMngListDto listDto;
-    UserMngDetailDto detailDto;
+    UserMngSearchDTO searchDTO;
+    UserMngListDTO listDTO;
+    UserMngDetailDTO detailDTO;
 
     String grpCd, grpNm, userId, userNm, userPw, mobileNum, email, userType, authCd;
     UseStatus useYn;
@@ -97,11 +97,11 @@ class UserMngServiceTest {
         ReflectionTestUtils.setField(userMng, BaseTimeEntity.class, "modDate", modDate,
             LocalDateTime.class);
 
-        searchDto = UserMngSearchDtoBuilder.build(0, 20, grpCd, null, "userNm", "", useYn);
+        searchDTO = UserMngSearchDTOBuilder.build(0, 20, grpCd, null, "userNm", "", useYn);
 
-        listDto = new UserMngListDto(grpCd, grpNm, userId, userNm, mobileNum, email, userType,
+        listDTO = new UserMngListDTO(grpCd, grpNm, userId, userNm, mobileNum, email, userType,
             useYn, regDate, modDate);
-        detailDto = new UserMngDetailDto(grpCd, userId, userNm, mobileNum, email, userType, useYn,
+        detailDTO = new UserMngDetailDTO(grpCd, userId, userNm, mobileNum, email, userType, useYn,
             regDate, modDate);
     }
 
@@ -109,16 +109,16 @@ class UserMngServiceTest {
     @DisplayName("사용자 목록 조회 테스트")
     public void selectUserMngList() throws Exception {
         // given
-        List<UserMngListDto> list = new ArrayList<>();
-        list.add(listDto);
-        Page<UserMngListDto> pageList = new PageImpl<>(list);
+        List<UserMngListDTO> list = new ArrayList<>();
+        list.add(listDTO);
+        Page<UserMngListDTO> pageList = new PageImpl<>(list);
 
         // mocking
         given(userMngRepository.searchPageList(anyString(), anyString(), anyString(), any(),
             any())).willReturn(pageList);
 
         // when
-        Page<UserMngListDto> resultList = userMngService.selectUserMngList(searchDto);
+        Page<UserMngListDTO> resultList = userMngService.selectUserMngList(searchDTO);
 
         // then
         assertThat(resultList.getNumberOfElements()).isEqualTo(1);
@@ -130,10 +130,10 @@ class UserMngServiceTest {
     @DisplayName("사용자 상세 조회 테스트")
     public void selectUserMngDetail() throws Exception {
         // mocking
-        given(userMngRepository.findByUserId(any())).willReturn(detailDto);
+        given(userMngRepository.findByUserId(any())).willReturn(detailDTO);
 
         // when
-        UserMngDetailDto findDetail = userMngService.selectUserMngDetail(request);
+        UserMngDetailDTO findDetail = userMngService.selectUserMngDetail(request);
 
         // then
         assertThat(findDetail.getUserId()).isEqualTo(userId);
@@ -149,8 +149,8 @@ class UserMngServiceTest {
         request.setUserId("075082,424981,784252,885235");
         request.setAuthCd("AUTH_ADMIN");
 
-        List<UserAuthMngListDto> userAuthMngList = new ArrayList<>();
-        userAuthMngList.add(new UserAuthMngListDto("AUTH_NORMAL", "일반 회원 권한", "Y", "N"));
+        List<UserAuthMngListDTO> userAuthMngList = new ArrayList<>();
+        userAuthMngList.add(new UserAuthMngListDTO("AUTH_NORMAL", "일반 회원 권한", "Y", "N"));
 
         // mocking
         given(userMngRepository.searchUserAuthMngList(anyList(), anyString())).willReturn(
@@ -170,7 +170,7 @@ class UserMngServiceTest {
     public void insertUserMngData() throws Exception {
         // mocking
         given(userMngRepository.save(any())).willReturn(userMng);
-        given(userMngRepository.findByUserId(any())).willReturn(detailDto);
+        given(userMngRepository.findByUserId(any())).willReturn(detailDTO);
         given(passwordEncoder.encode(anyString())).willReturn(userPw);
 
         // when

@@ -3,10 +3,10 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserGrpMng.userGrpMng;
 import static com.jsplan.drp.domain.sys.usermng.entity.QUserMng.userMng;
 
-import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.QUserGrpMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -42,7 +42,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return Page (페이징 목록)
      */
     @Override
-    public Page<UserGrpMngListDto> searchPageList(String grpNm, Pageable pageable) {
+    public Page<UserGrpMngListDTO> searchPageList(String grpNm, Pageable pageable) {
         return applyPagination(pageable,
             contentQuery -> getContentQuery(grpNm, contentQuery),
             countQuery -> getCountQuery(grpNm, countQuery)
@@ -56,9 +56,9 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param contentQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<UserGrpMngListDto> getContentQuery(String grpNm,
+    private JPAQuery<UserGrpMngListDTO> getContentQuery(String grpNm,
         JPAQueryFactory contentQuery) {
-        return contentQuery.select(new QUserGrpMngListDto(
+        return contentQuery.select(new QUserGrpMngListDTO(
                 userGrpMng.grpCd,
                 userGrpMng.grpNm,
                 userGrpMng.grpDesc,
@@ -103,8 +103,8 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return UserGrpMngDto (그룹 DTO)
      */
     @Override
-    public UserGrpMngDetailDto findByGrpCd(String grpCd) {
-        return select(new QUserGrpMngDetailDto(
+    public UserGrpMngDetailDTO findByGrpCd(String grpCd) {
+        return select(new QUserGrpMngDetailDTO(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
             userGrpMng.grpDesc,
@@ -141,8 +141,8 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return List (그룹 목록)
      */
     @Override
-    public List<UserGrpMngListDto> searchExcelList(String grpNm) {
-        List<UserGrpMngListDto> excelList = getContentQuery(grpNm, getQueryFactory()).fetch();
+    public List<UserGrpMngListDTO> searchExcelList(String grpNm) {
+        List<UserGrpMngListDTO> excelList = getContentQuery(grpNm, getQueryFactory()).fetch();
         return addRowNum(excelList, 1, excelList.size());
     }
 }

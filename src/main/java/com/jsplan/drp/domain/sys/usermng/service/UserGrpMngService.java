@@ -2,10 +2,10 @@ package com.jsplan.drp.domain.sys.usermng.service;
 
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
 import com.jsplan.drp.global.obj.entity.DataStatus;
 import java.util.List;
@@ -32,12 +32,12 @@ public class UserGrpMngService {
     /**
      * <p>그룹 목록</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return Page (페이징 목록)
      */
-    public Page<UserGrpMngListDto> selectUserGrpMngList(UserGrpMngSearchDto searchDto) {
-        PageRequest pageRequest = PageRequest.of(searchDto.getPageNo(), searchDto.getPageSize());
-        return userGrpMngRepository.searchPageList(searchDto.getGrpNm(), pageRequest);
+    public Page<UserGrpMngListDTO> selectUserGrpMngList(UserGrpMngSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return userGrpMngRepository.searchPageList(searchDTO.getGrpNm(), pageRequest);
     }
 
     /**
@@ -46,7 +46,7 @@ public class UserGrpMngService {
      * @param request (그룹 정보)
      * @return UserGrpMngDto (그룹 DTO)
      */
-    public UserGrpMngDetailDto selectUserGrpMngDetail(UserGrpMngRequest request) {
+    public UserGrpMngDetailDTO selectUserGrpMngDetail(UserGrpMngRequest request) {
         return userGrpMngRepository.findByGrpCd(request.getGrpCd());
     }
 
@@ -123,10 +123,10 @@ public class UserGrpMngService {
     /**
      * <p>그룹 엑셀 목록</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return List (그룹 목록)
      */
-    public List<UserGrpMngListDto> selectUserGrpMngExcelList(UserGrpMngSearchDto searchDto) {
-        return userGrpMngRepository.searchExcelList(searchDto.getGrpNm());
+    public List<UserGrpMngListDTO> selectUserGrpMngExcelList(UserGrpMngSearchDTO searchDTO) {
+        return userGrpMngRepository.searchExcelList(searchDTO.getGrpNm());
     }
 }

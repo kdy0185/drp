@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class UserGrpMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        Page<UserGrpMngListDto> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
+        Page<UserGrpMngListDTO> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
 
         // then
         assertThat(pageList.getNumberOfElements()).isEqualTo(1);
@@ -52,12 +52,12 @@ class UserGrpMngRepositoryTest {
         String grpCd = "GRP_MNG";
 
         // when
-        UserGrpMngDetailDto detailDto = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findByGrpCd(grpCd);
 
         // then
-        assertThat(detailDto.getGrpNm()).isEqualTo("관리자 그룹");
-        assertThat(detailDto.getRegUser()).isEqualTo("시스템 관리자");
-        assertThat(detailDto.getRegDate()).isEqualTo("2022-01-25 11:47:06");
+        assertThat(detailDTO.getGrpNm()).isEqualTo("관리자 그룹");
+        assertThat(detailDTO.getRegUser()).isEqualTo("시스템 관리자");
+        assertThat(detailDTO.getRegDate()).isEqualTo("2022-01-25 11:47:06");
     }
 
     @Test
@@ -116,9 +116,9 @@ class UserGrpMngRepositoryTest {
         userGrpMngRepository.saveAndFlush(request.toEntity());
 
         userGrpMngRepository.deleteById(grpCd);
-        UserGrpMngDetailDto detailDto = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findByGrpCd(grpCd);
 
         // then
-        assertThat(detailDto).isNull();
+        assertThat(detailDTO).isNull();
     }
 }

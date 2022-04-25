@@ -1,11 +1,11 @@
 package com.jsplan.drp.domain.sys.usermng.service;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
 import com.jsplan.drp.global.obj.entity.DataStatus;
@@ -38,13 +38,13 @@ public class UserMngService {
     /**
      * <p>사용자 목록</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return Page (페이징 목록)
      */
-    public Page<UserMngListDto> selectUserMngList(UserMngSearchDto searchDto) {
-        PageRequest pageRequest = PageRequest.of(searchDto.getPageNo(), searchDto.getPageSize());
-        return userMngRepository.searchPageList(searchDto.getGrpCd(), searchDto.getSearchCd(),
-            searchDto.getSearchWord(), searchDto.getUseYn(), pageRequest);
+    public Page<UserMngListDTO> selectUserMngList(UserMngSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return userMngRepository.searchPageList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), searchDTO.getUseYn(), pageRequest);
     }
 
     /**
@@ -53,7 +53,7 @@ public class UserMngService {
      * @param request (사용자 정보)
      * @return UserMngDto (사용자 DTO)
      */
-    public UserMngDetailDto selectUserMngDetail(UserMngRequest request) {
+    public UserMngDetailDTO selectUserMngDetail(UserMngRequest request) {
         return userMngRepository.findByUserId(request.getUserId());
     }
 
@@ -69,15 +69,15 @@ public class UserMngService {
         List<String> userIdList = List.of(request.getUserId().split(","));
 
         // 하위 권한 조회
-        List<UserAuthMngListDto> userAuthMngList = userMngRepository.searchUserAuthMngList(
+        List<UserAuthMngListDTO> userAuthMngList = userMngRepository.searchUserAuthMngList(
             userIdList, request.getAuthCd());
-        for (UserAuthMngListDto listDto : userAuthMngList) {
+        for (UserAuthMngListDTO listDTO : userAuthMngList) {
             authObject = new JSONObject();
-            authObject.put("id", listDto.getAuthCd());
-            authObject.put("text", listDto.getAuthNm());
-            authObject.put("leaf", "Y".equals(listDto.getLastYn()));
-            authObject.put("expanded", !"Y".equals(listDto.getLastYn()));
-            authObject.put("checked", "Y".equals(listDto.getAuthYn()));
+            authObject.put("id", listDTO.getAuthCd());
+            authObject.put("text", listDTO.getAuthNm());
+            authObject.put("leaf", "Y".equals(listDTO.getLastYn()));
+            authObject.put("expanded", !"Y".equals(listDTO.getLastYn()));
+            authObject.put("checked", "Y".equals(listDTO.getAuthYn()));
             authArray.add(authObject);
         }
 
@@ -177,11 +177,11 @@ public class UserMngService {
     /**
      * <p>사용자 엑셀 목록</p>
      *
-     * @param searchDto (조회 조건)
+     * @param searchDTO (조회 조건)
      * @return List (사용자 목록)
      */
-    public List<UserMngListDto> selectUserMngExcelList(UserMngSearchDto searchDto) {
-        return userMngRepository.searchExcelList(searchDto.getGrpCd(), searchDto.getSearchCd(),
-            searchDto.getSearchWord(), searchDto.getUseYn());
+    public List<UserMngListDTO> selectUserMngExcelList(UserMngSearchDTO searchDTO) {
+        return userMngRepository.searchExcelList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), searchDTO.getUseYn());
     }
 }

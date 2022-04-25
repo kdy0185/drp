@@ -1,8 +1,8 @@
 package com.jsplan.drp.domain.sys.usermng.repository;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDto;
-import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -26,16 +26,16 @@ public interface UserMngCustomRepository {
      * @param pageable   (페이징 정보)
      * @return Page (페이징 목록)
      */
-    Page<UserMngListDto> searchPageList(String grpCd, String searchCd, String searchWord,
+    Page<UserMngListDTO> searchPageList(String grpCd, String searchCd, String searchWord,
         UseStatus useYn, Pageable pageable);
 
     /**
      * <p>사용자 상세</p>
      *
      * @param userId (사용자 아이디)
-     * @return UserMngDetailDto (사용자 DTO)
+     * @return UserMngDetailDTO (사용자 DTO)
      */
-    UserMngDetailDto findByUserId(String userId);
+    UserMngDetailDTO findByUserId(String userId);
 
     /**
      * <p>사용자 권한 목록</p>
@@ -44,7 +44,7 @@ public interface UserMngCustomRepository {
      * @param authCd (권한 코드)
      * @return List (권한 목록)
      */
-    List<UserAuthMngListDto> searchUserAuthMngList(List<String> userIdList, String authCd);
+    List<UserAuthMngListDTO> searchUserAuthMngList(List<String> userIdList, String authCd);
 
     /**
      * <p>사용자 엑셀 목록</p>
@@ -55,6 +55,6 @@ public interface UserMngCustomRepository {
      * @param useYn      (사용 여부)
      * @return List (사용자 목록)
      */
-    List<UserMngListDto> searchExcelList(String grpCd, String searchCd, String searchWord,
+    List<UserMngListDTO> searchExcelList(String grpCd, String searchCd, String searchWord,
         UseStatus useYn);
 }

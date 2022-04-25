@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.obj.repository;
 
-import com.jsplan.drp.global.obj.entity.BaseListDto;
+import com.jsplan.drp.global.obj.entity.BaseListDTO;
 import com.jsplan.drp.global.util.RowNumUtil;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
@@ -129,7 +129,7 @@ public abstract class Querydsl5RepositorySupport {
      * @param countQuery   (Function 객체)
      * @return Page (Page 객체)
      */
-    protected <T extends BaseListDto> Page<T> applyPagination(Pageable pageable,
+    protected <T extends BaseListDTO> Page<T> applyPagination(Pageable pageable,
         Function<JPAQueryFactory, JPAQuery<T>> contentQuery,
         Function<JPAQueryFactory, JPAQuery<Long>> countQuery) {
         JPAQuery<T> jpaContentQuery = contentQuery.apply(getQueryFactory());
@@ -149,7 +149,7 @@ public abstract class Querydsl5RepositorySupport {
      * @param pageSize (페이지당 데이터 출력 수)
      * @return List (RowNum 추가 목록)
      */
-    protected <T extends BaseListDto> List<T> addRowNum(List<T> content, long pageNo,
+    protected <T extends BaseListDTO> List<T> addRowNum(List<T> content, long pageNo,
         int pageSize) {
         RowNumUtil rowNumUtil = new RowNumUtil(content.size(), pageNo, pageSize);
         content.forEach(v -> v.setRn(rowNumUtil.getRn()));

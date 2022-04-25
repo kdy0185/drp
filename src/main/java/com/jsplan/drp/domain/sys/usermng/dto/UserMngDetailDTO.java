@@ -8,14 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * @Class : UserMngDetailDto
+ * @Class : UserMngDetailDTO
  * @Author : KDW
  * @Date : 2022-04-16
  * @Description : 사용자 상세 DTO
  */
 @Getter
 @NoArgsConstructor
-public class UserMngDetailDto {
+public class UserMngDetailDTO {
 
     private String grpCd; // 그룹 코드
     private String userId; // 사용자 아이디
@@ -37,12 +37,12 @@ public class UserMngDetailDto {
     }
 
     // 권한 설정 팝업 화면 : 아이디 설정
-    public UserMngDetailDto(String userIdList) {
+    public UserMngDetailDTO(String userIdList) {
         userId = userIdList;
     }
 
     @QueryProjection
-    public UserMngDetailDto(String grpCd, String userId, String userNm, String mobileNum,
+    public UserMngDetailDTO(String grpCd, String userId, String userNm, String mobileNum,
         String email, String userType, UseStatus useYn, LocalDateTime regDate,
         LocalDateTime modDate) {
         this.grpCd = grpCd;

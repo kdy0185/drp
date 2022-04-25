@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDto;
+import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
@@ -56,7 +56,7 @@ class UserGrpMngControllerTest {
     private UserGrpMngService userGrpMngService;
 
     UserGrpMngRequest request;
-    UserGrpMngDetailDto detailDto;
+    UserGrpMngDetailDTO detailDTO;
     String grpCd, grpNm, grpDesc;
 
     @BeforeEach
@@ -77,7 +77,7 @@ class UserGrpMngControllerTest {
 
         request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
         userGrpMngService.insertUserGrpMngData(request);
-        detailDto = userGrpMngService.selectUserGrpMngDetail(request);
+        detailDTO = userGrpMngService.selectUserGrpMngDetail(request);
     }
 
     @AfterEach
