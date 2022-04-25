@@ -68,11 +68,11 @@
           type: "String",
           useNull: true
         }, {
-          name: "regDate", // 등록 일시
+          name: "regDate", // 등록 일자
           type: "String",
           useNull: true
         }, {
-          name: "modDate", // 수정 일시
+          name: "modDate", // 수정 일자
           type: "String",
           useNull: true
         }]
@@ -233,7 +233,7 @@
               return val;
             }
           }, {
-            text: "등록 일시",
+            text: "등록 일자",
             width: 30,
             align: "center",
             sortable: true,
@@ -243,7 +243,7 @@
               return val;
             }
           }, {
-            text: "수정 일시",
+            text: "수정 일자",
             width: 30,
             align: "center",
             sortable: true,
