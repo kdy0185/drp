@@ -101,7 +101,7 @@ class UserGrpMngServiceTest {
         Page<UserGrpMngListDTO> pageList = new PageImpl<>(list);
 
         // mocking
-        given(userGrpMngRepository.searchPageList(anyString(), any())).willReturn(pageList);
+        given(userGrpMngRepository.searchUserGrpMngList(anyString(), any())).willReturn(pageList);
 
         // when
         Page<UserGrpMngListDTO> resultList = userGrpMngService.selectUserGrpMngList(searchDTO);
@@ -116,7 +116,7 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 상세 조회 테스트")
     public void selectUserGrpMngDetail() throws Exception {
         // mocking
-        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDTO);
+        given(userGrpMngRepository.findUserGrpMngByGrpCd(any())).willReturn(detailDTO);
 
         // when
         UserGrpMngDetailDTO findDetail = userGrpMngService.selectUserGrpMngDetail(request);
@@ -133,7 +133,7 @@ class UserGrpMngServiceTest {
     public void insertUserGrpMngData() throws Exception {
         // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
-        given(userGrpMngRepository.findByGrpCd(any())).willReturn(detailDTO);
+        given(userGrpMngRepository.findUserGrpMngByGrpCd(any())).willReturn(detailDTO);
 
         // when
         userGrpMngService.insertUserGrpMngData(request);

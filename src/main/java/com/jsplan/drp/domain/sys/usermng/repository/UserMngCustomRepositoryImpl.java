@@ -14,6 +14,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
+import com.jsplan.drp.global.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.StringUtils;
 
 /**
  * @Class : UserMngCustomRepositoryImpl
@@ -51,7 +51,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return Page (페이징 목록)
      */
     @Override
-    public Page<UserMngListDTO> searchPageList(String grpCd, String searchCd,
+    public Page<UserMngListDTO> searchUserMngList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, Pageable pageable) {
         return applyPagination(pageable,
             contentQuery -> getContentQuery(grpCd, searchCd, searchWord, useYn, contentQuery),
@@ -113,7 +113,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return BooleanExpression (Boolean 표현식)
      */
     private BooleanExpression grpCdEq(String grpCd) {
-        return StringUtils.hasText(grpCd) ? userMng.userGrpMng.grpCd.eq(grpCd) : null;
+        return !StringUtil.isEmpty(grpCd) ? userMng.userGrpMng.grpCd.eq(grpCd) : null;
     }
 
     /**
@@ -124,7 +124,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return BooleanExpression (Boolean 표현식)
      */
     private BooleanExpression userLike(String searchCd, String searchWord) {
-        if (StringUtils.hasText(searchWord)) {
+        if (!StringUtil.isEmpty(searchWord)) {
             if ("userId".equals(searchCd)) {
                 return userMng.userId.contains(searchWord);
             }
@@ -151,7 +151,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @param userId (사용자 아이디)
      * @return UserMngDetailDTO (사용자 DTO)
      */
-    public UserMngDetailDTO findByUserId(String userId) {
+    public UserMngDetailDTO findUserMngByUserId(String userId) {
         return select(new QUserMngDetailDTO(
             userMng.userGrpMng.grpCd,
             userMng.userId,
@@ -168,7 +168,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     }
 
     /**
-     * <p>사용자 권한 목록</p>
+     * <p>사용자별 권한 목록</p>
      *
      * @param userIdList (사용자 아이디 목록)
      * @param authCd     (권한 코드)
@@ -188,18 +188,18 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     }
 
     /**
-     * <p>사용자 권한 목록 조회 조건 : 상위 권한 코드</p>
+     * <p>사용자별 권한 목록 조회 조건 : 상위 권한 코드</p>
      *
      * @param authCd (권한 코드)
      * @return BooleanExpression (Boolean 표현식)
      */
     private BooleanExpression upperAuthCdEq(String authCd) {
-        return StringUtils.hasText(authCd) ? authMng.upperAuthMng.authCd.eq(authCd)
+        return !StringUtil.isEmpty(authCd) ? authMng.upperAuthMng.authCd.eq(authCd)
             : authMng.upperAuthMng.authCd.isNull();
     }
 
     /**
-     * <p>사용자 권한 여부 조회</p>
+     * <p>사용자별 권한 여부 조회</p>
      *
      * @param userIdList (사용자 아이디 목록)
      * @param authCd     (권한 코드)
@@ -225,7 +225,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return List (사용자 목록)
      */
     @Override
-    public List<UserMngListDTO> searchExcelList(String grpCd, String searchCd,
+    public List<UserMngListDTO> searchUserMngExcelList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn) {
         List<UserMngListDTO> excelList = getContentQuery(grpCd, searchCd, searchWord, useYn,
             getQueryFactory()).fetch();

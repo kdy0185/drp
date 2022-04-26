@@ -21,7 +21,7 @@ public interface UserGrpMngCustomRepository {
      * @param pageable (페이징 정보)
      * @return Page (페이징 목록)
      */
-    Page<UserGrpMngListDTO> searchPageList(String grpNm, Pageable pageable);
+    Page<UserGrpMngListDTO> searchUserGrpMngList(String grpNm, Pageable pageable);
 
     /**
      * <p>그룹 상세</p>
@@ -29,7 +29,7 @@ public interface UserGrpMngCustomRepository {
      * @param grpCd (그룹 코드)
      * @return UserGrpMngDetailDTO (그룹 DTO)
      */
-    UserGrpMngDetailDTO findByGrpCd(String grpCd);
+    UserGrpMngDetailDTO findUserGrpMngByGrpCd(String grpCd);
 
     /**
      * <p>사용자 확인</p>
@@ -45,5 +45,5 @@ public interface UserGrpMngCustomRepository {
      * @param grpNm    (그룹명)
      * @return List (그룹 목록)
      */
-    List<UserGrpMngListDTO> searchExcelList(String grpNm);
+    List<UserGrpMngListDTO> searchUserGrpMngExcelList(String grpNm);
 }

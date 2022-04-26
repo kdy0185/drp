@@ -37,17 +37,17 @@ public class UserGrpMngService {
      */
     public Page<UserGrpMngListDTO> selectUserGrpMngList(UserGrpMngSearchDTO searchDTO) {
         PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
-        return userGrpMngRepository.searchPageList(searchDTO.getGrpNm(), pageRequest);
+        return userGrpMngRepository.searchUserGrpMngList(searchDTO.getGrpNm(), pageRequest);
     }
 
     /**
      * <p>그룹 상세</p>
      *
      * @param request (그룹 정보)
-     * @return UserGrpMngDto (그룹 DTO)
+     * @return UserGrpMngDetailDTO (그룹 DTO)
      */
     public UserGrpMngDetailDTO selectUserGrpMngDetail(UserGrpMngRequest request) {
-        return userGrpMngRepository.findByGrpCd(request.getGrpCd());
+        return userGrpMngRepository.findUserGrpMngByGrpCd(request.getGrpCd());
     }
 
     /**
@@ -127,6 +127,6 @@ public class UserGrpMngService {
      * @return List (그룹 목록)
      */
     public List<UserGrpMngListDTO> selectUserGrpMngExcelList(UserGrpMngSearchDTO searchDTO) {
-        return userGrpMngRepository.searchExcelList(searchDTO.getGrpNm());
+        return userGrpMngRepository.searchUserGrpMngExcelList(searchDTO.getGrpNm());
     }
 }

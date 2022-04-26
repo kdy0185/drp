@@ -2,7 +2,6 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -12,7 +11,6 @@ import lombok.ToString;
  * @Description : 사용자 권한 목록 DTO
  */
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @ToString(of = {"authCd", "authNm", "authYn", "lastYn"})
 public class UserAuthMngListDTO {

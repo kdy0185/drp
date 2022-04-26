@@ -69,7 +69,7 @@ class UserMngServiceTest {
     LocalDateTime regDate, modDate;
 
     @BeforeEach
-    public void SetUp() {
+    public void setUp() {
         setTestModel();
     }
 
@@ -114,7 +114,7 @@ class UserMngServiceTest {
         Page<UserMngListDTO> pageList = new PageImpl<>(list);
 
         // mocking
-        given(userMngRepository.searchPageList(anyString(), anyString(), anyString(), any(),
+        given(userMngRepository.searchUserMngList(anyString(), anyString(), anyString(), any(),
             any())).willReturn(pageList);
 
         // when
@@ -130,7 +130,7 @@ class UserMngServiceTest {
     @DisplayName("사용자 상세 조회 테스트")
     public void selectUserMngDetail() throws Exception {
         // mocking
-        given(userMngRepository.findByUserId(any())).willReturn(detailDTO);
+        given(userMngRepository.findUserMngByUserId(any())).willReturn(detailDTO);
 
         // when
         UserMngDetailDTO findDetail = userMngService.selectUserMngDetail(request);
@@ -143,7 +143,7 @@ class UserMngServiceTest {
     }
 
     @Test
-    @DisplayName("사용자 권한 목록 조회 테스트")
+    @DisplayName("사용자별 권한 목록 조회 테스트")
     public void selectUserAuthMngList() throws Exception {
         // given
         request.setUserId("075082,424981,784252,885235");
@@ -170,7 +170,7 @@ class UserMngServiceTest {
     public void insertUserMngData() throws Exception {
         // mocking
         given(userMngRepository.save(any())).willReturn(userMng);
-        given(userMngRepository.findByUserId(any())).willReturn(detailDTO);
+        given(userMngRepository.findUserMngByUserId(anyString())).willReturn(detailDTO);
         given(passwordEncoder.encode(anyString())).willReturn(userPw);
 
         // when

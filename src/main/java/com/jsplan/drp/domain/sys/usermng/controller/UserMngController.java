@@ -189,11 +189,11 @@ public class UserMngController {
      */
     @GetMapping(value = "/sys/usermng/userAuthMngSearch.do")
     public @ResponseBody JSONObject userAuthMngSearch(@ModelAttribute UserMngRequest request) {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject userAuthMngObject = new JSONObject();
         JSONArray userAuthMngList = userMngService.selectUserAuthMngList(request);
-        jsonObject.put("userAuthMngList", userAuthMngList);
+        userAuthMngObject.put("userAuthMngList", userAuthMngList);
 
-        return jsonObject;
+        return userAuthMngObject;
     }
 
     /**
