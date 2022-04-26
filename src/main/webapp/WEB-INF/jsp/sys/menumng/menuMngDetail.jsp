@@ -85,35 +85,53 @@
     }
   }
 
-  // 수정
-  function updateMenuMng() {
+  // 등록
+  function insertMenuMng() {
     var form = $('form[name="menuMngDetailForm"]');
-    var state = $(form).find('input[name="state"]').val();
-    var msg = state === "I" ? "등록" : "수정";
-    var menuAuthItems = subTree.view.getChecked();
-    var authCd = "";
-    $(menuAuthItems).each(function (i) {
-      authCd += menuAuthItems[i].data.id + ",";
-    });
-
     $(form).validateForm();
 
     if ($(form).valid()) {
-      if (confirm(msg + " 하시겠습니까?")) {
-        $(form).find('input[name="authCd"]').val(authCd);
+      if (confirm("등록 하시겠습니까?")) {
+        $(form).find('input[name="authCd"]').val(getAuthCd());
         $.ajax({
           type: "post",
-          url: "/sys/menumng/menuMngUpdate.do",
+          url: "/sys/menumng/menuMngInsert.do",
           data: $(form).serialize(),
-          success: function (code) {
-            if (code === "S") {
-              alert(msg + " 되었습니다.");
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("등록 되었습니다.");
               $.util.closeDialog();
               moveList();
-            } else if (code === "N") {
-              alert(msg + "된 데이터가 없습니다.");
+            } else if (res.dataStatus === "DUPLICATE") {
+              alert("중복된 메뉴 코드입니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  // 수정
+  function updateMenuMng() {
+    var form = $('form[name="menuMngDetailForm"]');
+    $(form).validateForm();
+
+    if ($(form).valid()) {
+      if (confirm("수정 하시겠습니까?")) {
+        $(form).find('input[name="authCd"]').val(getAuthCd());
+        $.ajax({
+          type: "put",
+          url: "/sys/menumng/menuMngUpdate.do",
+          data: $(form).serialize(),
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("수정 되었습니다.");
+              $.util.closeDialog();
+              moveList();
+            } else {
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -126,25 +144,33 @@
     var form = $('form[name="menuMngDetailForm"]');
     if (confirm("삭제 하시겠습니까?")) {
       $.ajax({
-        type: "post",
+        type: "delete",
         url: "/sys/menumng/menuMngDelete.do",
         data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("삭제 되었습니다.");
             $.util.closeDialog();
             moveList();
-          } else if (code === "N") {
-            alert("삭제된 데이터가 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
+
+  // 권한 조회
+  function getAuthCd() {
+    var menuAuthItems = subTree.view.getChecked();
+    var authCd = "";
+    $(menuAuthItems).each(function (i) {
+      authCd += menuAuthItems[i].data.id + ",";
+    });
+    return authCd;
+  }
 </script>
-<form:form modelAttribute="menuMngVO" name="menuMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="menuMngDetailForm" method="post">
     <form:hidden path="state"/>
     <form:hidden path="authCd"/>
     <table class="table blue-base-table">
@@ -159,7 +185,7 @@
             <th class="top-line"><span class="star-mark">메뉴 코드</span></th>
             <td class="top-line">
                 <form:input path="menuCd" cssClass="form-control input-sm width_42 menuCdReq"
-                            readonly="${menuMngVO.state eq 'U' ? 'true' : 'false'}" onblur="getMenuInfo();"/>
+                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}" onblur="getMenuInfo();"/>
             </td>
             <th class="top-line" rowspan="5"><span class="star-unmark">권한</span></th>
             <td class="top-line padding_none" rowspan="5">
@@ -207,12 +233,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${menuMngVO.state eq 'I'}">
-            <button type="button" onclick="updateMenuMng();" class="btn btn-red">
+        <c:if test="${detailDTO.state eq 'I'}">
+            <button type="button" onclick="insertMenuMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${menuMngVO.state eq 'U'}">
+        <c:if test="${detailDTO.state eq 'U'}">
             <button type="button" onclick="updateMenuMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>
