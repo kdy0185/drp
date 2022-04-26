@@ -26,7 +26,7 @@ public interface UserMngCustomRepository {
      * @param pageable   (페이징 정보)
      * @return Page (페이징 목록)
      */
-    Page<UserMngListDTO> searchPageList(String grpCd, String searchCd, String searchWord,
+    Page<UserMngListDTO> searchUserMngList(String grpCd, String searchCd, String searchWord,
         UseStatus useYn, Pageable pageable);
 
     /**
@@ -35,10 +35,10 @@ public interface UserMngCustomRepository {
      * @param userId (사용자 아이디)
      * @return UserMngDetailDTO (사용자 DTO)
      */
-    UserMngDetailDTO findByUserId(String userId);
+    UserMngDetailDTO findUserMngByUserId(String userId);
 
     /**
-     * <p>사용자 권한 목록</p>
+     * <p>사용자별 권한 목록</p>
      *
      * @param userIdList (사용자 아이디 목록)
      * @param authCd (권한 코드)
@@ -55,6 +55,6 @@ public interface UserMngCustomRepository {
      * @param useYn      (사용 여부)
      * @return List (사용자 목록)
      */
-    List<UserMngListDTO> searchExcelList(String grpCd, String searchCd, String searchWord,
+    List<UserMngListDTO> searchUserMngExcelList(String grpCd, String searchCd, String searchWord,
         UseStatus useYn);
 }

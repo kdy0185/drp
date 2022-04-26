@@ -950,7 +950,7 @@ public class StringUtil {
         String[] arrRet = null;
         ArrayList<String> al = null;
         try {
-            StringTokenizer st = new StringTokenizer(src, mark, true);
+            StringTokenizer st = new StringTokenizer(clean(src), mark, true);
             al = new ArrayList<String>();
             String prevToken = "";
             int cnt = st.countTokens();

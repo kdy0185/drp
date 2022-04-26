@@ -9,6 +9,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
+import com.jsplan.drp.global.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -16,7 +17,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.StringUtils;
 
 /**
  * @Class : UserGrpMngCustomRepositoryImpl
@@ -42,7 +42,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return Page (페이징 목록)
      */
     @Override
-    public Page<UserGrpMngListDTO> searchPageList(String grpNm, Pageable pageable) {
+    public Page<UserGrpMngListDTO> searchUserGrpMngList(String grpNm, Pageable pageable) {
         return applyPagination(pageable,
             contentQuery -> getContentQuery(grpNm, contentQuery),
             countQuery -> getCountQuery(grpNm, countQuery)
@@ -93,17 +93,17 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return BooleanExpression (Boolean 표현식)
      */
     private BooleanExpression grpNmLike(String grpNm) {
-        return StringUtils.hasText(grpNm) ? userGrpMng.grpNm.contains(grpNm) : null;
+        return !StringUtil.isEmpty(grpNm) ? userGrpMng.grpNm.contains(grpNm) : null;
     }
 
     /**
      * <p>그룹 상세</p>
      *
      * @param grpCd (그룹 코드)
-     * @return UserGrpMngDto (그룹 DTO)
+     * @return UserGrpMngDetailDTO (그룹 DTO)
      */
     @Override
-    public UserGrpMngDetailDTO findByGrpCd(String grpCd) {
+    public UserGrpMngDetailDTO findUserGrpMngByGrpCd(String grpCd) {
         return select(new QUserGrpMngDetailDTO(
             userGrpMng.grpCd,
             userGrpMng.grpNm,
@@ -141,7 +141,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return List (그룹 목록)
      */
     @Override
-    public List<UserGrpMngListDTO> searchExcelList(String grpNm) {
+    public List<UserGrpMngListDTO> searchUserGrpMngExcelList(String grpNm) {
         List<UserGrpMngListDTO> excelList = getContentQuery(grpNm, getQueryFactory()).fetch();
         return addRowNum(excelList, 1, excelList.size());
     }

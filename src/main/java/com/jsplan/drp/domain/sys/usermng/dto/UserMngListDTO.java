@@ -6,7 +6,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @Class : UserMngListDTO
@@ -15,7 +14,6 @@ import lombok.NoArgsConstructor;
  * @Description : 사용자 목록 DTO
  */
 @Getter
-@NoArgsConstructor
 public class UserMngListDTO extends BaseListDTO {
 
     private String grpCd; // 그룹 코드

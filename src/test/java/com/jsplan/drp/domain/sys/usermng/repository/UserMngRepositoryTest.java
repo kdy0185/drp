@@ -61,7 +61,7 @@ class UserMngRepositoryTest {
 
     @Test
     @DisplayName("사용자 목록 조회 테스트")
-    public void selectUserMngList() throws Exception {
+    public void searchUserMngList() throws Exception {
         // given
         String grpCd = "GRP_USER";
         String searchCd = "userNm";
@@ -70,7 +70,7 @@ class UserMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 200);
 
         // when
-        Page<UserMngListDTO> pageList = userMngRepository.searchPageList(grpCd, searchCd,
+        Page<UserMngListDTO> pageList = userMngRepository.searchUserMngList(grpCd, searchCd,
             searchWord, useYn, pageRequest);
 
         // then
@@ -79,12 +79,12 @@ class UserMngRepositoryTest {
 
     @Test
     @DisplayName("사용자 상세 조회 테스트")
-    public void selectUserMngDetail() throws Exception {
+    public void findUserMngByUserId() throws Exception {
         // given
         String userId = "sys_app";
 
         // when
-        UserMngDetailDTO detailDTO = userMngRepository.findByUserId(userId);
+        UserMngDetailDTO detailDTO = userMngRepository.findUserMngByUserId(userId);
 
         // then
         assertThat(detailDTO.getUserNm()).isEqualTo("시스템 관리자");
@@ -92,8 +92,8 @@ class UserMngRepositoryTest {
     }
 
     @Test
-    @DisplayName("사용자 권한 목록 조회 테스트")
-    public void selectUserAuthMngList() throws Exception {
+    @DisplayName("사용자별 권한 목록 조회 테스트")
+    public void searchUserAuthMngList() throws Exception {
         // given
         String userId = "075082,424981,784252,885235";
         List<String> userIdList = List.of(userId.split(","));
@@ -116,7 +116,8 @@ class UserMngRepositoryTest {
     public void insertUserMngData() throws Exception {
         // when
         UserMng savedUserMng = userMngRepository.save(request.toEntity());
-        String findUserId = userMngRepository.findByUserId(savedUserMng.getUserId()).getUserId();
+        String findUserId = userMngRepository.findUserMngByUserId(savedUserMng.getUserId())
+            .getUserId();
 
         // then
         assertThat(findUserId).isEqualTo(userId);
@@ -156,7 +157,7 @@ class UserMngRepositoryTest {
         userMngRepository.saveAndFlush(request.toEntity());
 
         userMngRepository.deleteById(userId);
-        UserMngDetailDTO detailDTO = userMngRepository.findByUserId(userId);
+        UserMngDetailDTO detailDTO = userMngRepository.findUserMngByUserId(userId);
 
         // then
         assertThat(detailDTO).isNull();

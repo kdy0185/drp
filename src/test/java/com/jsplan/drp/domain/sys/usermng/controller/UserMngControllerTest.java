@@ -259,8 +259,8 @@ class UserMngControllerTest {
     @Test
     @Order(10)
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
-    @DisplayName("사용자 권한 목록 조회 테스트")
-    public void selectUserAuthMngList() throws Exception {
+    @DisplayName("사용자별 권한 목록 조회 테스트")
+    public void userAuthMngSearch() throws Exception {
         mockMvc.perform(get("/sys/usermng/userAuthMngSearch.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", "075082,424981,784252,885235")

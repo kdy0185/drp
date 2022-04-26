@@ -33,13 +33,13 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 목록 조회 테스트")
-    public void selectUserGrpMngList() throws Exception {
+    public void searchUserGrpMngList() throws Exception {
         // given
         String grpNm = "사용자";
         PageRequest pageRequest = PageRequest.of(0, 20);
 
         // when
-        Page<UserGrpMngListDTO> pageList = userGrpMngRepository.searchPageList(grpNm, pageRequest);
+        Page<UserGrpMngListDTO> pageList = userGrpMngRepository.searchUserGrpMngList(grpNm, pageRequest);
 
         // then
         assertThat(pageList.getNumberOfElements()).isEqualTo(1);
@@ -47,12 +47,12 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 상세 조회 테스트")
-    public void selectUserGrpMngDetail() throws Exception {
+    public void findUserGrpMngByGrpCd() throws Exception {
         // given
         String grpCd = "GRP_MNG";
 
         // when
-        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findUserGrpMngByGrpCd(grpCd);
 
         // then
         assertThat(detailDTO.getGrpNm()).isEqualTo("관리자 그룹");
@@ -73,7 +73,7 @@ class UserGrpMngRepositoryTest {
         UserGrpMngRequest request = UserGrpMngRequestBuilder.build(grpCd, grpNm, grpDesc);
 
         UserGrpMng savedUserGrpMng = userGrpMngRepository.save(request.toEntity());
-        String findGrpCd = userGrpMngRepository.findByGrpCd(savedUserGrpMng.getGrpCd()).getGrpCd();
+        String findGrpCd = userGrpMngRepository.findUserGrpMngByGrpCd(savedUserGrpMng.getGrpCd()).getGrpCd();
 
         // then
         assertThat(findGrpCd).isEqualTo(grpCd);
@@ -116,7 +116,7 @@ class UserGrpMngRepositoryTest {
         userGrpMngRepository.saveAndFlush(request.toEntity());
 
         userGrpMngRepository.deleteById(grpCd);
-        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findByGrpCd(grpCd);
+        UserGrpMngDetailDTO detailDTO = userGrpMngRepository.findUserGrpMngByGrpCd(grpCd);
 
         // then
         assertThat(detailDTO).isNull();

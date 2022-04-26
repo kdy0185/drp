@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * @Class : UserGrpMngDto
+ * @Class : UserGrpMngDetailDTO
  * @Author : KDW
  * @Date : 2022-03-21
  * @Description : 그룹 상세 DTO

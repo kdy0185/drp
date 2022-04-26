@@ -43,7 +43,7 @@ public class UserMngService {
      */
     public Page<UserMngListDTO> selectUserMngList(UserMngSearchDTO searchDTO) {
         PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
-        return userMngRepository.searchPageList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+        return userMngRepository.searchUserMngList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
             searchDTO.getSearchWord(), searchDTO.getUseYn(), pageRequest);
     }
 
@@ -51,14 +51,14 @@ public class UserMngService {
      * <p>사용자 상세</p>
      *
      * @param request (사용자 정보)
-     * @return UserMngDto (사용자 DTO)
+     * @return UserMngDetailDTO (사용자 DTO)
      */
     public UserMngDetailDTO selectUserMngDetail(UserMngRequest request) {
-        return userMngRepository.findByUserId(request.getUserId());
+        return userMngRepository.findUserMngByUserId(request.getUserId());
     }
 
     /**
-     * <p>사용자 권한 목록</p>
+     * <p>사용자별 권한 목록</p>
      *
      * @param request (권한 정보)
      * @return JSONArray (권한 목록)
@@ -91,7 +91,8 @@ public class UserMngService {
      * @return String
      */
     public UserMngResponse selectUserMngDupCnt(UserMngRequest request) {
-        DataStatus status = validateDupMngData(request) ? DataStatus.DUPLICATE : DataStatus.SUCCESS;
+        DataStatus status =
+            validateUserMngDupData(request) ? DataStatus.DUPLICATE : DataStatus.SUCCESS;
         return new UserMngResponse(request.getUserId(), status);
     }
 
@@ -103,7 +104,7 @@ public class UserMngService {
      */
     @Transactional
     public UserMngResponse insertUserMngData(UserMngRequest request) {
-        if (validateDupMngData(request)) {
+        if (validateUserMngDupData(request)) {
             return new UserMngResponse(null, DataStatus.DUPLICATE);
         } else {
             // BCrypt 패스워드 암호화
@@ -122,7 +123,7 @@ public class UserMngService {
      * @param request (사용자 정보)
      * @return boolean (중복 여부)
      */
-    private boolean validateDupMngData(UserMngRequest request) {
+    private boolean validateUserMngDupData(UserMngRequest request) {
         Optional<UserMng> optionalUserMng = userMngRepository.findById(request.getUserId());
         return optionalUserMng.isPresent();
     }
@@ -181,7 +182,7 @@ public class UserMngService {
      * @return List (사용자 목록)
      */
     public List<UserMngListDTO> selectUserMngExcelList(UserMngSearchDTO searchDTO) {
-        return userMngRepository.searchExcelList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+        return userMngRepository.searchUserMngExcelList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
             searchDTO.getSearchWord(), searchDTO.getUseYn());
     }
 }

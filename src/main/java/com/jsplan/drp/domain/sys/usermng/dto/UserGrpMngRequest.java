@@ -3,7 +3,6 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -14,7 +13,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 public class UserGrpMngRequest {
 
     @NotBlank(message = "{js.valid.msg.required}")
