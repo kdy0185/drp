@@ -24,7 +24,6 @@ public class MenuMngDetailDTO {
     private Integer menuLv; // 메뉴 수준
     private Integer menuOrd; // 메뉴 순서
     private String useYn; // 사용 여부
-    private String authCd; // 권한 코드
     private String state; // 등록/수정 (등록 : I, 수정 : U)
 
     // 상세 조회 시 구분값 설정

@@ -35,7 +35,7 @@ public interface MenuMngCustomRepository {
     MenuMngDetailDTO findMenuMngByMenuCd(String menuCd);
 
     /**
-     * <p>메뉴 권한 목록</p>
+     * <p>메뉴별 권한 목록</p>
      *
      * @param menuCdList (메뉴 코드 목록)
      * @param authCd     (권한 코드)

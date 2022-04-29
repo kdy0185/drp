@@ -70,11 +70,11 @@ class UserMngRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 200);
 
         // when
-        Page<UserMngListDTO> pageList = userMngRepository.searchUserMngList(grpCd, searchCd,
+        Page<UserMngListDTO> userMngList = userMngRepository.searchUserMngList(grpCd, searchCd,
             searchWord, useYn, pageRequest);
 
         // then
-        assertThat(pageList.getNumberOfElements()).isEqualTo(28);
+        assertThat(userMngList.getNumberOfElements()).isEqualTo(28);
     }
 
     @Test

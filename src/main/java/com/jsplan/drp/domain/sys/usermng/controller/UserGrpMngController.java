@@ -73,7 +73,7 @@ public class UserGrpMngController {
      * <p>그룹 조회</p>
      *
      * @param searchDTO (조회 조건)
-     * @return Page (페이징 목록)
+     * @return Page (그룹 목록)
      */
     @GetMapping(value = "/sys/usermng/userGrpMngSearch.do")
     public @ResponseBody

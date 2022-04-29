@@ -39,7 +39,7 @@ public class UserMngService {
      * <p>사용자 목록</p>
      *
      * @param searchDTO (조회 조건)
-     * @return Page (페이징 목록)
+     * @return Page (사용자 목록)
      */
     public Page<UserMngListDTO> selectUserMngList(UserMngSearchDTO searchDTO) {
         PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
@@ -88,7 +88,7 @@ public class UserMngService {
      * <p>사용자 아이디 중복 체크</p>
      *
      * @param request (사용자 정보)
-     * @return String
+     * @return UserMngResponse (응답 정보)
      */
     public UserMngResponse selectUserMngDupCnt(UserMngRequest request) {
         DataStatus status =

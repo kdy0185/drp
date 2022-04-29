@@ -19,7 +19,7 @@ public interface UserGrpMngCustomRepository {
      *
      * @param grpNm    (그룹명)
      * @param pageable (페이징 정보)
-     * @return Page (페이징 목록)
+     * @return Page (그룹 목록)
      */
     Page<UserGrpMngListDTO> searchUserGrpMngList(String grpNm, Pageable pageable);
 

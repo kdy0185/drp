@@ -145,7 +145,7 @@ class MenuMngServiceTest {
     @Test
     @DisplayName("메뉴 등록 테스트")
     public void insertMenuMngData() throws Exception {
-        // given
+        // mocking
         given(menuMngRepository.save(any())).willReturn(menuMng);
         given(menuMngRepository.findMenuMngByMenuCd(anyString())).willReturn(detailDTO);
 

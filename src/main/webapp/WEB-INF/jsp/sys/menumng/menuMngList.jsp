@@ -261,7 +261,7 @@
 
       // 메뉴 엑셀
       function excelMenuMng() {
-        var form = $('form[name="menuMngForm"]');
+        var form = $('form[name="menuMngSearchForm"]');
         $(form).attr({
           action: "/sys/menumng/menuMngExcel.do"
         }).submit();

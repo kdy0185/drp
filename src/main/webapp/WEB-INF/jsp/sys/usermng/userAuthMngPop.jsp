@@ -55,13 +55,16 @@
   // 권한 적용
   function selectAuth() {
     var form = $('form[name="userAuthMngForm"]');
+    var userId = $(form).find('input[name="userId"]').val();
 
     if (confirm("선택한 권한을 적용 하시겠습니까?")) {
-      $(form).find('input[name="authCd"]').val(getAuthCd());
       $.ajax({
         type: "put",
         url: "/sys/usermng/userAuthMngUpdate.do",
-        data: $(form).serialize(),
+        data: {
+          userId: userId,
+          authCd: getAuthCd()
+        },
         success: function (res) {
           if (res.dataStatus === "SUCCESS") {
             alert("적용 되었습니다.");
@@ -87,7 +90,6 @@
 
 <form:form modelAttribute="detailDTO" name="userAuthMngForm" method="post">
     <form:hidden path="userId"/>
-    <form:hidden path="authCd"/>
     <div class="container-fluid">
         <div class="row">
             <ul class="nav nav-pills">

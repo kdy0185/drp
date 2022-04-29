@@ -127,7 +127,7 @@ public abstract class Querydsl5RepositorySupport {
      * @param pageable     (Pageable 객체)
      * @param contentQuery (Function 객체)
      * @param countQuery   (Function 객체)
-     * @return Page (Page 객체)
+     * @return Page (페이징 목록)
      */
     protected <T extends BaseListDTO> Page<T> applyPagination(Pageable pageable,
         Function<JPAQueryFactory, JPAQuery<T>> contentQuery,

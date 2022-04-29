@@ -81,7 +81,7 @@ public class UserMngController {
      * <p>사용자 조회</p>
      *
      * @param searchDTO (조회 조건)
-     * @return Page (페이징 목록)
+     * @return Page (사용자 목록)
      */
     @GetMapping(value = "/sys/usermng/userMngSearch.do")
     public @ResponseBody Page<UserMngListDTO> userMngSearch(

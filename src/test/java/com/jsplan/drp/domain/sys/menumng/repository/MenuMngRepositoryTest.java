@@ -63,7 +63,6 @@ class MenuMngRepositoryTest {
         String menuCd = "P0000";
         String searchCd = "menuNm";
         String searchWord = "";
-        UseStatus useYn = UseStatus.Y;
 
         // when
         List<MenuMngListDTO> menuMngList = menuMngRepository.searchMenuMngList(menuCd, searchCd,
@@ -88,7 +87,7 @@ class MenuMngRepositoryTest {
     }
 
     @Test
-    @DisplayName("메뉴 권한 목록 조회 테스트")
+    @DisplayName("메뉴별 권한 목록 조회 테스트")
     public void searchMenuAuthMngList() throws Exception {
         // given
         String menuCd = "P0201,P0202,P0203";

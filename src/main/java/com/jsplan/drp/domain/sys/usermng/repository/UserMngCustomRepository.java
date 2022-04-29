@@ -24,7 +24,7 @@ public interface UserMngCustomRepository {
      * @param searchWord (검색어)
      * @param useYn      (사용 여부)
      * @param pageable   (페이징 정보)
-     * @return Page (페이징 목록)
+     * @return Page (사용자 목록)
      */
     Page<UserMngListDTO> searchUserMngList(String grpCd, String searchCd, String searchWord,
         UseStatus useYn, Pageable pageable);

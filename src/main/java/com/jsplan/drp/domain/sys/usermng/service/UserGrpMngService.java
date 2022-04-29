@@ -33,7 +33,7 @@ public class UserGrpMngService {
      * <p>그룹 목록</p>
      *
      * @param searchDTO (조회 조건)
-     * @return Page (페이징 목록)
+     * @return Page (그룹 목록)
      */
     public Page<UserGrpMngListDTO> selectUserGrpMngList(UserGrpMngSearchDTO searchDTO) {
         PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());

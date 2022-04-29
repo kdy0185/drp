@@ -39,13 +39,13 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      *
      * @param grpNm    (그룹명)
      * @param pageable (페이징 정보)
-     * @return Page (페이징 목록)
+     * @return Page (그룹 목록)
      */
     @Override
     public Page<UserGrpMngListDTO> searchUserGrpMngList(String grpNm, Pageable pageable) {
         return applyPagination(pageable,
-            contentQuery -> getContentQuery(grpNm, contentQuery),
-            countQuery -> getCountQuery(grpNm, countQuery)
+            contentQuery -> getUserGrpMngListQuery(grpNm, contentQuery),
+            countQuery -> getUserGrpMngCountQuery(grpNm, countQuery)
         );
     }
 
@@ -56,7 +56,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param contentQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<UserGrpMngListDTO> getContentQuery(String grpNm,
+    private JPAQuery<UserGrpMngListDTO> getUserGrpMngListQuery(String grpNm,
         JPAQueryFactory contentQuery) {
         return contentQuery.select(new QUserGrpMngListDTO(
                 userGrpMng.grpCd,
@@ -80,7 +80,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @param countQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<Long> getCountQuery(String grpNm, JPAQueryFactory countQuery) {
+    private JPAQuery<Long> getUserGrpMngCountQuery(String grpNm, JPAQueryFactory countQuery) {
         return countQuery.select(userGrpMng.count())
             .from(userGrpMng)
             .where(grpNmLike(grpNm));
@@ -142,7 +142,7 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
      */
     @Override
     public List<UserGrpMngListDTO> searchUserGrpMngExcelList(String grpNm) {
-        List<UserGrpMngListDTO> excelList = getContentQuery(grpNm, getQueryFactory()).fetch();
+        List<UserGrpMngListDTO> excelList = getUserGrpMngListQuery(grpNm, getQueryFactory()).fetch();
         return addRowNum(excelList, 1, excelList.size());
     }
 }

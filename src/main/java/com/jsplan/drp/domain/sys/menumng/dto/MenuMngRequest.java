@@ -48,7 +48,7 @@ public class MenuMngRequest {
     private String state; // 등록/수정 (등록 : I, 수정 : U)
 
     // Test 전용 생성자
-    public MenuMngRequest(String menuCd, String upperMenuCd, String menuNm, String menuEngNm,
+    MenuMngRequest(String menuCd, String upperMenuCd, String menuNm, String menuEngNm,
         String menuUrl, String menuDesc, Integer menuLv, Integer menuOrd, UseStatus useYn,
         String authCd) {
         this.menuCd = menuCd;

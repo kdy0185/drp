@@ -31,7 +31,6 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     /**
      * <p>메뉴 관리 Custom Repository Impl 생성자</p>
      */
-
     public MenuMngCustomRepositoryImpl() {
         super(MenuMng.class);
     }
@@ -49,7 +48,7 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     public List<MenuMngListDTO> searchMenuMngList(String menuCd, String searchCd, String searchWord,
         UseStatus useYn) {
         List<MenuMng> menuMngList = Objects.requireNonNull(
-            getContentQuery(menuCd, searchCd, searchWord, useYn, "menuOrd")).fetch();
+            getMenuMngListQuery(menuCd, searchCd, searchWord, useYn, "list")).fetch();
 
         return menuMngList.stream()
             .map(v -> new MenuMngListDTO(v.getMenuCd(), v.getMenuNm(), v.getMenuUrl(), null,
@@ -60,23 +59,23 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     /**
      * <p>메뉴 목록 쿼리</p>
      *
-     * @param menuCd      (메뉴 코드)
-     * @param searchCd    (검색 조건)
-     * @param searchWord  (검색어)
-     * @param useYn       (사용 여부)
-     * @param orderColumn (정렬 기준 컬럼)
+     * @param menuCd     (메뉴 코드)
+     * @param searchCd   (검색 조건)
+     * @param searchWord (검색어)
+     * @param useYn      (사용 여부)
+     * @param queryType  (쿼리 유형)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<MenuMng> getContentQuery(String menuCd, String searchCd, String searchWord,
-        UseStatus useYn, String orderColumn) {
+    private JPAQuery<MenuMng> getMenuMngListQuery(String menuCd, String searchCd, String searchWord,
+        UseStatus useYn, String queryType) {
         JPAQuery<MenuMng> contentQuery = selectFrom(menuMng)
-            .where(upperMenuCdEq(menuCd), menuLike(searchCd, searchWord), useYnEq(useYn));
+            .where(upperMenuCdEq(menuCd, queryType), menuLike(searchCd, searchWord), useYnEq(useYn));
 
-        if ("menuCd".equals(orderColumn)) {
-            return contentQuery.orderBy(menuMng.menuCd.asc());
-        }
-        if ("menuOrd".equals(orderColumn)) {
+        if ("list".equals(queryType)) {
             return contentQuery.orderBy(menuMng.menuOrd.asc());
+        }
+        if ("excel".equals(queryType)) {
+            return contentQuery.orderBy(menuMng.menuCd.asc());
         }
         return null;
     }
@@ -84,12 +83,16 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     /**
      * <p>메뉴 목록 조회 조건 : 상위 메뉴 코드</p>
      *
-     * @param menuCd (메뉴 코드)
+     * @param menuCd    (메뉴 코드)
+     * @param queryType (쿼리 유형)
      * @return BooleanExpression (Boolean 표현식)
      */
-    private BooleanExpression upperMenuCdEq(String menuCd) {
-        return !StringUtil.isEmpty(menuCd) ? menuMng.upperMenuMng.menuCd.eq(menuCd)
-            : menuMng.upperMenuMng.menuCd.isNull();
+    private BooleanExpression upperMenuCdEq(String menuCd, String queryType) {
+        if ("list".equals(queryType)) {
+            return !StringUtil.isEmpty(menuCd) ? menuMng.upperMenuMng.menuCd.eq(menuCd)
+                : menuMng.upperMenuMng.menuCd.isNull();
+        }
+        return null;
     }
 
     /**
@@ -145,7 +148,7 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     }
 
     /**
-     * <p>메뉴 권한 목록</p>
+     * <p>메뉴별 권한 목록</p>
      *
      * @param menuCdList (메뉴 코드 목록)
      * @param authCd     (권한 코드)
@@ -165,7 +168,7 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     }
 
     /**
-     * <p>메뉴 권한 목록 조회 조건 : 상위 권한 코드</p>
+     * <p>메뉴별 권한 목록 조회 조건 : 상위 권한 코드</p>
      *
      * @param authCd (권한 코드)
      * @return BooleanExpression (Boolean 표현식)
@@ -205,7 +208,7 @@ public class MenuMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     public List<MenuMngListDTO> searchMenuMngExcelList(String menuCd, String searchCd,
         String searchWord, UseStatus useYn) {
         List<MenuMng> menuMngList = Objects.requireNonNull(
-            getContentQuery(menuCd, searchCd, searchWord, useYn, "menuCd")).fetch();
+            getMenuMngListQuery(menuCd, searchCd, searchWord, useYn, "excel")).fetch();
 
         List<MenuMngListDTO> excelList = menuMngList.stream()
             .map(v -> new MenuMngListDTO(v.getMenuCd(), v.getMenuNm(), v.getMenuUrl(),

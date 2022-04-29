@@ -48,14 +48,14 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @param searchWord (검색어)
      * @param useYn      (사용 여부)
      * @param pageable   (페이징 정보)
-     * @return Page (페이징 목록)
+     * @return Page (사용자 목록)
      */
     @Override
     public Page<UserMngListDTO> searchUserMngList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, Pageable pageable) {
         return applyPagination(pageable,
-            contentQuery -> getContentQuery(grpCd, searchCd, searchWord, useYn, contentQuery),
-            countQuery -> getCountQuery(grpCd, searchCd, searchWord, useYn, countQuery)
+            contentQuery -> getUserMngListQuery(grpCd, searchCd, searchWord, useYn, contentQuery),
+            countQuery -> getUserMngCountQuery(grpCd, searchCd, searchWord, useYn, countQuery)
         );
     }
 
@@ -69,7 +69,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @param contentQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<UserMngListDTO> getContentQuery(String grpCd, String searchCd,
+    private JPAQuery<UserMngListDTO> getUserMngListQuery(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, JPAQueryFactory contentQuery) {
         return contentQuery.select(new QUserMngListDTO(
                 userMng.userGrpMng.grpCd,
@@ -99,7 +99,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @param countQuery (쿼리 Factory)
      * @return JPAQuery (생성된 쿼리문)
      */
-    private JPAQuery<Long> getCountQuery(String grpCd, String searchCd,
+    private JPAQuery<Long> getUserMngCountQuery(String grpCd, String searchCd,
         String searchWord, UseStatus useYn, JPAQueryFactory countQuery) {
         return countQuery.select(userMng.count())
             .from(userMng)
@@ -206,13 +206,13 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
      * @return String (권한 여부)
      */
     private String getAuthYn(List<String> userIdList, String authCd) {
-        Long authCnt = select(userAuthMng.authMng.authCd.count())
+        Long userCnt = select(userAuthMng.authMng.authCd.count())
             .from(userAuthMng)
             .where(userAuthMng.userMng.userId.in(userIdList),
                 userAuthMng.authMng.authCd.eq(authCd))
             .groupBy(userAuthMng.authMng.authCd)
             .fetchOne();
-        return authCnt != null && authCnt > 0 ? "Y" : "N";
+        return userCnt != null && userCnt > 0 ? "Y" : "N";
     }
 
     /**
@@ -227,7 +227,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     @Override
     public List<UserMngListDTO> searchUserMngExcelList(String grpCd, String searchCd,
         String searchWord, UseStatus useYn) {
-        List<UserMngListDTO> excelList = getContentQuery(grpCd, searchCd, searchWord, useYn,
+        List<UserMngListDTO> excelList = getUserMngListQuery(grpCd, searchCd, searchWord, useYn,
             getQueryFactory()).fetch();
         return addRowNum(excelList, 1, excelList.size());
     }

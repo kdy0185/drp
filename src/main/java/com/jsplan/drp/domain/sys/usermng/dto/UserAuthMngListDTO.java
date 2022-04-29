@@ -8,7 +8,7 @@ import lombok.ToString;
  * @Class : UserAuthMngListDTO
  * @Author : KDW
  * @Date : 2022-04-21
- * @Description : 사용자 권한 목록 DTO
+ * @Description : 사용자별 권한 목록 DTO
  */
 @Getter
 @AllArgsConstructor

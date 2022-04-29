@@ -79,7 +79,7 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.email = email;
         this.userType = userType;
         this.useYn = useYn;
-        setUserGrpMng(userGrpMng);
+        this.userGrpMng = userGrpMng;
         setUserAuthMng(userAuthMng);
     }
 
@@ -91,20 +91,6 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
     @Override
     public boolean isNew() {
         return getRegDate() == null;
-    }
-
-    // 그룹 설정
-    private void setUserGrpMng(UserGrpMng userGrpMng) {
-        removeUserGrpMng();
-        this.userGrpMng = userGrpMng;
-        userGrpMng.getUserMng().add(this);
-    }
-
-    // 기존 그룹 제거
-    private void removeUserGrpMng() {
-        if (this.userGrpMng != null) {
-            this.userGrpMng.getUserMng().remove(this);
-        }
     }
 
     // 권한 설정
