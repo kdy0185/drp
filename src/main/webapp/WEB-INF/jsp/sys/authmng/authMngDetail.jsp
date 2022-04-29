@@ -10,28 +10,51 @@
 <%@ include file="/WEB-INF/jsp/cmmn/include/subTaglib.jsp" %>
 
 <script type="text/javascript">
-  // 수정
-  function updateAuthMng() {
+  // 등록
+  function insertAuthMng() {
     var form = $('form[name="authMngDetailForm"]');
-    var state = $(form).find('input[name="state"]').val();
-    var msg = state === "I" ? "등록" : "수정";
     $(form).validateForm();
 
     if ($(form).valid()) {
-      if (confirm(msg + " 하시겠습니까?")) {
+      if (confirm("등록 하시겠습니까?")) {
         $.ajax({
           type: "post",
-          url: "/sys/authmng/authMngUpdate.do",
+          url: "/sys/authmng/authMngInsert.do",
           data: $(form).serialize(),
-          success: function (code) {
-            if (code === "S") {
-              alert(msg + " 되었습니다.");
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("등록 되었습니다.");
               $.util.closeDialog();
               moveList();
-            } else if (code === "N") {
-              alert(msg + "된 데이터가 없습니다.");
+            } else if (res.dataStatus === "DUPLICATE") {
+              alert("중복된 권한입니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  // 수정
+  function updateAuthMng() {
+    var form = $('form[name="authMngDetailForm"]');
+    $(form).validateForm();
+
+    if ($(form).valid()) {
+      if (confirm("수정 하시겠습니까?")) {
+        $.ajax({
+          type: "put",
+          url: "/sys/authmng/authMngUpdate.do",
+          data: $(form).serialize(),
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("수정 되었습니다.");
+              $.util.closeDialog();
+              moveList();
+            } else {
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -42,31 +65,28 @@
   // 삭제
   function deleteAuthMng() {
     var form = $('form[name="authMngDetailForm"]');
+
     if (confirm("삭제 하시겠습니까?")) {
       $.ajax({
-        type: "post",
+        type: "delete",
         url: "/sys/authmng/authMngDelete.do",
         data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("삭제 되었습니다.");
             $.util.closeDialog();
             moveList();
-          } else if (code === "U") {
-            alert("권한별 사용자가 적용되어 삭제할 수 없습니다.");
-          } else if (code === "M") {
-            alert("권한별 메뉴가 적용되어 삭제할 수 없습니다.");
-          } else if (code === "N") {
-            alert("삭제된 데이터가 없습니다.");
+          } else if (res.dataStatus === "CONSTRAINT") {
+            alert("권한별 사용자 또는 메뉴가 적용되어 삭제할 수 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
 </script>
-<form:form modelAttribute="authMngVO" name="authMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="authMngDetailForm" method="post">
     <form:hidden path="state"/>
     <table class="table blue-base-table">
         <colgroup>
@@ -80,7 +100,7 @@
             <th class="top-line"><span class="star-mark">권한 코드</span></th>
             <td class="top-line">
                 <form:input path="authCd" cssClass="form-control input-sm width_95 required"
-                            readonly="${authMngVO.state eq 'U' ? 'true' : 'false'}"/>
+                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}"/>
             </td>
             <th class="top-line"><span class="star-unmark">상위 권한 코드</span></th>
             <td class="top-line">
@@ -97,9 +117,9 @@
             <td colspan="3"><form:input path="authNm" cssClass="form-control input-sm width_982 required"/></td>
         </tr>
         <tr>
-            <th><span class="star-unmark">권한 수준</span></th>
+            <th><span class="star-mark">권한 수준</span></th>
             <td><form:input path="authLv" cssClass="form-control input-sm width_42 digitsReq"/></td>
-            <th><span class="star-unmark">권한 순서</span></th>
+            <th><span class="star-mark">권한 순서</span></th>
             <td><form:input path="authOrd" cssClass="form-control input-sm width_42 digitsReq"/></td>
         </tr>
         <tr>
@@ -112,16 +132,16 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${authMngVO.state eq 'I'}">
-            <button type="button" onclick="updateAuthMng();" class="btn btn-red">
+        <c:if test="${detailDTO.state eq 'I'}">
+            <button type="button" onclick="insertAuthMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${authMngVO.state eq 'U'}">
+        <c:if test="${detailDTO.state eq 'U'}">
             <button type="button" onclick="updateAuthMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>
-            <c:if test="${authMngVO.useYn eq 'Y'}">
+            <c:if test="${detailDTO.useYn eq 'Y'}">
                 <button type="button" onclick="deleteAuthMng();" class="btn btn-red">
                     <i class="fa fa-trash"></i>삭제
                 </button>

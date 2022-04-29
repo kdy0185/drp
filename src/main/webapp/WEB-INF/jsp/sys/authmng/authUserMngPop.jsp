@@ -46,8 +46,8 @@
       url: "/sys/authmng/authUserMngSearch.do",
       reader: {
         type: "json",
-        root: "authUserMngList",
-        totalProperty: "cnt"
+        root: "content",
+        totalProperty: "totalElements"
       },
       simpleSortMode: true
     },
@@ -74,7 +74,7 @@
     var searchWord = $(form).find('input[name="searchWord"]').val();
     store.pageSize = pageSize;
     operation.params = {
-      pageNo: store.currentPage,
+      pageNo: store.currentPage - 1,
       pageSize: pageSize,
       authCd: authCd,
       grpCd: grpCd,
@@ -174,43 +174,47 @@
   // 사용자 적용
   function selectUser(authYn) {
     var form = $('form[name="authUserMngForm"]');
+    var authCd = $(form).find('input[name="authCd"]').val();
     var gbn = authYn === "Y" ? "허용" : "해제";
     var authUserCnt = popGrid.getSelectionModel().getCount();
-    var authUserItems = popGrid.getSelectionModel().getSelection();
-    var userId = "";
-    $(authUserItems).each(function (i) {
-      userId += authUserItems[i].data.userId + ",";
-    });
 
     if (authUserCnt === 0) {
       alert("사용자를 선택하세요.");
     } else {
       if (confirm("선택한 사용자의 접근 권한을 " + gbn + " 하시겠습니까?")) {
-        $(form).find('input[name="userId"]').val(userId);
-        $(form).find('input[name="authYn"]').val(authYn);
         $.ajax({
-          type: "post",
+          type: "put",
           url: "/sys/authmng/authUserMngUpdate.do",
-          data: $(form).serialize(),
-          success: function (code) {
-            if (code === "S") {
+          data: {
+            authCd: authCd,
+            userId: getUserId(),
+            authYn: authYn
+          },
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
               alert("적용 되었습니다.");
               searchUser();
-            } else if (code === "N") {
-              alert("수정된 데이터가 없습니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
       }
     }
   }
+
+  // 사용자 조회
+  function getUserId() {
+    var authUserItems = popGrid.getSelectionModel().getSelection();
+    var userId = "";
+    $(authUserItems).each(function (i) {
+      userId += authUserItems[i].data.userId + ",";
+    });
+    return userId;
+  }
 </script>
-<form:form modelAttribute="authMngVO" name="authUserMngForm" method="post">
+<form:form modelAttribute="searchDTO" name="authUserMngForm" method="post">
     <form:hidden path="authCd"/>
-    <form:hidden path="userId"/>
-    <form:hidden path="authYn"/>
 
     <div class="contents-box search-area padding_l26 padding_r26">
         <div class="row">

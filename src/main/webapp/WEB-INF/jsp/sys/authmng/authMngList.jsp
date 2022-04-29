@@ -290,7 +290,7 @@
 
       // 권한 엑셀
       function excelAuthMng() {
-        var form = $('form[name="authMngForm"]');
+        var form = $('form[name="authMngSearchForm"]');
         $(form).attr({
           action: "/sys/authmng/authMngExcel.do"
         }).submit();
@@ -307,7 +307,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="authMngVO" name="authMngSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="authMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-5 col-sm-12 col-xs-12 padding_l25">
@@ -348,7 +348,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="authMngVO" name="authMngForm" method="post">
+            <form:form modelAttribute="searchDTO" name="authMngForm" method="post">
                 <form:hidden path="authCd"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">

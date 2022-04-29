@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -36,6 +37,7 @@ import org.springframework.data.domain.Persistable;
 @Table(name = "SYS_DRP_USER")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"userId"}, callSuper = false)
 @ToString(of = {"userId", "userNm", "mobileNum", "email", "userType", "useYn"})
 public class UserMng extends BaseTimeEntity implements Persistable<String> {
 
