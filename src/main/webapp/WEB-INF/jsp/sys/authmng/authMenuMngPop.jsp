@@ -55,36 +55,41 @@
   // 메뉴 적용
   function selectMenu() {
     var form = $('form[name="authMenuMngForm"]');
-    var authMenuItems = subTree.view.getChecked();
-    var menuCd = "";
-    $(authMenuItems).each(function (i) {
-      menuCd += authMenuItems[i].data.id + ",";
-    });
+    var authCd = $(form).find('input[name="authCd"]').val();
 
     if (confirm("선택한 메뉴로의 접근 권한을 허용 하시겠습니까?")) {
-      $(form).find('input[name="menuCd"]').val(menuCd);
       $.ajax({
-        type: "post",
+        type: "put",
         url: "/sys/authmng/authMenuMngUpdate.do",
-        data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        data: {
+          authCd: authCd,
+          menuCd: getMenuCd()
+        },
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("적용 되었습니다.");
             $.util.closeSubDialog();
-          } else if (code === "N") {
-            alert("수정된 데이터가 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
+
+  // 메뉴 조회
+  function getMenuCd() {
+    var authMenuItems = subTree.view.getChecked();
+    var menuCd = "";
+    $(authMenuItems).each(function (i) {
+      menuCd += authMenuItems[i].data.id + ",";
+    });
+    return menuCd;
+  }
 </script>
 
-<form:form modelAttribute="authMngVO" name="authMenuMngForm" method="post">
+<form:form modelAttribute="detailDTO" name="authMenuMngForm" method="post">
     <form:hidden path="authCd"/>
-    <form:hidden path="menuCd"/>
     <div class="container-fluid">
         <div class="row">
             <ul class="nav nav-pills">
