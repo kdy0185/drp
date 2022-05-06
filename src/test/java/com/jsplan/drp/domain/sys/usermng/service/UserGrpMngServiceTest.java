@@ -104,11 +104,11 @@ class UserGrpMngServiceTest {
         given(userGrpMngRepository.searchUserGrpMngList(anyString(), any())).willReturn(pageList);
 
         // when
-        Page<UserGrpMngListDTO> resultList = userGrpMngService.selectUserGrpMngList(searchDTO);
+        Page<UserGrpMngListDTO> userGrpMngList = userGrpMngService.selectUserGrpMngList(searchDTO);
 
         // then
-        assertThat(resultList.getNumberOfElements()).isEqualTo(1);
-        assertThat(resultList.stream().findFirst().orElseThrow(NoSuchElementException::new)
+        assertThat(userGrpMngList.getNumberOfElements()).isEqualTo(1);
+        assertThat(userGrpMngList.stream().findFirst().orElseThrow(NoSuchElementException::new)
             .getGrpNm()).contains(grpNm);
     }
 
@@ -116,7 +116,7 @@ class UserGrpMngServiceTest {
     @DisplayName("그룹 상세 조회 테스트")
     public void selectUserGrpMngDetail() throws Exception {
         // mocking
-        given(userGrpMngRepository.findUserGrpMngByGrpCd(any())).willReturn(detailDTO);
+        given(userGrpMngRepository.findUserGrpMngByGrpCd(anyString())).willReturn(detailDTO);
 
         // when
         UserGrpMngDetailDTO findDetail = userGrpMngService.selectUserGrpMngDetail(request);
@@ -133,7 +133,7 @@ class UserGrpMngServiceTest {
     public void insertUserGrpMngData() throws Exception {
         // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
-        given(userGrpMngRepository.findUserGrpMngByGrpCd(any())).willReturn(detailDTO);
+        given(userGrpMngRepository.findUserGrpMngByGrpCd(anyString())).willReturn(detailDTO);
 
         // when
         userGrpMngService.insertUserGrpMngData(request);

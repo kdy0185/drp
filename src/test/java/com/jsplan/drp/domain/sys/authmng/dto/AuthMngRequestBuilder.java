@@ -8,6 +8,7 @@ package com.jsplan.drp.domain.sys.authmng.dto;
  */
 public class AuthMngRequestBuilder {
 
+    // Test 전용 생성자
     public static AuthMngRequest build(String authCd, String upperAuthCd, String authNm,
         String authDesc, Integer authLv, Integer authOrd) {
         return new AuthMngRequest(authCd, upperAuthCd, authNm, authDesc, authLv, authOrd);

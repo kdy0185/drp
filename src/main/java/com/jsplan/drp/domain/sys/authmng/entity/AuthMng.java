@@ -81,8 +81,8 @@ public class AuthMng {
     private List<MenuAuthMng> authMenuMng = new ArrayList<>(); // 권한 메뉴 매핑 엔티티
 
     @Builder
-    public AuthMng(String authCd, AuthMng upperAuthMng, String authNm, String authDesc, int authLv,
-        int authOrd) {
+    public AuthMng(String authCd, AuthMng upperAuthMng, String authNm, String authDesc,
+        Integer authLv, Integer authOrd) {
         this.authCd = authCd;
         this.upperAuthMng = upperAuthMng;
         this.authNm = authNm;
