@@ -1,13 +1,27 @@
 package com.jsplan.drp.domain.sys.codemng.service;
 
-import com.jsplan.drp.domain.sys.codemng.mapper.CodeMngMapper;
-import com.jsplan.drp.domain.sys.codemng.entity.CodeMngVO;
-import com.jsplan.drp.global.util.FilterUtil;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeGrpMngDetailDTO;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeGrpMngListDTO;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeGrpMngRequest;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeMngDetailDTO;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeMngListDTO;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequest;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeMngResponse;
+import com.jsplan.drp.domain.sys.codemng.dto.CodeMngSearchDTO;
+import com.jsplan.drp.domain.sys.codemng.entity.CodeGrpMng;
+import com.jsplan.drp.domain.sys.codemng.entity.CodeMng;
+import com.jsplan.drp.domain.sys.codemng.entity.CodeMngId;
+import com.jsplan.drp.domain.sys.codemng.repository.CodeGrpMngRepository;
+import com.jsplan.drp.domain.sys.codemng.repository.CodeMngRepository;
+import com.jsplan.drp.global.obj.entity.CodeMngDataStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
-import javax.annotation.Resource;
+import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,326 +31,362 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date : 2022-01-26
  * @Description : 코드 관리 Service
  */
-@Service("CodeMngService")
+@Service
+@RequiredArgsConstructor
 public class CodeMngService {
 
-    @Resource
-    private CodeMngMapper codeMngMapper;
+    private final CodeGrpMngRepository codeGrpMngRepository;
+    private final CodeMngRepository codeMngRepository;
 
     /**
      * <p>그룹 코드 목록</p>
      *
-     * @param codeMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (그룹 코드 목록)
      */
-    public List<CodeMngVO> selectGrpMngList(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectGrpMngList(codeMngVO);
-    }
-
-    /**
-     * <p>그룹 코드 목록 수</p>
-     *
-     * @param codeMngVO
-     * @return int
-     * @throws Exception throws Exception
-     */
-    public int selectGrpMngListCnt(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectGrpMngListCnt(codeMngVO);
+    public Page<CodeGrpMngListDTO> selectCodeGrpMngList(CodeMngSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return codeGrpMngRepository.searchCodeGrpMngList(searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), pageRequest);
     }
 
     /**
      * <p>공통 코드 목록</p>
      *
-     * @param codeMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (공통 코드 목록)
      */
-    public List<CodeMngVO> selectCodeMngList(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectCodeMngList(codeMngVO);
-    }
-
-    /**
-     * <p>공통 코드 목록 수</p>
-     *
-     * @param codeMngVO
-     * @return int
-     * @throws Exception throws Exception
-     */
-    public int selectCodeMngListCnt(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectCodeMngListCnt(codeMngVO);
+    public Page<CodeMngListDTO> selectCodeMngList(CodeMngSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return codeMngRepository.searchCodeMngList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), pageRequest);
     }
 
     /**
      * <p>그룹 코드 상세</p>
      *
-     * @param codeMngVO
-     * @return CodeMngVO
-     * @throws Exception throws Exception
+     * @param request (그룹 코드 정보)
+     * @return CodeGrpMngDetailDTO (그룹 코드 DTO)
      */
-    public CodeMngVO selectGrpMngDetail(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectGrpMngDetail(codeMngVO);
+    public CodeGrpMngDetailDTO selectCodeGrpMngDetail(CodeGrpMngRequest request) {
+        return codeGrpMngRepository.findCodeGrpMngByGrpCd(request.getGrpCd());
     }
 
     /**
      * <p>공통 코드 상세</p>
      *
-     * @param codeMngVO
-     * @return CodeMngVO
-     * @throws Exception throws Exception
+     * @param request (공통 코드 정보)
+     * @return CodeMngDetailDTO (공통 코드 DTO)
      */
-    public CodeMngVO selectCodeMngDetail(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectCodeMngDetail(codeMngVO);
+    public CodeMngDetailDTO selectCodeMngDetail(CodeMngRequest request) {
+        return codeMngRepository.findCodeMngByComCd(request.getGrpCd(), request.getComCd());
     }
 
     /**
      * <p>그룹 코드 수정</p>
      *
-     * @param codeMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (그룹 코드 정보)
+     * @return CodeMngResponse (응답 정보)
      */
     @Transactional
-    public String updateGrpMngData(CodeMngVO codeMngVO) throws Exception {
-        String code = null;
-        String jsonData = codeMngVO.getJsonData();
-        jsonData = FilterUtil.filterXssReverse(jsonData);
-        jsonData = StringUtil.clean(jsonData);
-        JSONArray jsonArray = JSONArray.fromObject(jsonData);
-        int cnt = jsonArray.size();
+    public CodeMngResponse updateCodeGrpMngData(CodeGrpMngRequest request) {
+        JSONArray codeGrpMngArray = request.changeJsonData();
+        CodeMngDataStatus dataStatus;
+        int dataCnt = 0;
 
-        if (cnt > 0) {
-            boolean isBlankGrp = false;
-            boolean isDupGrp = false;
-            boolean isDupInsertGrp = false;
-            boolean isDupUpdateGrp = false;
-            String arrGrpCd = null;
-
-            // Validation Check
-            for (int i = 0; i < cnt; i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                codeMngVO = (CodeMngVO) JSONObject.toBean(jsonObject, CodeMngVO.class);
-                String grpCd = codeMngVO.getGrpCd();
-                String exGrpCd = codeMngVO.getExGrpCd();
-                String grpNm = codeMngVO.getGrpNm();
-                String state = codeMngVO.getState();
-
-                // 1. 공백 여부
-                if (!StringUtil.isBlank(state)) {
-                    if (StringUtil.isBlank(grpCd) || StringUtil.isBlank(grpNm)) {
-                        isBlankGrp = true;
-                    }
-                }
-
-                // 2. 코드 간 중복 여부
-                arrGrpCd += grpCd + ",";
-                if (i == cnt - 1) {
-                    isDupGrp = StringUtil.findDuplicateValue(arrGrpCd);
-                }
-
-                // 3. 등록 코드 중복 여부
-                if ("I".equals(state)) {
-                    if (codeMngMapper.selectGrpMngListCnt(codeMngVO) > 0) {
-                        isDupInsertGrp = true;
-                    }
-                }
-
-                // 4. 수정 코드 중복 여부
-                if ("U".equals(state) && !grpCd.equals(exGrpCd)) {
-                    if (codeMngMapper.selectGrpMngListCnt(codeMngVO) > 0) {
-                        isDupUpdateGrp = true;
-                    }
-                }
-            }
-
-            if (isBlankGrp) {
-                code = "B";
-            } else if (isDupGrp) {
-                code = "D";
-            } else if (isDupInsertGrp) {
-                code = "I";
-            } else if (isDupUpdateGrp) {
-                code = "U";
-            } else {
-                for (int i = 0; i < cnt; i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    codeMngVO = (CodeMngVO) JSONObject.toBean(jsonObject, CodeMngVO.class);
-                    if ("I".equals(codeMngVO.getState())) {
-                        codeMngMapper.insertGrpMngData(codeMngVO);
-                    } else if ("U".equals(codeMngVO.getState())) {
-                        codeMngMapper.updateGrpMngData(codeMngVO);
-                    }
-                }
-                code = "S";
+        if (codeGrpMngArray.size() > 0) {
+            dataStatus = validateCodeGrpMngData(codeGrpMngArray);
+            if (CodeMngDataStatus.SUCCESS_UPDATE == dataStatus) {
+                dataCnt = applyCodeGrpMngData(codeGrpMngArray);
             }
         } else {
-            code = "N";
+            dataStatus = CodeMngDataStatus.NOT_UPDATE;
         }
-        return code;
+        return new CodeMngResponse(dataCnt, dataStatus, dataStatus.getTitle());
+    }
+
+    /**
+     * <p>그룹 코드 유효성 체크</p>
+     *
+     * @param codeGrpMngArray (그룹 코드 JSONArray 정보)
+     * @return CodeMngDataStatus (유효성 체크 결과)
+     */
+    private CodeMngDataStatus validateCodeGrpMngData(JSONArray codeGrpMngArray) {
+        String arrGrpCd = "";
+
+        for (int i = 0; i < codeGrpMngArray.size(); i++) {
+            JSONObject codeGrpMngObject = codeGrpMngArray.getJSONObject(i);
+            CodeGrpMngRequest request = (CodeGrpMngRequest) JSONObject.toBean(codeGrpMngObject,
+                CodeGrpMngRequest.class);
+            String grpCd = request.getGrpCd();
+            String grpNm = request.getGrpNm();
+            String state = request.getState();
+
+            // 1. 공백 여부 체크
+            if (!StringUtil.isBlank(state)) {
+                if (StringUtil.isBlank(grpCd) || StringUtil.isBlank(grpNm)) {
+                    return CodeMngDataStatus.BLANK;
+                }
+            }
+
+            // 2. 코드 간 중복 체크
+            arrGrpCd += grpCd + ",";
+            if (i == codeGrpMngArray.size() - 1) {
+                if (StringUtil.findDuplicateValue(arrGrpCd)) {
+                    return CodeMngDataStatus.DUPLICATE;
+                }
+            }
+
+            // 3. 중복 그룹 코드 체크
+            if ("I".equals(state)) {
+                if (codeGrpMngRepository.existsCodeGrpMngByGrpCd(grpCd)) {
+                    return CodeMngDataStatus.INSERT_DUPLICATE;
+                }
+            }
+        }
+
+        return CodeMngDataStatus.SUCCESS_UPDATE;
+    }
+
+    /**
+     * <p>그룹 코드 변경 및 적용</p>
+     *
+     * @param codeGrpMngArray (그룹 코드 JSONArray 정보)
+     * @return int (변경된 row 수)
+     */
+    private int applyCodeGrpMngData(JSONArray codeGrpMngArray) {
+        CodeGrpMngRequest request;
+        int dataCnt = 0;
+
+        for (int i = 0; i < codeGrpMngArray.size(); i++) {
+            JSONObject codeGrpMngObject = codeGrpMngArray.getJSONObject(i);
+            request = (CodeGrpMngRequest) JSONObject.toBean(codeGrpMngObject,
+                CodeGrpMngRequest.class);
+            if ("I".equals(request.getState())) {
+                codeGrpMngRepository.save(request.toEntity());
+                dataCnt++;
+            } else if ("U".equals(request.getState())) {
+                CodeGrpMng codeGrpMng = codeGrpMngRepository.findById(request.getGrpCd())
+                    .orElseThrow(NoSuchElementException::new);
+                codeGrpMng.updateCodeGrpMng(request);
+                dataCnt++;
+            }
+        }
+
+        return dataCnt;
     }
 
     /**
      * <p>공통 코드 수정</p>
      *
-     * @param codeMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (공통 코드 정보)
+     * @return CodeMngResponse (응답 정보)
      */
     @Transactional
-    public String updateCodeMngData(CodeMngVO codeMngVO) throws Exception {
-        String code = null;
-        String jsonData = codeMngVO.getJsonData();
-        jsonData = FilterUtil.filterXssReverse(jsonData);
-        jsonData = StringUtil.clean(jsonData);
-        JSONArray jsonArray = JSONArray.fromObject(jsonData);
-        int cnt = jsonArray.size();
+    public CodeMngResponse updateCodeMngData(CodeMngRequest request) {
+        JSONArray codeMngArray = request.changeJsonData();
+        CodeMngDataStatus dataStatus;
+        int dataCnt = 0;
 
-        if (cnt > 0) {
-            boolean isBlankCode = false;
-            boolean isDupCode = false;
-            boolean isDupInsertCode = false;
-            boolean isDupUpdateCode = false;
-            String arrCd = null;
-
-            // Validation Check
-            for (int i = 0; i < cnt; i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                codeMngVO = (CodeMngVO) JSONObject.toBean(jsonObject, CodeMngVO.class);
-                String comCd = codeMngVO.getComCd();
-                String exComCd = codeMngVO.getExComCd();
-                String comNm = codeMngVO.getComNm();
-                String state = codeMngVO.getState();
-
-                // 1. 공백 여부
-                if (!StringUtil.isBlank(state)) {
-                    if (StringUtil.isBlank(comCd) || StringUtil.isBlank(comNm)) {
-                        isBlankCode = true;
-                    }
-                }
-
-                // 2. 코드 간 중복 여부
-                arrCd += comCd + ",";
-                if (i == cnt - 1) {
-                    isDupCode = StringUtil.findDuplicateValue(arrCd);
-                }
-
-                // 3. 등록 코드 중복 여부
-                if ("I".equals(state)) {
-                    if (codeMngMapper.selectCodeMngListCnt(codeMngVO) > 0) {
-                        isDupInsertCode = true;
-                    }
-                }
-
-                // 4. 수정 코드 중복 여부
-                if ("U".equals(state) && !comCd.equals(exComCd)) {
-                    if (codeMngMapper.selectCodeMngListCnt(codeMngVO) > 0) {
-                        isDupUpdateCode = true;
-                    }
-                }
-            }
-
-            if (isBlankCode) {
-                code = "B";
-            } else if (isDupCode) {
-                code = "D";
-            } else if (isDupInsertCode) {
-                code = "I";
-            } else if (isDupUpdateCode) {
-                code = "U";
-            } else {
-                for (int i = 0; i < cnt; i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    codeMngVO = (CodeMngVO) JSONObject.toBean(jsonObject, CodeMngVO.class);
-                    if ("I".equals(codeMngVO.getState())) {
-                        codeMngMapper.insertCodeMngData(codeMngVO);
-                    } else if ("U".equals(codeMngVO.getState())) {
-                        codeMngMapper.updateCodeMngData(codeMngVO);
-                    }
-                }
-                code = "S";
+        if (codeMngArray.size() > 0) {
+            dataStatus = validateCodeMngData(codeMngArray);
+            if (CodeMngDataStatus.SUCCESS_UPDATE == dataStatus) {
+                dataCnt = applyCodeMngData(codeMngArray);
             }
         } else {
-            code = "N";
+            dataStatus = CodeMngDataStatus.NOT_UPDATE;
         }
-        return code;
+        return new CodeMngResponse(dataCnt, dataStatus, dataStatus.getTitle());
+    }
+
+    /**
+     * <p>공통 코드 유효성 체크</p>
+     *
+     * @param codeMngArray (공통 코드 JSONArray 정보)
+     * @return CodeMngDataStatus (유효성 체크 결과)
+     */
+    private CodeMngDataStatus validateCodeMngData(JSONArray codeMngArray) {
+        String arrComCd = "";
+
+        for (int i = 0; i < codeMngArray.size(); i++) {
+            JSONObject codeMngObject = codeMngArray.getJSONObject(i);
+            CodeMngRequest request = (CodeMngRequest) JSONObject.toBean(codeMngObject,
+                CodeMngRequest.class);
+            String grpCd = request.getGrpCd();
+            String comCd = request.getComCd();
+            String comNm = request.getComNm();
+            String state = request.getState();
+
+            // 1. 공백 여부 체크
+            if (!StringUtil.isBlank(state)) {
+                if (StringUtil.isBlank(comCd) || StringUtil.isBlank(comNm)) {
+                    return CodeMngDataStatus.BLANK;
+                }
+            }
+
+            // 2. 코드 간 중복 체크
+            arrComCd += comCd + ",";
+            if (i == codeMngArray.size() - 1) {
+                if (StringUtil.findDuplicateValue(arrComCd)) {
+                    return CodeMngDataStatus.DUPLICATE;
+                }
+            }
+
+            // 3. 중복 공통 코드 체크
+            if ("I".equals(state)) {
+                if (codeMngRepository.existsCodeMngByComCd(grpCd, comCd)) {
+                    return CodeMngDataStatus.INSERT_DUPLICATE;
+                }
+            }
+        }
+
+        return CodeMngDataStatus.SUCCESS_UPDATE;
+    }
+
+    /**
+     * <p>공통 코드 변경 및 적용</p>
+     *
+     * @param codeMngArray (공통 코드 JSONArray 정보)
+     * @return int (변경된 row 수)
+     */
+    private int applyCodeMngData(JSONArray codeMngArray) {
+        CodeMngRequest request;
+        int dataCnt = 0;
+
+        for (int i = 0; i < codeMngArray.size(); i++) {
+            JSONObject codeMngObject = codeMngArray.getJSONObject(i);
+            request = (CodeMngRequest) JSONObject.toBean(codeMngObject,
+                CodeMngRequest.class);
+            if ("I".equals(request.getState())) {
+                codeMngRepository.save(request.toEntity());
+                dataCnt++;
+            } else if ("U".equals(request.getState())) {
+                CodeMng codeMng = codeMngRepository.findById(
+                        CodeMngId.createCodeMngId(request.getGrpCd(), request.getComCd()))
+                    .orElseThrow(NoSuchElementException::new);
+                codeMng.updateCodeMng(request);
+                dataCnt++;
+            }
+        }
+
+        return dataCnt;
     }
 
     /**
      * <p>그룹 코드 삭제</p>
      *
-     * @param codeMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (그룹 코드 정보)
+     * @return CodeMngResponse (응답 정보)
      */
     @Transactional
-    public String deleteGrpMngData(CodeMngVO codeMngVO) throws Exception {
-        String code = null;
-        int cnt = 0;
-        boolean isDupGrp = false;
-        String[] arrGrpCd = StringUtil.split(codeMngVO.getGrpCd());
+    public CodeMngResponse deleteCodeGrpMngData(CodeGrpMngRequest request) {
+        String[] arrGrpCd = StringUtil.split(request.getGrpCd());
+        CodeMngDataStatus dataStatus;
+        int dataCnt = 0;
 
-        // 공통 코드 체크
-        for (String grpCd : arrGrpCd) {
-            codeMngVO.setGrpCd(grpCd);
-            if (codeMngMapper.selectCodeMngListCnt(codeMngVO) > 0) {
-                isDupGrp = true;
-                break;
+        if (arrGrpCd.length > 0) {
+            dataStatus = existsCodeMngData(arrGrpCd);
+            if (CodeMngDataStatus.SUCCESS_DELETE == dataStatus) {
+                dataCnt = removeCodeGrpMngData(arrGrpCd);
             }
-        }
-
-        if (isDupGrp) {
-            code = "D";
         } else {
-            for (String grpCd : arrGrpCd) {
-                codeMngVO.setGrpCd(grpCd);
-                cnt += codeMngMapper.deleteGrpMngData(codeMngVO);
-            }
-            code = cnt > 0 ? "S" : "N";
+            dataStatus = CodeMngDataStatus.NOT_UPDATE;
         }
-        return code;
+        return new CodeMngResponse(dataCnt, dataStatus, dataStatus.getTitle());
+    }
+
+    /**
+     * <p>공통 코드 확인</p>
+     *
+     * @param arrGrpCd (그룹 코드 정보)
+     * @return CodeMngDataStatus (유효성 체크 결과)
+     */
+    private CodeMngDataStatus existsCodeMngData(String[] arrGrpCd) {
+        for (String grpCd : arrGrpCd) {
+            if (codeGrpMngRepository.existsCodeMngByGrpCd(grpCd)) { // 그룹 코드 내 공통 코드가 존재할 경우
+                return CodeMngDataStatus.CONSTRAINT;
+            }
+        }
+
+        return CodeMngDataStatus.SUCCESS_DELETE;
+    }
+
+    /**
+     * <p>그룹 코드 삭제 처리</p>
+     *
+     * @param arrGrpCd (그룹 코드 정보)
+     * @return int (변경된 row 수)
+     */
+    private int removeCodeGrpMngData(String[] arrGrpCd) {
+        int dataCnt = 0;
+
+        for (String grpCd : arrGrpCd) {
+            codeGrpMngRepository.deleteById(grpCd);
+            dataCnt++;
+        }
+
+        return dataCnt;
     }
 
     /**
      * <p>공통 코드 삭제</p>
      *
-     * @param codeMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (공통 코드 정보)
+     * @return CodeMngResponse (응답 정보)
      */
     @Transactional
-    public String deleteCodeMngData(CodeMngVO codeMngVO) throws Exception {
-        String code = null;
-        int cnt = 0;
-        String[] arrComCd = StringUtil.split(codeMngVO.getComCd());
+    public CodeMngResponse deleteCodeMngData(CodeMngRequest request) {
+        String[] arrComCd = StringUtil.split(request.getComCd());
+        CodeMngDataStatus dataStatus;
+        int dataCnt = 0;
+
+        if (arrComCd.length > 0) {
+            dataCnt = removeCodeMngData(request.getGrpCd(), arrComCd);
+            dataStatus = CodeMngDataStatus.SUCCESS_DELETE;
+        } else {
+            dataStatus = CodeMngDataStatus.NOT_UPDATE;
+        }
+
+        return new CodeMngResponse(dataCnt, dataStatus, dataStatus.getTitle());
+    }
+
+    /**
+     * <p>공통 코드 삭제 처리</p>
+     *
+     * @param grpCd    (그룹 코드 정보)
+     * @param arrComCd (공통 코드 정보)
+     * @return int (변경된 row 수)
+     */
+    private int removeCodeMngData(String grpCd, String[] arrComCd) {
+        int dataCnt = 0;
 
         for (String comCd : arrComCd) {
-            codeMngVO.setComCd(comCd);
-            cnt += codeMngMapper.deleteCodeMngData(codeMngVO);
+            codeMngRepository.deleteById(CodeMngId.createCodeMngId(grpCd, comCd));
+            dataCnt++;
         }
-        code = cnt > 0 ? "S" : "N";
 
-        return code;
+        return dataCnt;
     }
 
     /**
      * <p>그룹 코드 엑셀 목록</p>
      *
-     * @param codeMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (그룹 코드 목록)
      */
-    public List<CodeMngVO> selectGrpMngExcelList(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectGrpMngExcelList(codeMngVO);
+    public List<CodeGrpMngListDTO> selectCodeGrpMngExcelList(CodeMngSearchDTO searchDTO) {
+        return codeGrpMngRepository.searchCodeGrpMngExcelList(searchDTO.getSearchCd(),
+            searchDTO.getSearchWord());
     }
 
     /**
      * <p>공통 코드 엑셀 목록</p>
      *
-     * @param codeMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (공통 코드 목록)
      */
-    public List<CodeMngVO> selectCodeMngExcelList(CodeMngVO codeMngVO) throws Exception {
-        return codeMngMapper.selectCodeMngExcelList(codeMngVO);
+    public List<CodeMngListDTO> selectCodeMngExcelList(CodeMngSearchDTO searchDTO) {
+        return codeMngRepository.searchCodeMngExcelList(searchDTO.getGrpCd(),
+            searchDTO.getSearchCd(), searchDTO.getSearchWord());
     }
 }

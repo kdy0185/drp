@@ -29,7 +29,7 @@
       });
 
       // Ext Grid Model 정의 - 그룹 코드
-      Ext.define("grpMngModel", {
+      Ext.define("codeGrpMngModel", {
         extend: "Ext.data.Model",
         fields: [{
           name: "rn", // 순번
@@ -37,10 +37,6 @@
           useNull: true
         }, {
           name: "grpCd", // 그룹 코드
-          type: "String",
-          useNull: true
-        }, {
-          name: "exGrpCd", // 그룹 코드 (저장 전 key)
           type: "String",
           useNull: true
         }, {
@@ -78,10 +74,6 @@
           type: "String",
           useNull: true
         }, {
-          name: "exComCd", // 공통 코드 (저장 전 key)
-          type: "String",
-          useNull: true
-        }, {
           name: "comNm", // 공통 코드명
           type: "String",
           useNull: true
@@ -105,24 +97,24 @@
       });
 
       // Ext Grid Store 정의 - 그룹 코드
-      var grpMngStore = Ext.create("Ext.data.Store", {
+      var codeGrpMngStore = Ext.create("Ext.data.Store", {
         pageSize: defaultPageSize,
         autoLoad: false,
-        model: "grpMngModel",
+        model: "codeGrpMngModel",
         proxy: {
           type: "ajax",
-          url: "/sys/codemng/grpMngSearch.do",
+          url: "/sys/codemng/codeGrpMngSearch.do",
           reader: {
             type: "json",
-            root: "grpMngList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
         listeners: {
           load: function (dataStore) {
             if (dataStore.pageSize > dataStore.totalCount) dataStore.pageSize = dataStore.totalCount;
-            var textPoint = $("#grpMngGrid").prev().find(".sub-title-info");
+            var textPoint = $("#codeGrpMngGrid").prev().find(".sub-title-info");
             textPoint.empty();
             var em = '<em class="sub-title-info-em">' + dataStore.pageSize + '</em>건 / 전체 '
                 + dataStore.totalCount + '건';
@@ -142,8 +134,8 @@
           url: "/sys/codemng/codeMngSearch.do",
           reader: {
             type: "json",
-            root: "codeMngList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
@@ -161,7 +153,7 @@
       });
 
       // 페이지 이동 시 파라미터 재생성 - 그룹 코드
-      grpMngStore.on("beforeload", function (store, operation) {
+      codeGrpMngStore.on("beforeload", function (store, operation) {
         var searchArea = $("div.search-area");
         $.util.setSearchStyle(searchArea);
 
@@ -170,7 +162,7 @@
         var searchWord = $('input[name="searchWord"]').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           searchCd: searchCd,
           searchWord: searchWord
@@ -188,7 +180,7 @@
         var searchWord = $('input[name="searchWord"]').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           grpCd: grpCd,
           searchCd: searchCd,
@@ -200,8 +192,28 @@
         Ext.QuickTips.init();
 
         // edit plugin 추가
-        var grpCellEditing = Ext.create("Ext.grid.plugin.CellEditing", {clicksToEdit: 1});
-        var codeCellEditing = Ext.create("Ext.grid.plugin.CellEditing", {clicksToEdit: 1});
+        var grpCellEditing = Ext.create("Ext.grid.plugin.CellEditing", {
+          clicksToEdit: 1,
+          listeners: {
+            beforeEdit: function (editor, e, eOpts) {
+              if (e.field === "grpCd") {
+                var fieldType = e.record.data.state === "I" ? "textfield" : "displayfield";
+                e.column.setEditor({xtype: fieldType});
+              }
+            }
+          }
+        });
+        var codeCellEditing = Ext.create("Ext.grid.plugin.CellEditing", {
+          clicksToEdit: 1,
+          listeners: {
+            beforeEdit: function (editor, e, eOpts) {
+              if (e.field === "comCd") {
+                var fieldType = e.record.data.state === "I" ? "textfield" : "displayfield";
+                e.column.setEditor({xtype: fieldType});
+              }
+            }
+          }
+        });
 
         // combo + renderer 추가
         var useStore = new Ext.data.SimpleStore({
@@ -229,8 +241,8 @@
         };
 
         // Ext Grid 정의 - 그룹 코드
-        var grpMngGrid = Ext.create("Ext.grid.Panel", {
-          store: grpMngStore,
+        var codeGrpMngGrid = Ext.create("Ext.grid.Panel", {
+          store: codeGrpMngStore,
           loadMask: true,
           plugins: "bufferedrenderer",
           callbackKey: "callback",
@@ -256,17 +268,6 @@
             editor: {
               xtype: "textfield"
             },
-            renderer: function (val, metadata, record) {
-              metadata.style = "cursor: pointer;";
-              return val;
-            }
-          }, {
-            text: "그룹 코드 (저장 전 key)",
-            width: 10,
-            align: "center",
-            sortable: true,
-            hidden: true,
-            dataIndex: "exGrpCd",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -328,20 +329,20 @@
           }],
           height: comHeight,
           autoWidth: true,
-          renderTo: "grpMngGrid",
+          renderTo: "codeGrpMngGrid",
           viewConfig: {
             stripeRows: true,
             enableTextSelection: true,
             listeners: {
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
-                if (columnIndex !== 0) readGrpMng();
+                if (columnIndex !== 0) readCodeGrpMng();
               }
             }
           },
           plugins: [grpCellEditing],
           dockedItems: [{
             xtype: "pagingtoolbar",
-            store: grpMngStore,
+            store: codeGrpMngStore,
             dock: "bottom",
             displayInfo: true
           }],
@@ -349,7 +350,7 @@
         });
 
         // 그리드 바인딩
-        grpMngGrid.getSelectionModel().on("selectionchange",
+        codeGrpMngGrid.getSelectionModel().on("selectionchange",
             function (sm, selectedRecord) {
               if (selectedRecord.length) {
                 $('input[name="grpCd"]').val(selectedRecord[0].data.grpCd);
@@ -357,12 +358,11 @@
               }
             });
 
-        grpMngGrid.on("edit", function (editor, e) {
-          e.record.data.regUser = $('input[name="regUser"]').val();
+        codeGrpMngGrid.on("edit", function (editor, e) {
           e.record.data.state = e.record.data.state === "I" ? "I" : "U";
           e.record.commit();
         });
-        subGrid = grpMngGrid;
+        subGrid = codeGrpMngGrid;
 
         // Ext Grid 정의 - 공통 코드
         var codeMngGrid = Ext.create("Ext.grid.Panel", {
@@ -401,17 +401,6 @@
             editor: {
               xtype: "textfield"
             },
-            renderer: function (val, metadata, record) {
-              metadata.style = "cursor: pointer;";
-              return val;
-            }
-          }, {
-            text: "공통 코드 (저장 전 key)",
-            width: 10,
-            align: "center",
-            sortable: true,
-            hidden: true,
-            dataIndex: "exComCd",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -514,7 +503,6 @@
           enableKeyEvents: true
         });
         codeMngGrid.on("edit", function (editor, e) {
-          e.record.data.regUser = $('input[name="regUser"]').val();
           e.record.data.state = e.record.data.state === "I" ? "I" : "U";
           e.record.commit();
         });
@@ -527,7 +515,7 @@
         var searchWord = $('input[name="searchWord"]').val();
         if (searchWord !== "") {
           if (searchCd === "grpCd" || searchCd === "grpNm") {
-            grpMngStore.loadPage(1);
+            codeGrpMngStore.loadPage(1);
           }
           if (searchCd === "comCd" || searchCd === "comNm") {
             codeMngStore.loadPage(1);
@@ -540,21 +528,21 @@
 
       // 일괄 조회
       function searchAll() {
-        grpMngStore.loadPage(1);
+        codeGrpMngStore.loadPage(1);
         codeMngStore.loadPage(1);
         $.util.setSearchCondition();
       }
 
       // 그룹 코드 추가
-      function insertGrpMng() {
-        var row = Ext.create("grpMngModel", {
+      function insertCodeGrpMng() {
+        var row = Ext.create("codeGrpMngModel", {
           rn: 0,
           grpCd: "",
           grpNm: "",
           useYn: "Y",
           state: "I"
         });
-        grpMngStore.insert(0, row);
+        codeGrpMngStore.insert(0, row);
       }
 
       // 공통 코드 추가
@@ -577,12 +565,12 @@
       }
 
       // 그룹 코드 상세
-      function readGrpMng() {
+      function readCodeGrpMng() {
         var title = "그룹 코드 정보";
         var width = 750;
         $.ajax({
           type: "post",
-          url: "/sys/codemng/grpMngDetail.do",
+          url: "/sys/codemng/codeGrpMngDetail.do",
           data: {
             grpCd: $('input[name="grpCd"]').val()
           },
@@ -612,7 +600,7 @@
       }
 
       // 그룹 코드 수정
-      function updateGrpMng() {
+      function updateCodeGrpMng() {
         var grpItems = subGrid.store.data.items;
         var grpJson = [];
         $(grpItems).each(function (i) {
@@ -620,27 +608,15 @@
         });
 
         $.ajax({
-          type: "post",
-          url: "/sys/codemng/grpMngUpdate.do",
+          type: "put",
+          url: "/sys/codemng/codeGrpMngUpdate.do",
           data: {
             jsonData: JSON.stringify(grpJson)
           },
-          success: function (code) {
-            if (code === "S") {
-              alert("저장 되었습니다.");
+          success: function (res) {
+            alert(res.dataMsg);
+            if (res.dataStatus === "SUCCESS_UPDATE") {
               searchAll();
-            } else if (code === "B") {
-              alert("코드(명)을 입력하세요.");
-            } else if (code === "D") {
-              alert("중복된 코드입니다.");
-            } else if (code === "I") {
-              alert("이미 등록된 코드입니다.");
-            } else if (code === "U") {
-              alert("이미 등록된 코드로 수정할 수 없습니다.");
-            } else if (code === "N") {
-              alert("수정된 데이터가 없습니다.");
-            } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
             }
           }
         });
@@ -655,34 +631,22 @@
         });
 
         $.ajax({
-          type: "post",
+          type: "put",
           url: "/sys/codemng/codeMngUpdate.do",
           data: {
             jsonData: JSON.stringify(codeJson)
           },
-          success: function (code) {
-            if (code === "S") {
-              alert("저장 되었습니다.");
+          success: function (res) {
+            alert(res.dataMsg);
+            if (res.dataStatus === "SUCCESS_UPDATE") {
               searchAll();
-            } else if (code === "B") {
-              alert("코드(명)을 입력하세요.");
-            } else if (code === "D") {
-              alert("중복된 코드입니다.");
-            } else if (code === "I") {
-              alert("이미 등록된 코드입니다.");
-            } else if (code === "U") {
-              alert("이미 등록된 코드로 수정할 수 없습니다.");
-            } else if (code === "N") {
-              alert("수정된 데이터가 없습니다.");
-            } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
             }
           }
         });
       }
 
       // 그룹 코드 삭제
-      function deleteGrpMng() {
+      function deleteCodeGrpMng() {
         var grpCnt = subGrid.getSelectionModel().getCount();
         var rows = subGrid.getSelectionModel().getSelection();
         var grpCd = "";
@@ -694,21 +658,15 @@
         } else {
           if (confirm("선택한 그룹 코드를 삭제 하시겠습니까?")) {
             $.ajax({
-              type: "post",
-              url: "/sys/codemng/grpMngDelete.do",
+              type: "delete",
+              url: "/sys/codemng/codeGrpMngDelete.do",
               data: {
                 grpCd: grpCd
               },
-              success: function (code) {
-                if (code === "S") {
-                  alert("삭제 되었습니다.");
+              success: function (res) {
+                alert(res.dataMsg);
+                if (res.dataStatus === "SUCCESS_DELETE") {
                   searchAll();
-                } else if (code === "D") {
-                  alert("공통 코드가 있는 그룹 코드는 삭제할 수 없습니다.");
-                } else if (code === "N") {
-                  alert("수정된 데이터가 없습니다.");
-                } else {
-                  alert("오류가 발생하였습니다.\ncode : " + code);
                 }
               }
             });
@@ -732,20 +690,16 @@
         } else {
           if (confirm("선택한 공통 코드를 삭제 하시겠습니까?")) {
             $.ajax({
-              type: "post",
+              type: "delete",
               url: "/sys/codemng/codeMngDelete.do",
               data: {
                 grpCd: $('input[name="grpCd"]').val(),
                 comCd: comCd
               },
-              success: function (code) {
-                if (code === "S") {
-                  alert("삭제 되었습니다.");
+              success: function (res) {
+                alert(res.dataMsg);
+                if (res.dataStatus === "SUCCESS_DELETE") {
                   searchAll();
-                } else if (code === "N") {
-                  alert("수정된 데이터가 없습니다.");
-                } else {
-                  alert("오류가 발생하였습니다.\ncode : " + code);
                 }
               }
             });
@@ -754,10 +708,10 @@
       }
 
       // 그룹 코드 엑셀
-      function excelGrpMng() {
+      function excelCodeGrpMng() {
         var form = $('form[name="codeMngSearchForm"]');
         $(form).attr({
-          action: "/sys/codemng/grpMngExcel.do"
+          action: "/sys/codemng/codeGrpMngExcel.do"
         }).submit();
       }
 
@@ -780,7 +734,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="codeMngVO" name="codeMngSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="codeMngSearchForm" method="post">
                 <div class="contents-box search-area">
                     <div class="row">
                         <div class="col-md-5 col-sm-12 col-xs-12 padding_l25">
@@ -811,7 +765,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="codeMngVO" name="codeMngForm" method="post">
+            <form:form modelAttribute="searchDTO" name="codeMngForm" method="post">
                 <form:hidden path="grpCd"/>
                 <form:hidden path="comCd"/>
                 <div class="contents-box grid-area border_none">
@@ -826,22 +780,22 @@
                             <li class="pull-right">
                                 <div class="text-right">
                                     <div class="grid-option-box">
-                                        <button type="button" onclick="excelGrpMng();" class="btn btn-green">
+                                        <button type="button" onclick="excelCodeGrpMng();" class="btn btn-green">
                                             <i class="fa fa-file-excel-o" aria-hidden="true"></i><span>EXCEL</span>
                                         </button>
                                     </div>
                                 </div>
                             </li>
                         </ul>
-                        <div id="grpMngGrid"></div>
+                        <div id="codeGrpMngGrid"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="insertGrpMng();" class="btn btn-red">
+                            <button type="button" onclick="insertCodeGrpMng();" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>추가
                             </button>
-                            <button type="button" onclick="updateGrpMng();" class="btn btn-red">
+                            <button type="button" onclick="updateCodeGrpMng();" class="btn btn-red">
                                 <i class="fa fa-floppy-o"></i>저장
                             </button>
-                            <button type="button" onclick="deleteGrpMng();" class="btn btn-red">
+                            <button type="button" onclick="deleteCodeGrpMng();" class="btn btn-red">
                                 <i class="fa fa-trash"></i>삭제
                             </button>
                         </div>

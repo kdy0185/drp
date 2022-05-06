@@ -7,6 +7,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import java.util.List;
 import java.util.function.Function;
 import javax.annotation.PostConstruct;
@@ -119,6 +120,16 @@ public abstract class Querydsl5RepositorySupport {
      */
     protected <T> JPAQuery<T> selectFrom(EntityPath<T> from) {
         return getQueryFactory().selectFrom(from);
+    }
+
+    /**
+     * <p>Update JPAQuery 생성</p>
+     *
+     * @param path (EntityPath 객체)
+     * @return JPAUpdateClause (JPAUpdateClause 객체)
+     */
+    protected JPAUpdateClause update(EntityPath<?> path) {
+        return getQueryFactory().update(path);
     }
 
     /**
