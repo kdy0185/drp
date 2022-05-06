@@ -185,8 +185,8 @@ public class HeaderUtil {
     public static String getFullRefererHost(HttpServletRequest request) {
         String refererUrl = request.getHeader("referer");
         if (!StringUtil.isBlank(refererUrl)) {
-            int chkNum = refererUrl.contains("://") ? refererUrl.indexOf("://") + 3 : 0;
-            int endNum = refererUrl.indexOf('/', chkNum);
+            int checkNum = refererUrl.contains("://") ? refererUrl.indexOf("://") + 3 : 0;
+            int endNum = refererUrl.indexOf('/', checkNum);
             if (endNum >= 0) {
                 return refererUrl.substring(0, endNum);
             } else {

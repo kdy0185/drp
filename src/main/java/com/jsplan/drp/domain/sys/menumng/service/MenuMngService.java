@@ -1,11 +1,19 @@
 package com.jsplan.drp.domain.sys.menumng.service;
 
-import com.jsplan.drp.domain.sys.menumng.entity.MenuMngVO;
-import com.jsplan.drp.domain.sys.menumng.mapper.MenuMngMapper;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuAuthMngListDTO;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuMngDetailDTO;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuMngListDTO;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuMngResponse;
+import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTO;
+import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
+import com.jsplan.drp.domain.sys.menumng.repository.MenuMngRepository;
+import com.jsplan.drp.global.obj.entity.DataStatus;
 import com.jsplan.drp.global.util.StringUtil;
-import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Resource;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -17,35 +25,36 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date : 2022-01-26
  * @Description : 메뉴 관리 Service
  */
-@Service("MenuMngService")
+@Service
+@RequiredArgsConstructor
 public class MenuMngService {
 
-    @Resource
-    private MenuMngMapper menuMngMapper;
+    private final MenuMngRepository menuMngRepository;
 
     /**
      * <p>메뉴 목록</p>
      *
-     * @param menuMngVO
-     * @return JSONArray
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return JSONArray (메뉴 목록)
      */
-    public JSONArray selectMenuMngList(MenuMngVO menuMngVO) throws Exception {
+    public JSONArray selectMenuMngList(MenuMngSearchDTO searchDTO) {
         JSONArray menuMngArray = new JSONArray();
-        JSONObject menuMngObject = new JSONObject();
+        JSONObject menuMngObject;
 
         // 하위 메뉴 조회
-        List<MenuMngVO> menuMngList = menuMngMapper.selectMenuMngList(menuMngVO);
-        for (MenuMngVO vo : menuMngList) {
+        List<MenuMngListDTO> menuMngList = menuMngRepository.searchMenuMngList(
+            searchDTO.getMenuCd(), searchDTO.getSearchCd(), searchDTO.getSearchWord(),
+            searchDTO.getUseYn());
+        for (MenuMngListDTO listDTO : menuMngList) {
             menuMngObject = new JSONObject();
-            menuMngObject.put("menuNm", vo.getMenuNm());
-            menuMngObject.put("menuCd", vo.getMenuCd());
-            menuMngObject.put("menuUrl", vo.getMenuUrl());
-            menuMngObject.put("menuLv", vo.getMenuLv());
-            menuMngObject.put("menuOrd", vo.getMenuOrd());
-            menuMngObject.put("useYn", vo.getUseYn());
-            menuMngObject.put("leaf", "Y".equals(vo.getLastYn()));
-            menuMngObject.put("expanded", !"Y".equals(vo.getLastYn()));
+            menuMngObject.put("menuNm", listDTO.getMenuNm());
+            menuMngObject.put("menuCd", listDTO.getMenuCd());
+            menuMngObject.put("menuUrl", listDTO.getMenuUrl());
+            menuMngObject.put("menuLv", listDTO.getMenuLv());
+            menuMngObject.put("menuOrd", listDTO.getMenuOrd());
+            menuMngObject.put("useYn", listDTO.getUseYn());
+            menuMngObject.put("leaf", "Y".equals(listDTO.getLastYn()));
+            menuMngObject.put("expanded", !"Y".equals(listDTO.getLastYn()));
 
             menuMngArray.add(menuMngObject);
         }
@@ -56,36 +65,34 @@ public class MenuMngService {
     /**
      * <p>메뉴 상세</p>
      *
-     * @param menuMngVO
-     * @return MenuMngVO
-     * @throws Exception throws Exception
+     * @param request (메뉴 정보)
+     * @return MenuMngDetailDTO (메뉴 DTO)
      */
-    public MenuMngVO selectMenuMngDetail(MenuMngVO menuMngVO) throws Exception {
-        return menuMngMapper.selectMenuMngDetail(menuMngVO);
+    public MenuMngDetailDTO selectMenuMngDetail(MenuMngRequest request) {
+        return menuMngRepository.findMenuMngByMenuCd(request.getMenuCd());
     }
 
     /**
      * <p>메뉴별 권한 목록</p>
      *
-     * @param menuMngVO
-     * @return JSONArray
-     * @throws Exception throws Exception
+     * @param request (권한 정보)
+     * @return JSONArray (권한 목록)
      */
-    public JSONArray selectMenuAuthMngList(MenuMngVO menuMngVO) throws Exception {
-        String menuCd = menuMngVO.getMenuCd();
+    public JSONArray selectMenuAuthMngList(MenuMngRequest request) {
         JSONArray authArray = new JSONArray();
-        JSONObject authObject = new JSONObject();
-        menuMngVO.setMenuCdList(Arrays.asList(menuCd.split(",")));
+        JSONObject authObject;
+        List<String> menuCdList = List.of(request.getMenuCd().split(","));
 
         // 하위 권한 조회
-        List<MenuMngVO> menuAuthMngList = menuMngMapper.selectMenuAuthMngList(menuMngVO);
-        for (MenuMngVO authVO : menuAuthMngList) {
+        List<MenuAuthMngListDTO> menuAuthMngList = menuMngRepository.searchMenuAuthMngList(
+            menuCdList, request.getAuthCd());
+        for (MenuAuthMngListDTO listDTO : menuAuthMngList) {
             authObject = new JSONObject();
-            authObject.put("id", authVO.getAuthCd());
-            authObject.put("text", authVO.getAuthNm());
-            authObject.put("leaf", "Y".equals(authVO.getLastYn()));
-            authObject.put("expanded", !"Y".equals(authVO.getLastYn()));
-            authObject.put("checked", "Y".equals(authVO.getAuthYn()));
+            authObject.put("id", listDTO.getAuthCd());
+            authObject.put("text", listDTO.getAuthNm());
+            authObject.put("leaf", "Y".equals(listDTO.getLastYn()));
+            authObject.put("expanded", !"Y".equals(listDTO.getLastYn()));
+            authObject.put("checked", "Y".equals(listDTO.getAuthYn()));
             authArray.add(authObject);
         }
 
@@ -95,127 +102,81 @@ public class MenuMngService {
     /**
      * <p>메뉴 등록</p>
      *
-     * @param menuMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (메뉴 정보)
+     * @return MenuMngResponse (응답 정보)
      */
     @Transactional
-    public String insertMenuMngData(MenuMngVO menuMngVO) throws Exception {
-        String code = null;
-
-        // 1. 메뉴 등록
-        code = menuMngMapper.insertMenuMngData(menuMngVO) > 0 ? "S" : "N";
-
-        // 2. 메뉴별 권한 등록
-        if (!StringUtil.isEmpty(menuMngVO.getAuthCd())) {
-            String[] arrAuthCd = StringUtil.split(menuMngVO.getAuthCd());
-            for (String authCd : arrAuthCd) {
-                menuMngVO.setAuthCd(authCd);
-                menuMngMapper.insertMenuAuthMngData(menuMngVO);
-            }
+    public MenuMngResponse insertMenuMngData(MenuMngRequest request) {
+        if (validateMenuMngDupData(request)) {
+            return new MenuMngResponse(null, DataStatus.DUPLICATE);
+        } else {
+            MenuMng menuMng = menuMngRepository.save(request.toEntity());
+            return new MenuMngResponse(menuMng.getMenuCd(), DataStatus.SUCCESS);
         }
+    }
 
-        return code;
+    /**
+     * <p>중복 메뉴 체크</p>
+     *
+     * @param request (메뉴 정보)
+     * @return boolean (중복 여부)
+     */
+    private boolean validateMenuMngDupData(MenuMngRequest request) {
+        Optional<MenuMng> optionalMenuMng = menuMngRepository.findById(request.getMenuCd());
+        return optionalMenuMng.isPresent();
     }
 
     /**
      * <p>메뉴 수정</p>
      *
-     * @param menuMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (메뉴 정보)
+     * @return MenuMngResponse (응답 정보)
      */
     @Transactional
-    public String updateMenuMngData(MenuMngVO menuMngVO) throws Exception {
-        String code = null;
-
-        // 1. 메뉴 수정
-        code = menuMngMapper.updateMenuMngData(menuMngVO) > 0 ? "S" : "N";
-
-        // 2. 메뉴별 권한 삭제
-        menuMngMapper.deleteMenuAuthMngData(menuMngVO);
-
-        // 3. 메뉴별 권한 등록
-        if (!StringUtil.isEmpty(menuMngVO.getAuthCd())) {
-            String[] arrAuthCd = StringUtil.split(menuMngVO.getAuthCd());
-            for (String authCd : arrAuthCd) {
-                menuMngVO.setAuthCd(authCd);
-                menuMngMapper.insertMenuAuthMngData(menuMngVO);
-            }
-        }
-
-        return code;
+    public MenuMngResponse updateMenuMngData(MenuMngRequest request) {
+        MenuMng menuMng = menuMngRepository.findById(request.getMenuCd())
+            .orElseThrow(NoSuchElementException::new);
+        menuMng.updateMenuMng(request);
+        return new MenuMngResponse(menuMng.getMenuCd(), DataStatus.SUCCESS);
     }
 
     /**
      * <p>메뉴 삭제</p>
      *
-     * @param menuMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (메뉴 정보)
+     * @return MenuMngResponse (응답 정보)
      */
     @Transactional
-    public String deleteMenuMngData(MenuMngVO menuMngVO) throws Exception {
-        String code = null;
-
-        // 1. 메뉴별 권한 삭제
-        menuMngMapper.deleteMenuAuthMngData(menuMngVO);
-
-        // 2. 메뉴 삭제
-        code = menuMngMapper.deleteMenuMngData(menuMngVO) > 0 ? "S" : "N";
-
-        return code;
+    public MenuMngResponse deleteMenuMngData(MenuMngRequest request) {
+        menuMngRepository.deleteById(request.getMenuCd());
+        return new MenuMngResponse(request.getMenuCd(), DataStatus.SUCCESS);
     }
 
     /**
      * <p>권한 설정 적용</p>
      *
-     * @param menuMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param menuCdList (메뉴 코드 목록)
+     * @param authCdList (권한 목록)
+     * @return MenuMngResponse (응답 정보)
      */
     @Transactional
-    public String updateMenuAuthMngData(MenuMngVO menuMngVO) throws Exception {
-        int cnt = 0;
-        String[] arrMenuCd = StringUtil.split(menuMngVO.getMenuCd());
-        String[] arrAuthCd = StringUtil.split(menuMngVO.getAuthCd());
-
-        for (String menuCd : arrMenuCd) {
-            menuMngVO.setMenuCd(menuCd);
-
-            // 1. 메뉴별 권한 삭제
-            cnt += menuMngMapper.deleteMenuAuthMngData(menuMngVO);
-
-            // 2. 메뉴별 권한 등록
-            if (arrAuthCd.length > 0) {
-                for (String authCd : arrAuthCd) {
-                    menuMngVO.setAuthCd(authCd);
-                    cnt += menuMngMapper.insertMenuAuthMngData(menuMngVO);
-                }
-            }
-
-            // 3. 기본 권한 등록
-            if ("A0000".equals(menuCd) || "A0100".equals(menuCd)) { // 메인 메뉴는 반드시 인증 권한 추가 필요
-                menuMngVO.setAuthCd("IS_AUTHENTICATED_FULLY");
-                cnt += menuMngMapper.insertMenuAuthMngData(menuMngVO);
-            }
-            if ("A0200".equals(menuCd)) { // 로그인 메뉴는 반드시 익명 권한 추가 필요
-                menuMngVO.setAuthCd("ANONYMOUS");
-                cnt += menuMngMapper.insertMenuAuthMngData(menuMngVO);
-            }
+    public MenuMngResponse updateMenuAuthMngData(String menuCdList, String authCdList) {
+        for (String menuCd : StringUtil.split(menuCdList)) {
+            MenuMng menuMng = menuMngRepository.findById(menuCd)
+                .orElseThrow(NoSuchElementException::new);
+            menuMng.updateMenuAuthMng(authCdList);
         }
-
-        return cnt > 0 ? "S" : "N";
+        return new MenuMngResponse(menuCdList, DataStatus.SUCCESS);
     }
 
     /**
      * <p>메뉴 엑셀 목록</p>
      *
-     * @param menuMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (메뉴 목록)
      */
-    public List<MenuMngVO> selectMenuMngExcelList(MenuMngVO menuMngVO) throws Exception {
-        return (List<MenuMngVO>) menuMngMapper.selectMenuMngExcelList(menuMngVO);
+    public List<MenuMngListDTO> selectMenuMngExcelList(MenuMngSearchDTO searchDTO) {
+        return menuMngRepository.searchMenuMngExcelList(searchDTO.getMenuCd(),
+            searchDTO.getSearchCd(), searchDTO.getSearchWord(), searchDTO.getUseYn());
     }
 }

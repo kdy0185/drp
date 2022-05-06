@@ -1,13 +1,23 @@
 package com.jsplan.drp.domain.sys.usermng.service;
 
-import com.jsplan.drp.domain.sys.usermng.entity.UserMngVO;
-import com.jsplan.drp.domain.sys.usermng.mapper.UserMngMapper;
+import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
+import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
+import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
+import com.jsplan.drp.global.obj.entity.DataStatus;
 import com.jsplan.drp.global.util.StringUtil;
-import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Resource;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,162 +28,56 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date : 2022-01-25
  * @Description : 사용자 관리 Service
  */
-@Service("UserMngService")
+@Service
+@RequiredArgsConstructor
 public class UserMngService {
 
-    @Resource
-    private UserMngMapper userMngMapper;
-
-    @Resource
-    private PasswordEncoder passwordEncoder;
-
-    /**
-     * <p>그룹 목록</p>
-     *
-     * @param userMngVO
-     * @return List
-     * @throws Exception throws Exception
-     */
-    public List<UserMngVO> selectGrpMngList(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectGrpMngList(userMngVO);
-    }
-
-    /**
-     * <p>그룹 목록 수</p>
-     *
-     * @param userMngVO
-     * @return int
-     * @throws Exception throws Exception
-     */
-    public int selectGrpMngListCnt(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectGrpMngListCnt(userMngVO);
-    }
-
-    /**
-     * <p>그룹 상세</p>
-     *
-     * @param userMngVO
-     * @return UserMngVO
-     * @throws Exception throws Exception
-     */
-    public UserMngVO selectGrpMngDetail(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectGrpMngDetail(userMngVO);
-    }
-
-    /**
-     * <p>그룹 등록</p>
-     *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
-     */
-    @Transactional
-    public String insertGrpMngData(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.insertGrpMngData(userMngVO) > 0 ? "S" : "N";
-    }
-
-    /**
-     * <p>그룹 수정</p>
-     *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
-     */
-    @Transactional
-    public String updateGrpMngData(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.updateGrpMngData(userMngVO) > 0 ? "S" : "N";
-    }
-
-    /**
-     * <p>그룹 삭제</p>
-     *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
-     */
-    @Transactional
-    public String deleteGrpMngData(UserMngVO userMngVO) throws Exception {
-        String code = null;
-
-        // 1. 그룹 내 사용자 조회
-        int cnt = userMngMapper.selectUserMngListCnt(userMngVO);
-
-        if (cnt > 0) {
-            code = "F"; // 그룹 내 사용자가 존재할 경우
-        } else {
-            // 2. 그룹 삭제
-            code = userMngMapper.deleteGrpMngData(userMngVO) > 0 ? "S" : "N";
-        }
-
-        return code;
-    }
-
-    /**
-     * <p>그룹 엑셀 목록</p>
-     *
-     * @param userMngVO
-     * @return List
-     * @throws Exception throws Exception
-     */
-    public List<UserMngVO> selectGrpMngExcelList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) userMngMapper.selectGrpMngExcelList(userMngVO);
-    }
+    private final UserMngRepository userMngRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * <p>사용자 목록</p>
      *
-     * @param userMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (사용자 목록)
      */
-    public List<UserMngVO> selectUserMngList(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectUserMngList(userMngVO);
-    }
-
-    /**
-     * <p>사용자 목록 수</p>
-     *
-     * @param userMngVO
-     * @return int
-     * @throws Exception throws Exception
-     */
-    public int selectUserMngListCnt(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectUserMngListCnt(userMngVO);
+    public Page<UserMngListDTO> selectUserMngList(UserMngSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return userMngRepository.searchUserMngList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), searchDTO.getUseYn(), pageRequest);
     }
 
     /**
      * <p>사용자 상세</p>
      *
-     * @param userMngVO
-     * @return UserMngVO
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngDetailDTO (사용자 DTO)
      */
-    public UserMngVO selectUserMngDetail(UserMngVO userMngVO) throws Exception {
-        return userMngMapper.selectUserMngDetail(userMngVO);
+    public UserMngDetailDTO selectUserMngDetail(UserMngRequest request) {
+        return userMngRepository.findUserMngByUserId(request.getUserId());
     }
 
     /**
-     * <p>사용자 권한 목록</p>
+     * <p>사용자별 권한 목록</p>
      *
-     * @param userMngVO
-     * @return JSONArray
-     * @throws Exception throws Exception
+     * @param request (권한 정보)
+     * @return JSONArray (권한 목록)
      */
-    public JSONArray selectUserAuthMngList(UserMngVO userMngVO) throws Exception {
-        String userId = userMngVO.getUserId();
+    public JSONArray selectUserAuthMngList(UserMngRequest request) {
         JSONArray authArray = new JSONArray();
-        JSONObject authObject = new JSONObject();
-        userMngVO.setUserIdList(Arrays.asList(userId.split(",")));
+        JSONObject authObject;
+        List<String> userIdList = List.of(request.getUserId().split(","));
 
         // 하위 권한 조회
-        List<UserMngVO> userAuthMngList = userMngMapper.selectUserAuthMngList(userMngVO);
-        for (UserMngVO authVO : userAuthMngList) {
+        List<UserAuthMngListDTO> userAuthMngList = userMngRepository.searchUserAuthMngList(
+            userIdList, request.getAuthCd());
+        for (UserAuthMngListDTO listDTO : userAuthMngList) {
             authObject = new JSONObject();
-            authObject.put("id", authVO.getAuthCd());
-            authObject.put("text", authVO.getAuthNm());
-            authObject.put("leaf", "Y".equals(authVO.getLastYn()));
-            authObject.put("expanded", !"Y".equals(authVO.getLastYn()));
-            authObject.put("checked", "Y".equals(authVO.getAuthYn()));
+            authObject.put("id", listDTO.getAuthCd());
+            authObject.put("text", listDTO.getAuthNm());
+            authObject.put("leaf", "Y".equals(listDTO.getLastYn()));
+            authObject.put("expanded", !"Y".equals(listDTO.getLastYn()));
+            authObject.put("checked", "Y".equals(listDTO.getAuthYn()));
             authArray.add(authObject);
         }
 
@@ -183,152 +87,102 @@ public class UserMngService {
     /**
      * <p>사용자 아이디 중복 체크</p>
      *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngResponse (응답 정보)
      */
-    public String selectUserMngDupCnt(UserMngVO userMngVO) throws Exception {
-        int cnt = userMngMapper.selectUserMngDupCnt(userMngVO);
-        return !StringUtil.isBlank(userMngVO.getUserId()) && cnt == 0 ? "S" : "D";
+    public UserMngResponse selectUserMngDupCnt(UserMngRequest request) {
+        DataStatus status =
+            validateUserMngDupData(request) ? DataStatus.DUPLICATE : DataStatus.SUCCESS;
+        return new UserMngResponse(request.getUserId(), status);
     }
 
     /**
      * <p>사용자 등록</p>
      *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngResponse (응답 정보)
      */
     @Transactional
-    public String insertUserMngData(UserMngVO userMngVO) throws Exception {
-        String code = null;
+    public UserMngResponse insertUserMngData(UserMngRequest request) {
+        if (validateUserMngDupData(request)) {
+            return new UserMngResponse(null, DataStatus.DUPLICATE);
+        } else {
+            // BCrypt 패스워드 암호화
+            String encodePw = passwordEncoder.encode(request.getUserPw());
+            request.setUserPw(encodePw);
 
-        // 1. 사용자 등록
-        // BCrypt 패스워드 암호화
-        String encodePw = passwordEncoder.encode(userMngVO.getUserPw());
-        userMngVO.setUserPw(encodePw);
+            UserMng userMng = userMngRepository.save(request.toEntity());
 
-        code = userMngMapper.insertUserMngData(userMngVO) > 0 ? "S" : "N";
-
-        // 2-1. 사용자 권한 등록
-        if (!StringUtil.isEmpty(userMngVO.getAuthCd())) {
-            String[] arrAuthCd = StringUtil.split(userMngVO.getAuthCd());
-            for (String authCd : arrAuthCd) {
-                userMngVO.setAuthCd(authCd);
-                userMngMapper.insertUserAuthMngData(userMngVO);
-            }
+            return new UserMngResponse(userMng.getUserId(), DataStatus.SUCCESS);
         }
+    }
 
-        // 2-2. 기본 인증 권한 등록
-        userMngVO.setAuthCd("IS_AUTHENTICATED_FULLY");
-        userMngMapper.insertUserAuthMngData(userMngVO);
-
-        return code;
+    /**
+     * <p>중복 사용자 체크</p>
+     *
+     * @param request (사용자 정보)
+     * @return boolean (중복 여부)
+     */
+    private boolean validateUserMngDupData(UserMngRequest request) {
+        Optional<UserMng> optionalUserMng = userMngRepository.findById(request.getUserId());
+        return optionalUserMng.isPresent();
     }
 
     /**
      * <p>사용자 수정</p>
      *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngResponse (응답 정보)
      */
     @Transactional
-    public String updateUserMngData(UserMngVO userMngVO) throws Exception {
-        String code = null;
-
-        // 1. 사용자 수정
+    public UserMngResponse updateUserMngData(UserMngRequest request) {
         // BCrypt 패스워드 암호화
-        String userPw = userMngVO.getUserPw();
-        if (!StringUtil.isEmpty(userPw)) {
-            String encodePw = passwordEncoder.encode(userPw);
-            userMngVO.setUserPw(encodePw);
-        }
+        String encodePw = passwordEncoder.encode(request.getUserPw());
+        request.setUserPw(encodePw);
 
-        code = userMngMapper.updateUserMngData(userMngVO) > 0 ? "S" : "N";
-
-        // 2-1. 사용자 권한 삭제
-        userMngMapper.deleteUserAuthMngData(userMngVO);
-
-        // 2-2. 사용자 권한 등록
-        if (!StringUtil.isEmpty(userMngVO.getAuthCd())) {
-            String[] arrAuthCd = StringUtil.split(userMngVO.getAuthCd());
-            for (String authCd : arrAuthCd) {
-                userMngVO.setAuthCd(authCd);
-                userMngMapper.insertUserAuthMngData(userMngVO);
-            }
-        }
-
-        // 2-3. 기본 인증 권한 등록
-        userMngVO.setAuthCd("IS_AUTHENTICATED_FULLY");
-        userMngMapper.insertUserAuthMngData(userMngVO);
-
-        return code;
+        UserMng userMng = userMngRepository.findById(request.getUserId())
+            .orElseThrow(NoSuchElementException::new);
+        userMng.updateUserMng(request);
+        return new UserMngResponse(userMng.getUserId(), DataStatus.SUCCESS);
     }
 
     /**
      * <p>사용자 삭제</p>
      *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngResponse (응답 정보)
      */
     @Transactional
-    public String deleteUserMngData(UserMngVO userMngVO) throws Exception {
-        String code = null;
-
-        // 1. 사용자 권한 삭제
-        userMngMapper.deleteUserAuthMngData(userMngVO);
-
-        // 2. 사용자 삭제
-        code = userMngMapper.deleteUserMngData(userMngVO) > 0 ? "S" : "N";
-
-        return code;
+    public UserMngResponse deleteUserMngData(UserMngRequest request) {
+        userMngRepository.deleteById(request.getUserId());
+        return new UserMngResponse(request.getUserId(), DataStatus.SUCCESS);
     }
 
     /**
      * <p>권한 설정 적용</p>
      *
-     * @param userMngVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param userIdList (사용자 아이디 목록)
+     * @param authCdList (권한 목록)
+     * @return UserMngResponse (응답 정보)
      */
     @Transactional
-    public String updateUserAuthMngData(UserMngVO userMngVO) throws Exception {
-        int cnt = 0;
-        String[] arrUserId = StringUtil.split(userMngVO.getUserId());
-        String[] arrAuthCd = StringUtil.split(userMngVO.getAuthCd());
-
-        for (String userId : arrUserId) {
-            userMngVO.setUserId(userId);
-
-            // 1. 사용자 권한 삭제
-            userMngMapper.deleteUserAuthMngData(userMngVO);
-
-            // 2. 사용자 권한 등록
-            if (arrAuthCd.length > 0) {
-                for (String authCd : arrAuthCd) {
-                    userMngVO.setAuthCd(authCd);
-                    userMngMapper.insertUserAuthMngData(userMngVO);
-                }
-            }
-
-            // 3. 기본 인증 권한 등록
-            userMngVO.setAuthCd("IS_AUTHENTICATED_FULLY");
-            cnt += userMngMapper.insertUserAuthMngData(userMngVO);
+    public UserMngResponse updateUserAuthMngData(String userIdList, String authCdList) {
+        for (String userId : StringUtil.split(userIdList)) {
+            UserMng userMng = userMngRepository.findById(userId)
+                .orElseThrow(NoSuchElementException::new);
+            userMng.updateUserAuthMng(authCdList);
         }
-
-        return cnt > 0 ? "S" : "N";
+        return new UserMngResponse(userIdList, DataStatus.SUCCESS);
     }
 
     /**
      * <p>사용자 엑셀 목록</p>
      *
-     * @param userMngVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (사용자 목록)
      */
-    public List<UserMngVO> selectUserMngExcelList(UserMngVO userMngVO) throws Exception {
-        return (List<UserMngVO>) userMngMapper.selectUserMngExcelList(userMngVO);
+    public List<UserMngListDTO> selectUserMngExcelList(UserMngSearchDTO searchDTO) {
+        return userMngRepository.searchUserMngExcelList(searchDTO.getGrpCd(), searchDTO.getSearchCd(),
+            searchDTO.getSearchWord(), searchDTO.getUseYn());
     }
 }

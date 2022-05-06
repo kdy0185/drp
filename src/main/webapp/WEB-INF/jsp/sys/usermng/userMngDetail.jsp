@@ -52,36 +52,55 @@
     mainTree = userAuthMngTree;
   });
 
-  // 수정
-  function updateUserMng() {
+  // 등록
+  function insertUserMng() {
     var form = $('form[name="userMngDetailForm"]');
-    var state = $(form).find('input[name="state"]').val();
-    var msg = state === "I" ? "등록" : "수정";
-    var userAuthItems = mainTree.view.getChecked();
-    var authCd = "";
-    $(userAuthItems).each(function (i) {
-      authCd += userAuthItems[i].data.id + ",";
-    });
-
     $(form).validateForm();
 
     if ($(form).valid()) {
-      if (confirm(msg + " 하시겠습니까?")) {
+      if (confirm("등록 하시겠습니까?")) {
         $(form).find('select[name="grpCd"]').removeAttr("disabled");
-        $(form).find('input[name="authCd"]').val(authCd);
+        $(form).find('input[name="authCd"]').val(getAuthCd());
         $.ajax({
           type: "post",
-          url: "/sys/usermng/userMngUpdate.do",
+          url: "/sys/usermng/userMngInsert.do",
           data: $(form).serialize(),
-          success: function (code) {
-            if (code === "S") {
-              alert(msg + " 되었습니다.");
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("등록 되었습니다.");
               $.util.closeDialog();
               userMngStore.reload();
-            } else if (code === "N") {
-              alert(msg + "된 데이터가 없습니다.");
+            } else if (res.dataStatus === "DUPLICATE") {
+              alert("중복된 아이디입니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  // 수정
+  function updateUserMng() {
+    var form = $('form[name="userMngDetailForm"]');
+    $(form).validateForm();
+
+    if ($(form).valid()) {
+      if (confirm("수정 하시겠습니까?")) {
+        $(form).find('select[name="grpCd"]').removeAttr("disabled");
+        $(form).find('input[name="authCd"]').val(getAuthCd());
+        $.ajax({
+          type: "put",
+          url: "/sys/usermng/userMngUpdate.do",
+          data: $(form).serialize(),
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("수정 되었습니다.");
+              $.util.closeDialog();
+              userMngStore.reload();
+            } else {
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -92,29 +111,38 @@
   // 삭제
   function deleteUserMng() {
     var form = $('form[name="userMngDetailForm"]');
+
     if (confirm("삭제 하시겠습니까?")) {
       $(form).find('select[name="grpCd"]').removeAttr("disabled");
       $.ajax({
-        type: "post",
+        type: "delete",
         url: "/sys/usermng/userMngDelete.do",
         data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("삭제 되었습니다.");
             $.util.closeDialog();
             userMngStore.reload();
-          } else if (code === "N") {
-            alert("삭제된 데이터가 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
+
+  // 권한 조회
+  function getAuthCd() {
+    var userAuthItems = mainTree.view.getChecked();
+    var authCd = "";
+    $(userAuthItems).each(function (i) {
+      authCd += userAuthItems[i].data.id + ",";
+    });
+    return authCd;
+  }
 </script>
 
-<form:form modelAttribute="userMngVO" name="userMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="userMngDetailForm" method="post">
     <form:hidden path="state"/>
     <form:hidden path="authCd"/>
     <table class="table blue-base-table">
@@ -129,7 +157,7 @@
             <th class="top-line"><span class="star-mark">그룹</span></th>
             <td class="top-line">
                 <form:select path="grpCd" cssClass="form-control input-sm width_66 required"
-                             disabled="${userMngVO.state eq 'U' ? 'true' : 'false'}">
+                             disabled="${detailDTO.state eq 'U' ? 'true' : 'false'}">
                     <form:option value="" label="선택"/>
                     <c:forEach var="grpVO" items="${grpList}" varStatus="status">
                         <form:option value="${grpVO.grpCd}" label="${grpVO.grpNm}"/>
@@ -144,18 +172,17 @@
         <tr>
             <th><span class="star-mark">아이디</span></th>
             <td><form:input path="userId"
-                            cssClass="form-control input-sm width_66 ${userMngVO.state eq 'I' ? 'idDupCheck' : 'required'}"
-                            readonly="${userMngVO.state eq 'U' ? 'true' : 'false'}"/></td>
+                            cssClass="form-control input-sm width_66 ${detailDTO.state eq 'I' ? 'idDupCheck' : 'required'}"
+                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}"/></td>
         </tr>
         <tr>
             <th><span class="star-mark">성명</span></th>
             <td><form:input path="userNm" cssClass="form-control input-sm width_66 required"/></td>
         </tr>
         <tr>
-            <th><span class="${userMngVO.state eq 'I' ? 'star-mark' : 'star-unmark'}">비밀번호</span>
-            </th>
+            <th><span class="${detailDTO.state eq 'I' ? 'star-mark' : 'star-unmark'}">비밀번호</span></th>
             <td><form:password path="userPw"
-                               cssClass="form-control input-sm width_66 ${userMngVO.state eq 'I' ? 'pwCheckReq' : 'pwCheck'}"/></td>
+                               cssClass="form-control input-sm width_66 ${detailDTO.state eq 'I' ? 'pwCheck' : 'pwCheck'}"/></td>
         </tr>
         <tr>
             <th><span class="star-unmark">비밀번호 확인</span></th>
@@ -199,12 +226,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${userMngVO.state eq 'I'}">
-            <button type="button" onclick="updateUserMng();" class="btn btn-red">
+        <c:if test="${detailDTO.state eq 'I'}">
+            <button type="button" onclick="insertUserMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${userMngVO.state eq 'U'}">
+        <c:if test="${detailDTO.state eq 'U'}">
             <button type="button" onclick="updateUserMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>

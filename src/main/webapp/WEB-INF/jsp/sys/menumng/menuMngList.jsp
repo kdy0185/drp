@@ -261,7 +261,7 @@
 
       // 메뉴 엑셀
       function excelMenuMng() {
-        var form = $('form[name="menuMngForm"]');
+        var form = $('form[name="menuMngSearchForm"]');
         $(form).attr({
           action: "/sys/menumng/menuMngExcel.do"
         }).submit();
@@ -278,7 +278,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="menuMngVO" name="menuMngSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="menuMngSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-5 col-sm-12 col-xs-12 padding_l25">
@@ -319,7 +319,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="menuMngVO" name="menuMngForm" method="post">
+            <form:form modelAttribute="searchDTO" name="menuMngForm" method="post">
                 <form:hidden path="menuCd"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">

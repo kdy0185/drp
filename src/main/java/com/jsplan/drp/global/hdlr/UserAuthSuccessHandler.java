@@ -30,7 +30,7 @@ public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
     private String defaultUrl;
     private boolean useReferer;
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    private static final String SAVE_ID_CHK = "saveIdChk";
+    private static final String SAVE_ID_CHECK = "saveIdCheck";
     private static final String COOKIE_NAME = "cookieUserId";
     private static final int COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7일
     private static final int SESSION_MAX_TIME = 30 * 60; // 30분
@@ -81,8 +81,8 @@ public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
         resetAuthenticationAttributes(request);
 
         // ID 저장 설정
-        String saveIdChk = request.getParameter(SAVE_ID_CHK);
-        if (saveIdChk != null) {
+        String saveIdCheck = request.getParameter(SAVE_ID_CHECK);
+        if (saveIdCheck != null) {
             String userId = ((UserVO) authentication.getPrincipal()).getUserId();
             Cookie cookie = new Cookie(COOKIE_NAME, userId);
             cookie.setMaxAge(COOKIE_MAX_AGE);

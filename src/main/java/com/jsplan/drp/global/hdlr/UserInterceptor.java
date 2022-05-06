@@ -1,6 +1,7 @@
 package com.jsplan.drp.global.hdlr;
 
 import com.jsplan.drp.global.obj.entity.UserVO;
+import com.jsplan.drp.global.util.StringUtil;
 import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,15 +42,14 @@ public class UserInterceptor implements HandlerInterceptor {
 
         // 기본 언어 설정 (한국어)
         Locale sessionLocale = sessionLocaleResolver.resolveLocale(request);
-        locale = sessionLocale == null ? Locale.KOREA : sessionLocale;
+        locale = StringUtil.isEmpty(sessionLocale.getLanguage()) ? Locale.KOREA : sessionLocale;
 
         // 인증된 사용자의 정보 조회
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
         String userId = "";
 
-        if (principal != null && principal instanceof UserVO) {
-            userId = ((UserVO) principal).getUserId();
+        if (null != auth && auth.isAuthenticated()) {
+            userId = ((UserVO) auth.getPrincipal()).getUserId();
         }
 
         // sessionLocaleResolver 에 언어 설정
