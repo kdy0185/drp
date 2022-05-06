@@ -78,8 +78,8 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
                 userMng.userNm,
                 userMng.mobileNum,
                 userMng.email,
-                Expressions.simpleTemplate(String.class, "getCodeNm({0}, {1})",
-                    "USER_TYPE", userMng.userType),
+                Expressions.simpleTemplate(String.class, "getCodeNm({0}, {1})", "USER_TYPE",
+                    userMng.userType),
                 userMng.useYn,
                 userMng.regDate,
                 userMng.modDate))

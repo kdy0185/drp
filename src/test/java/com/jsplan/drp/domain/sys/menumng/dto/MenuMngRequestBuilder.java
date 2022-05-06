@@ -10,6 +10,7 @@ import com.jsplan.drp.global.obj.entity.UseStatus;
  */
 public class MenuMngRequestBuilder {
 
+    // Test 전용 생성자
     public static MenuMngRequest build(String menuCd, String upperMenuCd, String menuNm,
         String menuEngNm, String menuUrl, String menuDesc, Integer menuLv, Integer menuOrd,
         UseStatus useYn, String authCd) {

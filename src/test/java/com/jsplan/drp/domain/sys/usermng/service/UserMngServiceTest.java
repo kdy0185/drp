@@ -118,11 +118,11 @@ class UserMngServiceTest {
             any())).willReturn(pageList);
 
         // when
-        Page<UserMngListDTO> resultList = userMngService.selectUserMngList(searchDTO);
+        Page<UserMngListDTO> userMngList = userMngService.selectUserMngList(searchDTO);
 
         // then
-        assertThat(resultList.getNumberOfElements()).isEqualTo(1);
-        assertThat(resultList.stream().findFirst().orElseThrow(NoSuchElementException::new)
+        assertThat(userMngList.getNumberOfElements()).isEqualTo(1);
+        assertThat(userMngList.stream().findFirst().orElseThrow(NoSuchElementException::new)
             .getUserNm()).contains(userNm);
     }
 
@@ -130,7 +130,7 @@ class UserMngServiceTest {
     @DisplayName("사용자 상세 조회 테스트")
     public void selectUserMngDetail() throws Exception {
         // mocking
-        given(userMngRepository.findUserMngByUserId(any())).willReturn(detailDTO);
+        given(userMngRepository.findUserMngByUserId(anyString())).willReturn(detailDTO);
 
         // when
         UserMngDetailDTO findDetail = userMngService.selectUserMngDetail(request);

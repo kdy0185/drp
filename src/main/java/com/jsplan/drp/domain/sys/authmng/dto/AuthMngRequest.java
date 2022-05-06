@@ -19,10 +19,12 @@ public class AuthMngRequest {
 
     @NotBlank(message = "{js.valid.msg.required}")
     private String authCd; // 권한 코드
+
     private String upperAuthCd; // 상위 권한 코드
 
     @NotBlank(message = "{js.valid.msg.required}")
     private String authNm; // 권한명
+
     private String authDesc; // 권한 설명
 
     @Positive(message = "{js.valid.msg.digitsReq}")

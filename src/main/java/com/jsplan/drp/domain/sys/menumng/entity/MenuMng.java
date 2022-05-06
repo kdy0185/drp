@@ -55,10 +55,10 @@ public class MenuMng {
     private String menuDesc; // 메뉴 설명
 
     @Column(name = "MENU_LV", nullable = false)
-    private int menuLv; // 메뉴 수준
+    private Integer menuLv; // 메뉴 수준
 
     @Column(name = "MENU_ORD", nullable = false)
-    private int menuOrd; // 메뉴 순서
+    private Integer menuOrd; // 메뉴 순서
 
     @Column(name = "USE_YN", nullable = false, length = 1)
     @Enumerated(EnumType.STRING)
@@ -76,7 +76,7 @@ public class MenuMng {
 
     @Builder
     public MenuMng(String menuCd, MenuMng upperMenuMng, String menuNm, String menuEngNm,
-        String menuUrl, String menuDesc, int menuLv, int menuOrd, UseStatus useYn,
+        String menuUrl, String menuDesc, Integer menuLv, Integer menuOrd, UseStatus useYn,
         String menuAuthMng) {
         this.menuCd = menuCd;
         this.upperMenuMng = upperMenuMng;

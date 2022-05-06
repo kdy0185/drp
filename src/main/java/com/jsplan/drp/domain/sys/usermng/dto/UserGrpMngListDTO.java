@@ -19,9 +19,9 @@ public class UserGrpMngListDTO extends BaseListDTO {
     private final String grpNm; // 그룹명
     private final String grpDesc; // 그룹 설명
     private final String regUser; // 등록자
-    private final String regDate; // 등록 일시
+    private final String regDate; // 등록 일자
     private final String modUser; // 수정자
-    private final String modDate; // 수정 일시
+    private final String modDate; // 수정 일자
 
     @QueryProjection
     public UserGrpMngListDTO(String grpCd, String grpNm, String grpDesc, String regUser,

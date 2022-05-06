@@ -62,11 +62,9 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
                 userGrpMng.grpCd,
                 userGrpMng.grpNm,
                 userGrpMng.grpDesc,
-                Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                    userGrpMng.regUser),
+                Expressions.simpleTemplate(String.class, "getUserNm({0})", userGrpMng.regUser),
                 userGrpMng.regDate,
-                Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                    userGrpMng.modUser),
+                Expressions.simpleTemplate(String.class, "getUserNm({0})", userGrpMng.modUser),
                 userGrpMng.modDate))
             .from(userGrpMng)
             .where(grpNmLike(grpNm))
@@ -108,11 +106,9 @@ public class UserGrpMngCustomRepositoryImpl extends Querydsl5RepositorySupport i
             userGrpMng.grpCd,
             userGrpMng.grpNm,
             userGrpMng.grpDesc,
-            Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                userGrpMng.regUser),
+            Expressions.simpleTemplate(String.class, "getUserNm({0})", userGrpMng.regUser),
             userGrpMng.regDate,
-            Expressions.simpleTemplate(String.class, "getUserNm({0})",
-                userGrpMng.modUser),
+            Expressions.simpleTemplate(String.class, "getUserNm({0})", userGrpMng.modUser),
             userGrpMng.modDate))
             .from(userGrpMng)
             .where(userGrpMng.grpCd.eq(grpCd))
