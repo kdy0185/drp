@@ -58,7 +58,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴 목록 조회 테스트")
-    public void searchMenuMngList() throws Exception {
+    public void searchMenuMngList() {
         // given
         String menuCd = "P0000";
         String searchCd = "menuNm";
@@ -74,7 +74,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴 상세 조회 테스트")
-    public void findMenuMngByMenuCd() throws Exception {
+    public void findMenuMngByMenuCd() {
         // given
         String menuCd = "P0100";
 
@@ -88,7 +88,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴별 권한 목록 조회 테스트")
-    public void searchMenuAuthMngList() throws Exception {
+    public void searchMenuAuthMngList() {
         // given
         String menuCd = "P0201,P0202,P0203";
         List<String> menuCdList = List.of(menuCd.split(","));
@@ -108,7 +108,7 @@ class MenuMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 등록 테스트")
-    public void insertMenuMngData() throws Exception {
+    public void insertMenuMngData() {
         // when
         MenuMng savedMenuMng = menuMngRepository.save(request.toEntity());
         String findMenuCd = menuMngRepository.findMenuMngByMenuCd(savedMenuMng.getMenuCd())
@@ -121,7 +121,7 @@ class MenuMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 수정 테스트")
-    public void updateMenuMngData() throws Exception {
+    public void updateMenuMngData() {
         // given
         String menuCd = "P0100";
         String menuNm = "메뉴 수정";
@@ -143,7 +143,7 @@ class MenuMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 삭제 테스트")
-    public void deleteMenuMngData() throws Exception {
+    public void deleteMenuMngData() {
         // when
         menuMngRepository.saveAndFlush(request.toEntity());
 

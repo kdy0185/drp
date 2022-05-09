@@ -61,7 +61,7 @@ class UserMngRepositoryTest {
 
     @Test
     @DisplayName("사용자 목록 조회 테스트")
-    public void searchUserMngList() throws Exception {
+    public void searchUserMngList() {
         // given
         String grpCd = "GRP_USER";
         String searchCd = "userNm";
@@ -79,7 +79,7 @@ class UserMngRepositoryTest {
 
     @Test
     @DisplayName("사용자 상세 조회 테스트")
-    public void findUserMngByUserId() throws Exception {
+    public void findUserMngByUserId() {
         // given
         String userId = "sys_app";
 
@@ -93,7 +93,7 @@ class UserMngRepositoryTest {
 
     @Test
     @DisplayName("사용자별 권한 목록 조회 테스트")
-    public void searchUserAuthMngList() throws Exception {
+    public void searchUserAuthMngList() {
         // given
         String userId = "075082,424981,784252,885235";
         List<String> userIdList = List.of(userId.split(","));
@@ -113,7 +113,7 @@ class UserMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("사용자 등록 테스트")
-    public void insertUserMngData() throws Exception {
+    public void insertUserMngData() {
         // when
         UserMng savedUserMng = userMngRepository.save(request.toEntity());
         String findUserId = userMngRepository.findUserMngByUserId(savedUserMng.getUserId())
@@ -126,7 +126,7 @@ class UserMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("사용자 수정 테스트")
-    public void updateUserMngData() throws Exception {
+    public void updateUserMngData() {
         // given
         String userId = "sys_app";
         String userNm = "관리자";
@@ -152,7 +152,7 @@ class UserMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("사용자 삭제 테스트")
-    public void deleteUserMngData() throws Exception {
+    public void deleteUserMngData() {
         // when
         userMngRepository.saveAndFlush(request.toEntity());
 

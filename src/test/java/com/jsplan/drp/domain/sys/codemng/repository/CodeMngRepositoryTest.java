@@ -72,7 +72,7 @@ class CodeMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 코드 목록 조회 테스트")
-    public void searchCodeGrpMngList() throws Exception {
+    public void searchCodeGrpMngList() {
         // given
         String searchCd = "grpCd";
         String searchWord = "";
@@ -88,7 +88,7 @@ class CodeMngRepositoryTest {
 
     @Test
     @DisplayName("공통 코드 목록 조회 테스트")
-    public void searchCodeMngList() throws Exception {
+    public void searchCodeMngList() {
         // given
         String grpCd = "CONC_RATE";
         String searchCd = "comCd";
@@ -105,7 +105,7 @@ class CodeMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 코드 상세 조회 테스트")
-    public void findCodeGrpMngByGrpCd() throws Exception {
+    public void findCodeGrpMngByGrpCd() {
         // given
         String grpCd = "CONC_RATE";
 
@@ -118,7 +118,7 @@ class CodeMngRepositoryTest {
 
     @Test
     @DisplayName("공통 코드 상세 조회 테스트")
-    public void findCodeMngByGrpCd() throws Exception {
+    public void findCodeMngByGrpCd() {
         // given
         String grpCd = "CONC_RATE";
         String comCd = "5";
@@ -133,7 +133,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 코드 등록 테스트")
-    public void insertCodeGrpMngData() throws Exception {
+    public void insertCodeGrpMngData() {
         // when
         CodeGrpMng savedCodeGrpMng = codeGrpMngRepository.save(grpRequest.toEntity());
         String findGrpCd = codeGrpMngRepository.findCodeGrpMngByGrpCd(savedCodeGrpMng.getGrpCd())
@@ -146,7 +146,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("공통 코드 등록 테스트")
-    public void insertCodeMngData() throws Exception {
+    public void insertCodeMngData() {
         // when
         codeGrpMngRepository.save(grpRequest.toEntity());
         CodeMng savedCodeMng = codeMngRepository.save(codeRequest.toEntity());
@@ -160,7 +160,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 코드 수정 테스트")
-    public void updateCodeGrpMngData() throws Exception {
+    public void updateCodeGrpMngData() {
         // given
         String grpCd = "CONC_RATE";
         String grpNm = "몰입도 수정";
@@ -183,7 +183,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("공통 코드 수정 테스트")
-    public void updateCodeMngData() throws Exception {
+    public void updateCodeMngData() {
         // given
         String grpCd = "CONC_RATE";
         String comCd = "0";
@@ -208,7 +208,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 코드 삭제 테스트")
-    public void deleteCodeGrpMngData() throws Exception {
+    public void deleteCodeGrpMngData() {
         // when
         codeGrpMngRepository.saveAndFlush(grpRequest.toEntity());
 
@@ -222,7 +222,7 @@ class CodeMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("공통 코드 삭제 테스트")
-    public void deleteCodeMngData() throws Exception {
+    public void deleteCodeMngData() {
         // given
         codeGrpMngRepository.saveAndFlush(grpRequest.toEntity());
         codeMngRepository.saveAndFlush(codeRequest.toEntity());

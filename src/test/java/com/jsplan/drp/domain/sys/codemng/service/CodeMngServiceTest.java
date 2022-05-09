@@ -121,7 +121,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("그룹 코드 목록 조회 테스트")
-    public void selectCodeGrpMngList() throws Exception {
+    public void selectCodeGrpMngList() {
         // given
         List<CodeGrpMngListDTO> list = new ArrayList<>();
         list.add(
@@ -143,7 +143,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("공통 코드 목록 조회 테스트")
-    public void selectCodeMngList() throws Exception {
+    public void selectCodeMngList() {
         // given
         List<CodeMngListDTO> list = new ArrayList<>();
         list.add(new CodeMngListDTO(grpCd, grpNm, comCd, comNm, useYn, null, ord, regUser, regDate,
@@ -165,7 +165,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("그룹 코드 상세 조회 테스트")
-    public void selectCodeGrpMngDetail() throws Exception {
+    public void selectCodeGrpMngDetail() {
         // mocking
         given(codeGrpMngRepository.findCodeGrpMngByGrpCd(anyString())).willReturn(grpDetailDTO);
 
@@ -181,7 +181,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("공통 코드 상세 조회 테스트")
-    public void selectCodeMngDetail() throws Exception {
+    public void selectCodeMngDetail() {
         // mocking
         given(codeMngRepository.findCodeMngByComCd(anyString(), anyString())).willReturn(
             codeDetailDTO);
@@ -198,7 +198,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("그룹 코드 등록 테스트")
-    public void insertCodeGrpMngData() throws Exception {
+    public void insertCodeGrpMngData() {
         // given
         String jsonData = ""
             + "[\n"
@@ -225,7 +225,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("그룹 코드 수정 테스트")
-    public void updateCodeGrpMngData() throws Exception {
+    public void updateCodeGrpMngData() {
         // given
         String jsonData = ""
             + "[\n"
@@ -250,7 +250,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("공통 코드 등록 테스트")
-    public void insertCodeMngData() throws Exception {
+    public void insertCodeMngData() {
         // given
         String jsonData = ""
             + "[\n"
@@ -280,7 +280,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("공통 코드 수정 테스트")
-    public void updateCodeMngData() throws Exception {
+    public void updateCodeMngData() {
         String jsonData = ""
             + "[\n"
             + "    {\n"
@@ -305,7 +305,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("그룹 코드 삭제 테스트")
-    public void deleteCodeGrpMngData() throws Exception {
+    public void deleteCodeGrpMngData() {
         // when
         codeMngService.deleteCodeGrpMngData(grpRequest);
 
@@ -315,7 +315,7 @@ class CodeMngServiceTest {
 
     @Test
     @DisplayName("공통 코드 삭제 테스트")
-    public void deleteCodeMngData() throws Exception {
+    public void deleteCodeMngData() {
         // given
         CodeMngId codeMngId = CodeMngId.createCodeMngId(codeRequest.getGrpCd(),
             codeRequest.getComCd());

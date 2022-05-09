@@ -57,7 +57,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한 목록 조회 테스트")
-    public void searchAuthMngList() throws Exception {
+    public void searchAuthMngList() {
         // given
         String authCd = "AUTH_ADMIN";
         String searchCd = "authNm";
@@ -73,7 +73,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한 상세 조회 테스트")
-    public void findAuthMngByAuthCd() throws Exception {
+    public void findAuthMngByAuthCd() {
         // given
         String authCd = "AUTH_ADMIN";
 
@@ -86,7 +86,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한 등록 테스트")
-    public void insertAuthMngData() throws Exception {
+    public void insertAuthMngData() {
         // when
         AuthMng savedAuthMng = authMngRepository.save(request.toEntity());
         String findAuthCd = authMngRepository.findAuthMngByAuthCd(savedAuthMng.getAuthCd())
@@ -98,7 +98,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한 수정 테스트")
-    public void updateAuthMngData() throws Exception {
+    public void updateAuthMngData() {
         // given
         String authCd = "AUTH_NORMAL";
         String authNm = "일반 회원 권한 수정";
@@ -117,7 +117,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한 삭제 테스트")
-    public void deleteAuthMngData() throws Exception {
+    public void deleteAuthMngData() {
         // when
         authMngRepository.saveAndFlush(request.toEntity());
 
@@ -130,7 +130,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한별 사용자 목록 조회 테스트")
-    public void searchAuthUserMngList() throws Exception {
+    public void searchAuthUserMngList() {
         // given
         String authCd = "AUTH_ADMIN";
         List<String> authCdList = List.of(authCd.split(","));
@@ -153,7 +153,7 @@ class AuthMngRepositoryTest {
 
     @Test
     @DisplayName("권한별 메뉴 목록 조회 테스트")
-    public void searchAuthMenuMngList() throws Exception {
+    public void searchAuthMenuMngList() {
         // given
         String authCd = "AUTH_NORMAL";
         List<String> authCdList = List.of(authCd.split(","));

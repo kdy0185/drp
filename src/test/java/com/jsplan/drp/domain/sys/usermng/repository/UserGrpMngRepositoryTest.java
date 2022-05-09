@@ -33,7 +33,7 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 목록 조회 테스트")
-    public void searchUserGrpMngList() throws Exception {
+    public void searchUserGrpMngList() {
         // given
         String grpNm = "사용자";
         PageRequest pageRequest = PageRequest.of(0, 20);
@@ -47,7 +47,7 @@ class UserGrpMngRepositoryTest {
 
     @Test
     @DisplayName("그룹 상세 조회 테스트")
-    public void findUserGrpMngByGrpCd() throws Exception {
+    public void findUserGrpMngByGrpCd() {
         // given
         String grpCd = "GRP_MNG";
 
@@ -63,7 +63,7 @@ class UserGrpMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 등록 테스트")
-    public void insertUserGrpMngData() throws Exception {
+    public void insertUserGrpMngData() {
         // given
         String grpCd = "GRP_TEST";
         String grpNm = "테스트 그룹";
@@ -82,7 +82,7 @@ class UserGrpMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 수정 테스트")
-    public void updateUserGrpMngData() throws Exception {
+    public void updateUserGrpMngData() {
         // given
         String grpCd = "GRP_MNG";
         String grpNm = "관리자 그룹 수정";
@@ -105,7 +105,7 @@ class UserGrpMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("그룹 삭제 테스트")
-    public void deleteUserGrpMngData() throws Exception {
+    public void deleteUserGrpMngData() {
         // given
         String grpCd = "GRP_TEST";
         String grpNm = "테스트 그룹";

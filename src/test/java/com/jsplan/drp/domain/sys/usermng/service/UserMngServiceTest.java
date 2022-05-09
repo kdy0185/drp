@@ -107,7 +107,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자 목록 조회 테스트")
-    public void selectUserMngList() throws Exception {
+    public void selectUserMngList() {
         // given
         List<UserMngListDTO> list = new ArrayList<>();
         list.add(listDTO);
@@ -128,7 +128,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자 상세 조회 테스트")
-    public void selectUserMngDetail() throws Exception {
+    public void selectUserMngDetail() {
         // mocking
         given(userMngRepository.findUserMngByUserId(anyString())).willReturn(detailDTO);
 
@@ -144,7 +144,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자별 권한 목록 조회 테스트")
-    public void selectUserAuthMngList() throws Exception {
+    public void selectUserAuthMngList() {
         // given
         request.setUserId("075082,424981,784252,885235");
         request.setAuthCd("AUTH_ADMIN");
@@ -167,7 +167,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자 등록 테스트")
-    public void insertUserMngData() throws Exception {
+    public void insertUserMngData() {
         // mocking
         given(userMngRepository.save(any())).willReturn(userMng);
         given(userMngRepository.findUserMngByUserId(anyString())).willReturn(detailDTO);
@@ -183,7 +183,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자 수정 테스트")
-    public void updateUserMngData() throws Exception {
+    public void updateUserMngData() {
         // given
         request = UserMngRequestBuilder.build(grpCd, userId, "이름 수정", userPw, mobileNum,
             "test2@mail.com", userType, useYn, authCd);
@@ -201,7 +201,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("사용자 삭제 테스트")
-    public void deleteUserMngData() throws Exception {
+    public void deleteUserMngData() {
         // when
         userMngService.deleteUserMngData(request);
 
@@ -211,7 +211,7 @@ class UserMngServiceTest {
 
     @Test
     @DisplayName("권한 설정 적용 테스트")
-    public void updateUserAuthMngData() throws Exception {
+    public void updateUserAuthMngData() {
         // given
         String userIdList = "123456";
         String authCdList = "AUTH_NORMAL";
