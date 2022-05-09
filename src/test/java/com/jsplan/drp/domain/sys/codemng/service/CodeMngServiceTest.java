@@ -206,7 +206,7 @@ class CodeMngServiceTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
         CodeGrpMngRequest request = CodeGrpMngRequestBuilder.jsonBuild(jsonData);
@@ -233,7 +233,7 @@ class CodeMngServiceTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"요일 수정\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    }\n"
             + "]";
         CodeGrpMngRequest request = CodeGrpMngRequestBuilder.jsonBuild(jsonData);
@@ -260,7 +260,7 @@ class CodeMngServiceTest {
             + "        \"comNm\" : \"월\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"1\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
         CodeMngRequest request = CodeMngRequestBuilder.jsonBuild(jsonData);
@@ -288,7 +288,7 @@ class CodeMngServiceTest {
             + "        \"comCd\" : \"Mon\",\n"
             + "        \"comNm\" : \"월요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    }\n"
             + "]";
         CodeMngRequest request = CodeMngRequestBuilder.jsonBuild(jsonData);

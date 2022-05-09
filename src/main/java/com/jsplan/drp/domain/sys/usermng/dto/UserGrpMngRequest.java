@@ -1,6 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class UserGrpMngRequest {
 
     private String grpDesc; // 그룹 설명
 
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // Test 전용 생성자
     UserGrpMngRequest(String grpCd, String grpNm, String grpDesc) {

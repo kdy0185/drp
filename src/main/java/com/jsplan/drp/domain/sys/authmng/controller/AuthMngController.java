@@ -12,6 +12,7 @@ import com.jsplan.drp.global.bean.ReloadableFilterInvocationSecurityMetadataSour
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.ComsVO;
 import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
@@ -104,11 +105,11 @@ public class AuthMngController {
         List<AuthMngListDTO> authList = authMngService.selectUpperAuthMngList();
         mav.addObject("authList", authList);
 
-        if ("U".equals(request.getState())) {
+        if (DetailStatus.UPDATE.equals(request.getDetailStatus())) {
             detailDTO = authMngService.selectAuthMngDetail(request);
         }
 
-        detailDTO.setState(request.getState());
+        detailDTO.setDetailStatus(request.getDetailStatus());
         mav.addObject("detailDTO", detailDTO);
         return mav;
     }

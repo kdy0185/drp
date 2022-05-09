@@ -14,6 +14,7 @@ import com.jsplan.drp.domain.sys.codemng.entity.CodeMngId;
 import com.jsplan.drp.domain.sys.codemng.repository.CodeGrpMngRepository;
 import com.jsplan.drp.domain.sys.codemng.repository.CodeMngRepository;
 import com.jsplan.drp.global.obj.entity.CodeMngDataStatus;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -120,10 +121,10 @@ public class CodeMngService {
                 CodeGrpMngRequest.class);
             String grpCd = request.getGrpCd();
             String grpNm = request.getGrpNm();
-            String state = request.getState();
+            String detailStatus = request.getDetailStatus();
 
             // 1. 공백 여부 체크
-            if (!StringUtil.isBlank(state)) {
+            if (!StringUtil.isBlank(detailStatus)) {
                 if (StringUtil.isBlank(grpCd) || StringUtil.isBlank(grpNm)) {
                     return CodeMngDataStatus.BLANK;
                 }
@@ -138,7 +139,7 @@ public class CodeMngService {
             }
 
             // 3. 중복 그룹 코드 체크
-            if ("I".equals(state)) {
+            if (DetailStatus.INSERT.getCode().equals(detailStatus)) {
                 if (codeGrpMngRepository.existsCodeGrpMngByGrpCd(grpCd)) {
                     return CodeMngDataStatus.INSERT_DUPLICATE;
                 }
@@ -162,10 +163,10 @@ public class CodeMngService {
             JSONObject codeGrpMngObject = codeGrpMngArray.getJSONObject(i);
             request = (CodeGrpMngRequest) JSONObject.toBean(codeGrpMngObject,
                 CodeGrpMngRequest.class);
-            if ("I".equals(request.getState())) {
+            if (DetailStatus.INSERT.getCode().equals(request.getDetailStatus())) {
                 codeGrpMngRepository.save(request.toEntity());
                 dataCnt++;
-            } else if ("U".equals(request.getState())) {
+            } else if (DetailStatus.UPDATE.getCode().equals(request.getDetailStatus())) {
                 CodeGrpMng codeGrpMng = codeGrpMngRepository.findById(request.getGrpCd())
                     .orElseThrow(NoSuchElementException::new);
                 codeGrpMng.updateCodeGrpMng(request);
@@ -215,10 +216,10 @@ public class CodeMngService {
             String grpCd = request.getGrpCd();
             String comCd = request.getComCd();
             String comNm = request.getComNm();
-            String state = request.getState();
+            String detailStatus = request.getDetailStatus();
 
             // 1. 공백 여부 체크
-            if (!StringUtil.isBlank(state)) {
+            if (!StringUtil.isBlank(detailStatus)) {
                 if (StringUtil.isBlank(comCd) || StringUtil.isBlank(comNm)) {
                     return CodeMngDataStatus.BLANK;
                 }
@@ -233,7 +234,7 @@ public class CodeMngService {
             }
 
             // 3. 중복 공통 코드 체크
-            if ("I".equals(state)) {
+            if (DetailStatus.INSERT.getCode().equals(detailStatus)) {
                 if (codeMngRepository.existsCodeMngByComCd(grpCd, comCd)) {
                     return CodeMngDataStatus.INSERT_DUPLICATE;
                 }
@@ -257,10 +258,10 @@ public class CodeMngService {
             JSONObject codeMngObject = codeMngArray.getJSONObject(i);
             request = (CodeMngRequest) JSONObject.toBean(codeMngObject,
                 CodeMngRequest.class);
-            if ("I".equals(request.getState())) {
+            if (DetailStatus.INSERT.getCode().equals(request.getDetailStatus())) {
                 codeMngRepository.save(request.toEntity());
                 dataCnt++;
-            } else if ("U".equals(request.getState())) {
+            } else if (DetailStatus.UPDATE.getCode().equals(request.getDetailStatus())) {
                 CodeMng codeMng = codeMngRepository.findById(
                         CodeMngId.createCodeMngId(request.getGrpCd(), request.getComCd()))
                     .orElseThrow(NoSuchElementException::new);

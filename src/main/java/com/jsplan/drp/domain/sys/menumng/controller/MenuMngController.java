@@ -9,6 +9,7 @@ import com.jsplan.drp.domain.sys.menumng.service.MenuMngService;
 import com.jsplan.drp.global.bean.ReloadableFilterInvocationSecurityMetadataSource;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
@@ -95,11 +96,11 @@ public class MenuMngController {
         ModelAndView mav = new ModelAndView("sys/menumng/menuMngDetail");
         MenuMngDetailDTO detailDTO = new MenuMngDetailDTO();
 
-        if ("U".equals(request.getState())) {
+        if (DetailStatus.UPDATE.equals(request.getDetailStatus())) {
             detailDTO = menuMngService.selectMenuMngDetail(request);
         }
 
-        detailDTO.setState(request.getState());
+        detailDTO.setDetailStatus(request.getDetailStatus());
         mav.addObject("detailDTO", detailDTO);
         return mav;
     }

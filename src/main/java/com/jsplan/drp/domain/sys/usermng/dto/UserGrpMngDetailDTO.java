@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,10 +24,10 @@ public class UserGrpMngDetailDTO {
     private String regDate; // 등록 일시
     private String modUser; // 수정자
     private String modDate; // 수정 일시
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
-    public void setState(String state) {
-        this.state = state;
+    public void setDetailStatus(DetailStatus detailStatus) {
+        this.detailStatus = detailStatus;
     }
 
     @QueryProjection

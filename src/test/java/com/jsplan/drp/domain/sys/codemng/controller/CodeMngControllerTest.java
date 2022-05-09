@@ -88,7 +88,7 @@ class CodeMngControllerTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -108,7 +108,7 @@ class CodeMngControllerTest {
             + "        \"comNm\" : \"월\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"1\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -216,13 +216,13 @@ class CodeMngControllerTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"요일 수정\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    },\n"
             + "    {\n"
             + "        \"grpCd\" : \"MONTH\",\n"
             + "        \"grpNm\" : \"월\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -230,7 +230,7 @@ class CodeMngControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("jsonData", jsonData)
             ).andExpect(jsonPath("$.dataCnt").value(2))
-            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS_UPDATE"))
             .andExpect(status().isOk());
     }
 
@@ -245,7 +245,7 @@ class CodeMngControllerTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    }\n"
             + "]";
 
@@ -267,13 +267,13 @@ class CodeMngControllerTest {
             + "        \"grpCd\" : \"YEAR\",\n"
             + "        \"grpNm\" : \"년\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    },\n"
             + "    {\n"
             + "        \"grpCd\" : \"YEAR\",\n"
             + "        \"grpNm\" : \"년\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -295,7 +295,7 @@ class CodeMngControllerTest {
             + "        \"grpCd\" : \"WEEKLY\",\n"
             + "        \"grpNm\" : \"요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -319,7 +319,7 @@ class CodeMngControllerTest {
             + "        \"comNm\" : \"월요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"1\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    },\n"
             + "    {\n"
             + "        \"grpCd\" : \"WEEKLY\",\n"
@@ -327,7 +327,7 @@ class CodeMngControllerTest {
             + "        \"comNm\" : \"화요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"2\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -335,7 +335,7 @@ class CodeMngControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("jsonData", jsonData)
             ).andExpect(jsonPath("$.dataCnt").value(2))
-            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS_UPDATE"))
             .andExpect(status().isOk());
     }
 
@@ -351,7 +351,7 @@ class CodeMngControllerTest {
             + "        \"comCd\" : \"Mon\",\n"
             + "        \"grpNm\" : \"\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"U\"\n"
+            + "        \"detailStatus\" : \"UPDATE\"\n"
             + "    }\n"
             + "]";
 
@@ -375,7 +375,7 @@ class CodeMngControllerTest {
             + "        \"comNm\" : \"수요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"3\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    },\n"
             + "    {\n"
             + "        \"grpCd\" : \"WEEKLY\",\n"
@@ -383,7 +383,7 @@ class CodeMngControllerTest {
             + "        \"comNm\" : \"수요일\",\n"
             + "        \"useYn\" : \"Y\",\n"
             + "        \"ord\" : \"3\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -406,7 +406,7 @@ class CodeMngControllerTest {
             + "        \"comCd\" : \"Mon\",\n"
             + "        \"comNm\" : \"월\",\n"
             + "        \"useYn\" : \"Y\",\n"
-            + "        \"state\" : \"I\"\n"
+            + "        \"detailStatus\" : \"INSERT\"\n"
             + "    }\n"
             + "]";
 
@@ -429,7 +429,7 @@ class CodeMngControllerTest {
                 .param("grpCd", grpCd)
                 .param("comCd", comCd)
             ).andExpect(jsonPath("$.dataCnt").value(1))
-            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS_DELETE"))
             .andExpect(status().isOk());
     }
 
@@ -444,7 +444,7 @@ class CodeMngControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("grpCd", grpCd)
             ).andExpect(jsonPath("$.dataCnt").value(1))
-            .andExpect(jsonPath("$.dataStatus").value("SUCCESS"))
+            .andExpect(jsonPath("$.dataStatus").value("SUCCESS_DELETE"))
             .andExpect(status().isOk());
     }
 

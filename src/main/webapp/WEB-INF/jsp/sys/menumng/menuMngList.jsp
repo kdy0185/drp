@@ -179,7 +179,7 @@
               itemdblclick: function (view, node, htmlElement) {
                 var form = $('form[name="menuMngForm"]');
                 $(form).find('input[name="menuCd"]').val(node.data.menuCd);
-                readMenuMng('U');
+                readMenuMng('UPDATE');
               }
             }
           },
@@ -195,23 +195,23 @@
       }
 
       // 상세
-      function readMenuMng(state) {
+      function readMenuMng(detailStatus) {
         var form = $('form[name="menuMngForm"]');
         var menuMngCnt = mainTree.getSelectionModel().getCount();
-        var menuCd = state === "U" ? $(form).find('input[name="menuCd"]').val() : "";
-        if (state === "U" && menuMngCnt === 0) {
+        var menuCd = detailStatus === "UPDATE" ? $(form).find('input[name="menuCd"]').val() : "";
+        if (detailStatus === "UPDATE" && menuMngCnt === 0) {
           alert("메뉴를 선택하세요.");
-        } else if (state === "U" && menuMngCnt > 1) {
+        } else if (detailStatus === "UPDATE" && menuMngCnt > 1) {
           alert("1개의 메뉴만 선택하세요.");
         } else {
-          var title = state === "I" ? "메뉴 등록" : "메뉴 정보";
+          var title = detailStatus === "INSERT" ? "메뉴 등록" : "메뉴 정보";
           var width = 750;
           $.ajax({
             type: "post",
             url: "/sys/menumng/menuMngDetail.do",
             data: {
               menuCd: menuCd,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -347,10 +347,10 @@
                         </ul>
                         <div id="menuMngTree"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readMenuMng('I');" class="btn btn-red">
+                            <button type="button" onclick="readMenuMng('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readMenuMng('U');" class="btn btn-red">
+                            <button type="button" onclick="readMenuMng('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                             <button type="button" onclick="openAuthPop();" class="btn btn-red">

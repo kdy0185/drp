@@ -133,7 +133,7 @@ class UserMngControllerTest {
         mockMvc.perform(post("/sys/usermng/userMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("userId", userId)
-                .param("state", "U")
+                .param("detailStatus", "UPDATE")
             ).andExpect(view().name("sys/usermng/userMngDetail"))
             .andExpect(status().isOk());
     }

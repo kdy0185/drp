@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     /**
-     * @FileName : grpMngDetail.jsp
+     * @FileName : codeGrpMngDetail.jsp
      * @Author : KDW
      * @Date : 2022-01-26
      * @Description : 그룹 코드 정보 팝업
@@ -12,7 +12,7 @@
 <script type="text/javascript">
 
 </script>
-<form:form modelAttribute="codeMngVO" name="grpMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="grpMngDetailForm" method="post">
     <table class="table blue-base-table">
         <colgroup>
             <col style="width: 15%"/>

@@ -126,7 +126,7 @@ class AuthMngControllerTest {
         mockMvc.perform(post("/sys/authmng/authMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("authCd", authCd)
-                .param("state", "U")
+                .param("detailStatus", "UPDATE")
             ).andExpect(view().name("sys/authmng/authMngDetail"))
             .andExpect(status().isOk());
     }

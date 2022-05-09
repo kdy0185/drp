@@ -52,7 +52,7 @@
           type: "String",
           useNull: true
         }, {
-          name: "state", // 상태 : insert / update
+          name: "detailStatus", // 등록/수정 구분
           type: "String",
           useNull: true
         }]
@@ -90,7 +90,7 @@
           type: "String",
           useNull: true
         }, {
-          name: "state", // 상태 : insert / update
+          name: "detailStatus", // 등록/수정 구분
           type: "String",
           useNull: true
         }]
@@ -197,7 +197,8 @@
           listeners: {
             beforeEdit: function (editor, e, eOpts) {
               if (e.field === "grpCd") {
-                var fieldType = e.record.data.state === "I" ? "textfield" : "displayfield";
+                var fieldType = e.record.data.detailStatus === "INSERT" ? "textfield"
+                    : "displayfield";
                 e.column.setEditor({xtype: fieldType});
               }
             }
@@ -208,7 +209,8 @@
           listeners: {
             beforeEdit: function (editor, e, eOpts) {
               if (e.field === "comCd") {
-                var fieldType = e.record.data.state === "I" ? "textfield" : "displayfield";
+                var fieldType = e.record.data.detailStatus === "INSERT" ? "textfield"
+                    : "displayfield";
                 e.column.setEditor({xtype: fieldType});
               }
             }
@@ -316,12 +318,12 @@
               return val;
             }
           }, {
-            text: "상태",
+            text: "등록/수정 구분",
             width: 10,
             align: "center",
             sortable: true,
             hidden: true,
-            dataIndex: "state",
+            dataIndex: "detailStatus",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -335,7 +337,8 @@
             enableTextSelection: true,
             listeners: {
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
-                if (columnIndex !== 0) readCodeGrpMng();
+                if (columnIndex !== 0 &&
+                    dataRecord.data.detailStatus !== "INSERT") readCodeGrpMng();
               }
             }
           },
@@ -359,7 +362,8 @@
             });
 
         codeGrpMngGrid.on("edit", function (editor, e) {
-          e.record.data.state = e.record.data.state === "I" ? "I" : "U";
+          e.record.data.detailStatus =
+              e.record.data.detailStatus === "INSERT" ? "INSERT" : "UPDATE";
           e.record.commit();
         });
         subGrid = codeGrpMngGrid;
@@ -466,12 +470,12 @@
               return val;
             }
           }, {
-            text: "상태",
+            text: "등록/수정 구분",
             width: 10,
             align: "center",
             sortable: true,
             hidden: true,
-            dataIndex: "state",
+            dataIndex: "detailStatus",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -489,7 +493,8 @@
                 $('input[name="comCd"]').val(dataRecord.data.comCd);
               },
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
-                if (columnIndex !== 0) readCodeMng();
+                if (columnIndex !== 0 &&
+                    dataRecord.data.detailStatus !== "INSERT") readCodeMng();
               }
             }
           },
@@ -503,7 +508,8 @@
           enableKeyEvents: true
         });
         codeMngGrid.on("edit", function (editor, e) {
-          e.record.data.state = e.record.data.state === "I" ? "I" : "U";
+          e.record.data.detailStatus =
+              e.record.data.detailStatus === "INSERT" ? "INSERT" : "UPDATE";
           e.record.commit();
         });
         subGrid2 = codeMngGrid;
@@ -540,7 +546,7 @@
           grpCd: "",
           grpNm: "",
           useYn: "Y",
-          state: "I"
+          detailStatus: "INSERT"
         });
         codeGrpMngStore.insert(0, row);
       }
@@ -559,7 +565,7 @@
           comNm: "",
           ord: 0,
           useYn: "Y",
-          state: "I"
+          detailStatus: "INSERT"
         });
         codeMngStore.insert(0, row);
       }

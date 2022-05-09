@@ -8,6 +8,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
@@ -109,11 +110,11 @@ public class UserMngController {
             List<ComsVO> userTypeList = comsService.selectComsCodeList("USER_TYPE");
             mav.addObject("userTypeList", userTypeList);
 
-            if ("U".equals(request.getState())) {
+            if (DetailStatus.UPDATE.equals(request.getDetailStatus())) {
                 detailDTO = userMngService.selectUserMngDetail(request);
             }
 
-            detailDTO.setState(request.getState());
+            detailDTO.setDetailStatus(request.getDetailStatus());
             mav.addObject("detailDTO", detailDTO);
         } catch (Exception e) {
             e.printStackTrace();

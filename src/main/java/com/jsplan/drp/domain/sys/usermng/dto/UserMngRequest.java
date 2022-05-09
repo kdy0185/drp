@@ -2,6 +2,7 @@ package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -46,7 +47,7 @@ public class UserMngRequest {
 
     private String authCd; // 권한 코드
 
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // Test 전용 생성자
     UserMngRequest(String grpCd, String userId, String userNm, String userPw,

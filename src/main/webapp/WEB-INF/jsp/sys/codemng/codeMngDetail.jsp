@@ -12,7 +12,7 @@
 <script type="text/javascript">
 
 </script>
-<form:form modelAttribute="codeMngVO" name="codeMngDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="codeMngDetailForm" method="post">
     <table class="table blue-base-table">
         <colgroup>
             <col style="width: 15%"/>

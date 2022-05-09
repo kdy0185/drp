@@ -127,7 +127,7 @@ class UserGrpMngControllerTest {
         mockMvc.perform(post("/sys/usermng/userGrpMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("grpCd", grpCd)
-                .param("state", "U")
+                .param("detailStatus", "UPDATE")
             ).andExpect(view().name("sys/usermng/userGrpMngDetail"))
             .andExpect(status().isOk());
     }

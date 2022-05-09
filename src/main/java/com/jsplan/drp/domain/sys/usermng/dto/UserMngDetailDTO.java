@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
@@ -28,11 +29,12 @@ public class UserMngDetailDTO {
     private String useYn; // 사용 여부
     private String regDate; // 등록 일시
     private String modDate; // 수정 일시
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private String authCd; // 권한 코드
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // 상세 조회 시 구분값 설정
-    public void setState(String state) {
-        this.state = state;
+    public void setDetailStatus(DetailStatus detailStatus) {
+        this.detailStatus = detailStatus;
     }
 
     // 권한 설정 팝업 화면 : 아이디 설정

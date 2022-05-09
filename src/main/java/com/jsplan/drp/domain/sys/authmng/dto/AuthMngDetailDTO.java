@@ -1,5 +1,6 @@
 package com.jsplan.drp.domain.sys.authmng.dto;
 
+import com.jsplan.drp.global.obj.entity.DetailStatus;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
@@ -22,11 +23,11 @@ public class AuthMngDetailDTO {
     private Integer authLv; // 권한 수준
     private Integer authOrd; // 권한 순서
     private String useYn; // 사용 여부
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // 상세 조회 시 구분값 설정
-    public void setState(String state) {
-        this.state = state;
+    public void setDetailStatus(DetailStatus detailStatus) {
+        this.detailStatus = detailStatus;
     }
 
     // 메뉴 설정 팝업 화면 : 권한 설정

@@ -143,7 +143,7 @@
 </script>
 
 <form:form modelAttribute="detailDTO" name="userMngDetailForm" method="post">
-    <form:hidden path="state"/>
+    <form:hidden path="detailStatus"/>
     <form:hidden path="authCd"/>
     <table class="table blue-base-table">
         <colgroup>
@@ -157,7 +157,7 @@
             <th class="top-line"><span class="star-mark">그룹</span></th>
             <td class="top-line">
                 <form:select path="grpCd" cssClass="form-control input-sm width_66 required"
-                             disabled="${detailDTO.state eq 'U' ? 'true' : 'false'}">
+                             disabled="${detailDTO.detailStatus eq 'UPDATE' ? 'true' : 'false'}">
                     <form:option value="" label="선택"/>
                     <c:forEach var="grpVO" items="${grpList}" varStatus="status">
                         <form:option value="${grpVO.grpCd}" label="${grpVO.grpNm}"/>
@@ -172,17 +172,17 @@
         <tr>
             <th><span class="star-mark">아이디</span></th>
             <td><form:input path="userId"
-                            cssClass="form-control input-sm width_66 ${detailDTO.state eq 'I' ? 'idDupCheck' : 'required'}"
-                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}"/></td>
+                            cssClass="form-control input-sm width_66 ${detailDTO.detailStatus eq 'INSERT' ? 'idDupCheck' : 'required'}"
+                            readonly="${detailDTO.detailStatus eq 'UPDATE' ? 'true' : 'false'}"/></td>
         </tr>
         <tr>
             <th><span class="star-mark">성명</span></th>
             <td><form:input path="userNm" cssClass="form-control input-sm width_66 required"/></td>
         </tr>
         <tr>
-            <th><span class="${detailDTO.state eq 'I' ? 'star-mark' : 'star-unmark'}">비밀번호</span></th>
+            <th><span class="${detailDTO.detailStatus eq 'INSERT' ? 'star-mark' : 'star-unmark'}">비밀번호</span></th>
             <td><form:password path="userPw"
-                               cssClass="form-control input-sm width_66 ${detailDTO.state eq 'I' ? 'pwCheck' : 'pwCheck'}"/></td>
+                               cssClass="form-control input-sm width_66 ${detailDTO.detailStatus eq 'INSERT' ? 'pwCheck' : 'pwCheck'}"/></td>
         </tr>
         <tr>
             <th><span class="star-unmark">비밀번호 확인</span></th>
@@ -226,12 +226,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${detailDTO.state eq 'I'}">
+        <c:if test="${detailDTO.detailStatus eq 'INSERT'}">
             <button type="button" onclick="insertUserMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${detailDTO.state eq 'U'}">
+        <c:if test="${detailDTO.detailStatus eq 'UPDATE'}">
             <button type="button" onclick="updateUserMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>
