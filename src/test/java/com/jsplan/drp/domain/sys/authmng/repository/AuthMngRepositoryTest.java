@@ -10,6 +10,7 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthMngRequestBuilder;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthUserMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,6 +103,7 @@ class AuthMngRepositoryTest {
         // given
         String authCd = "AUTH_NORMAL";
         String authNm = "일반 회원 권한 수정";
+        LocalDateTime beforeDate = LocalDateTime.now();
 
         // when
         AuthMngRequest request = AuthMngRequestBuilder.build(authCd, upperAuthCd, authNm, null,
@@ -113,6 +115,7 @@ class AuthMngRepositoryTest {
 
         // then
         assertThat(authMng.getAuthNm()).isEqualTo(authNm);
+//        assertThat(authMng.getModDate()).isAfter(beforeDate);
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequestBuilder;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
 import com.jsplan.drp.global.obj.entity.UseStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,6 +127,7 @@ class MenuMngRepositoryTest {
         String menuCd = "P0100";
         String menuNm = "메뉴 수정";
         String menuUrl = "/pl/test/planModifyList.do";
+        LocalDateTime beforeDate = LocalDateTime.now();
 
         // when
         MenuMngRequest request = MenuMngRequestBuilder.build(menuCd, upperMenuCd, menuNm, null,
@@ -138,6 +140,7 @@ class MenuMngRepositoryTest {
         // then
         assertThat(menuMng.getMenuNm()).isEqualTo(menuNm);
         assertThat(menuMng.getMenuUrl()).isEqualTo(menuUrl);
+        assertThat(menuMng.getModDate()).isAfter(beforeDate);
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.jsplan.drp.domain.sys.menumng.entity;
 
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
+import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
 import com.jsplan.drp.global.obj.entity.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.domain.Persistable;
 
 /**
  * @Class : MenuMng
@@ -36,7 +38,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"menuCd", "menuNm", "menuEngNm", "menuUrl", "menuDesc", "menuLv", "menuOrd",
     "useYn"})
-public class MenuMng {
+public class MenuMng extends BaseTimeEntity implements Persistable<String> {
 
     @Id
     @Column(name = "MENU_CD", length = 5)
@@ -88,6 +90,16 @@ public class MenuMng {
         this.menuOrd = menuOrd;
         this.useYn = useYn;
         setMenuAuthMng(menuAuthMng);
+    }
+
+    @Override
+    public String getId() {
+        return menuCd;
+    }
+
+    @Override
+    public boolean isNew() {
+        return getRegDate() == null;
     }
 
     // 권한 설정
