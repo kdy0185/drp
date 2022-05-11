@@ -2,7 +2,7 @@ package com.jsplan.drp.global.config;
 
 import com.jsplan.drp.global.bean.EnumMapperFactory;
 import com.jsplan.drp.global.obj.vo.DataStatus;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.LinkedHashMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,7 +3,7 @@ package com.jsplan.drp.domain.sys.menumng.repository;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngDetailDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngListDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuAuthMngListDTO;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.List;
 
 /**

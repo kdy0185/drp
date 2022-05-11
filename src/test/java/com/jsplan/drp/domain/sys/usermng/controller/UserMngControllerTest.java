@@ -14,7 +14,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.service.UserMngService;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.Locale;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;

@@ -5,7 +5,7 @@ import com.jsplan.drp.domain.sys.menumng.entity.MenuAuthMng;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserAuthMng;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;

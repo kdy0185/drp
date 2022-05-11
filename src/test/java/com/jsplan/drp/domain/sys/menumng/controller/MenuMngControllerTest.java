@@ -14,7 +14,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngDetailDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequestBuilder;
 import com.jsplan.drp.domain.sys.menumng.service.MenuMngService;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.Locale;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;

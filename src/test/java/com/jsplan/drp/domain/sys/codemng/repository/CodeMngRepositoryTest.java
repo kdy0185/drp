@@ -13,7 +13,7 @@ import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequestBuilder;
 import com.jsplan.drp.domain.sys.codemng.entity.CodeGrpMng;
 import com.jsplan.drp.domain.sys.codemng.entity.CodeMng;
 import com.jsplan.drp.domain.sys.codemng.entity.CodeMngId;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;

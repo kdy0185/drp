@@ -10,7 +10,7 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthUserMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.domain.sys.authmng.repository.AuthMngRepository;
 import com.jsplan.drp.global.obj.vo.DataStatus;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
 import java.util.NoSuchElementException;

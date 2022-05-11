@@ -2,7 +2,7 @@ package com.jsplan.drp.domain.sys.codemng.dto;
 
 import com.jsplan.drp.domain.sys.codemng.entity.CodeGrpMng;
 import com.jsplan.drp.global.obj.dto.BaseListDTO;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.util.FilterUtil;
 import com.jsplan.drp.global.util.StringUtil;
 import lombok.Getter;

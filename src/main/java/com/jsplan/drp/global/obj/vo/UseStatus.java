@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @Class : DataStatus
+ * @Class : UseStatus
  * @Author : KDW
  * @Date : 2022-04-06
  * @Description : 사용 여부 관리 Enum

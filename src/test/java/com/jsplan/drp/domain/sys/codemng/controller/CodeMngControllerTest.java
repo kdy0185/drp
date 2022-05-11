@@ -16,7 +16,7 @@ import com.jsplan.drp.domain.sys.codemng.dto.CodeMngDetailDTO;
 import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequest;
 import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequestBuilder;
 import com.jsplan.drp.domain.sys.codemng.service.CodeMngService;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.Locale;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

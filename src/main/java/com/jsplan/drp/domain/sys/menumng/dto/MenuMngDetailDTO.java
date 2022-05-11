@@ -1,7 +1,7 @@
 package com.jsplan.drp.domain.sys.menumng.dto;
 
 import com.jsplan.drp.global.obj.vo.DetailStatus;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

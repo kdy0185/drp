@@ -18,7 +18,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTOBuilder;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
 import com.jsplan.drp.domain.sys.menumng.repository.MenuMngRepository;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

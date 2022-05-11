@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 
 /**
  * @Class : UserMngSearchDTOBuilder

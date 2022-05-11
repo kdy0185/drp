@@ -8,7 +8,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequestBuilder;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
-import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
