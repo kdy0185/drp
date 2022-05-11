@@ -25,7 +25,7 @@ import com.jsplan.drp.domain.sys.codemng.repository.CodeGrpMngRepository;
 import com.jsplan.drp.domain.sys.codemng.repository.CodeMngRepository;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

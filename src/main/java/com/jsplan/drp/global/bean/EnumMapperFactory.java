@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.bean;
 
-import com.jsplan.drp.global.obj.entity.EnumMapperVO;
+import com.jsplan.drp.global.obj.vo.EnumMapperVO;
 import com.jsplan.drp.global.obj.repository.EnumMapperType;
 import java.util.Arrays;
 import java.util.List;

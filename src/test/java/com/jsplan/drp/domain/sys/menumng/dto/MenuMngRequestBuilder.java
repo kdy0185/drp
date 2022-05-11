@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.menumng.dto;
 
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 
 /**
  * @Class : MenuMngRequestBuilder

@@ -8,7 +8,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngResponse;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTO;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
 import com.jsplan.drp.domain.sys.menumng.repository.MenuMngRepository;
-import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
 import java.util.NoSuchElementException;

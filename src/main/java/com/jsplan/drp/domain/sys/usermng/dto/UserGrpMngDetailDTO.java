@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
-import com.jsplan.drp.global.obj.entity.DetailStatus;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

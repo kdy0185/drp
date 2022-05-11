@@ -3,7 +3,7 @@ package com.jsplan.drp.domain.sys.usermng.entity;
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseTimeEntity;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;

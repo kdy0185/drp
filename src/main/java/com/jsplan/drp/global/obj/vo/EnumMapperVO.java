@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj.entity;
+package com.jsplan.drp.global.obj.vo;
 
 import com.jsplan.drp.global.obj.repository.EnumMapperType;
 import lombok.Getter;

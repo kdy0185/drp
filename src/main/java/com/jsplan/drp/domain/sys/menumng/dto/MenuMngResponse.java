@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.menumng.dto;
 
-import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

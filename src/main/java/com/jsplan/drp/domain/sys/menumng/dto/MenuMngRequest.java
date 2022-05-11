@@ -1,8 +1,8 @@
 package com.jsplan.drp.domain.sys.menumng.dto;
 
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
-import com.jsplan.drp.global.obj.entity.DetailStatus;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;

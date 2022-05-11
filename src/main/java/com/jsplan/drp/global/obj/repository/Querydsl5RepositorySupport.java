@@ -1,6 +1,6 @@
 package com.jsplan.drp.global.obj.repository;
 
-import com.jsplan.drp.global.obj.entity.BaseListDTO;
+import com.jsplan.drp.global.obj.dto.BaseListDTO;
 import com.jsplan.drp.global.util.RowNumUtil;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;

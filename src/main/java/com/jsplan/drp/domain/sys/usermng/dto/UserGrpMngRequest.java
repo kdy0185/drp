@@ -1,7 +1,7 @@
 package com.jsplan.drp.domain.sys.usermng.dto;
 
 import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
-import com.jsplan.drp.global.obj.entity.DetailStatus;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;

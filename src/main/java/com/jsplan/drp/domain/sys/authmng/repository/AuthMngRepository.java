@@ -1,7 +1,7 @@
 package com.jsplan.drp.domain.sys.authmng.repository;
 
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

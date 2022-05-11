@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.obj.entity;
+package com.jsplan.drp.global.obj.dto;
 
 import lombok.Getter;
 import lombok.Setter;

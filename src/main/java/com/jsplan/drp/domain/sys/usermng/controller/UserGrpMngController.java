@@ -8,7 +8,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
 import com.jsplan.drp.global.obj.entity.ComsVO;
-import com.jsplan.drp.global.obj.entity.DetailStatus;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;

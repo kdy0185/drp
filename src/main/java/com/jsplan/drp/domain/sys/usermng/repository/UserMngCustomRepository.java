@@ -3,7 +3,7 @@ package com.jsplan.drp.domain.sys.usermng.repository;
 import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

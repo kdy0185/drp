@@ -4,7 +4,7 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthMenuMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthMngDetailDTO;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthUserMngListDTO;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

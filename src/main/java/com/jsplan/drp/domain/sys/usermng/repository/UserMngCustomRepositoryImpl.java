@@ -12,7 +12,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus.UseStatus;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
 import com.jsplan.drp.global.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;

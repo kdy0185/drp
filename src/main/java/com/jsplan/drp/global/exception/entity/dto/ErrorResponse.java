@@ -1,7 +1,8 @@
-package com.jsplan.drp.global.exception.entity;
+package com.jsplan.drp.global.exception.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.jsplan.drp.global.exception.entity.vo.ErrorStatus;
 import java.util.Map;
 import lombok.Getter;
 

@@ -1,20 +1,20 @@
-package com.jsplan.drp.global.obj.entity;
+package com.jsplan.drp.global.obj.vo;
 
 import com.jsplan.drp.global.obj.repository.EnumMapperType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @Class : DataStatus
+ * @Class : DetailStatus
  * @Author : KDW
- * @Date : 2022-04-06
- * @Description : 사용 여부 관리 Enum
+ * @Date : 2022-05-09
+ * @Description : 등록/수정 구분 Enum
  */
 @Getter
 @RequiredArgsConstructor
-public enum UseStatus implements EnumMapperType {
-    Y("사용"),
-    N("미사용");
+public enum DetailStatus implements EnumMapperType {
+    INSERT("등록"),
+    UPDATE("수정");
 
     private final String title; // Enum 설명
 

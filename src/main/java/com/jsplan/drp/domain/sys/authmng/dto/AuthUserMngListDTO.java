@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.authmng.dto;
 
-import com.jsplan.drp.global.obj.entity.BaseListDTO;
+import com.jsplan.drp.global.obj.dto.BaseListDTO;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;

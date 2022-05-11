@@ -1,4 +1,4 @@
-package com.jsplan.drp.global.exception.entity;
+package com.jsplan.drp.global.exception.entity.vo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
