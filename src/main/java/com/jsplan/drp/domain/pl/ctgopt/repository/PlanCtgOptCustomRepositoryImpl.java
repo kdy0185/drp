@@ -92,7 +92,7 @@ public class PlanCtgOptCustomRepositoryImpl extends Querydsl5RepositorySupport i
      * @return BooleanExpression (Boolean 표현식)
      */
     private BooleanExpression planUserEq(String userId) {
-        return userId != null ? planCtgOpt.rtneCtgId.planUser.eq(userId) : null;
+        return !StringUtil.isEmpty(userId) ? planCtgOpt.rtneCtgId.planUser.eq(userId) : null;
     }
 
     /**

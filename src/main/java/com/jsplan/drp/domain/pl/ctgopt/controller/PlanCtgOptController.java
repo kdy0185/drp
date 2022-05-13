@@ -59,7 +59,7 @@ public class PlanCtgOptController {
             // ***************************** MENU : E *****************************
 
             // 기본 검색 조건 설정
-            searchDTO.setUserInfo();
+            searchDTO.fixUserInfo();
             mav.addObject("searchDTO", searchDTO);
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,7 +96,7 @@ public class PlanCtgOptController {
         PlanCtgOptDetailDTO detailDTO = new PlanCtgOptDetailDTO();
 
         if (DetailStatus.INSERT.equals(request.getDetailStatus())) {
-            detailDTO.setUserInfo(); // 로그인 정보 설정
+            detailDTO.fixUserInfo(); // 로그인 정보 설정
         }
 
         if (DetailStatus.UPDATE.equals(request.getDetailStatus())) {

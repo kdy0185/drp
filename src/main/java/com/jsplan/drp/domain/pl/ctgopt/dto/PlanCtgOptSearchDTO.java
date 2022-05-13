@@ -1,15 +1,10 @@
 package com.jsplan.drp.domain.pl.ctgopt.dto;
 
-import com.jsplan.drp.global.obj.entity.UserVO;
+import com.jsplan.drp.global.obj.vo.AuthVO;
 import com.jsplan.drp.global.obj.vo.UseStatus;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @Class : PlanCtgOptSearchDTO
@@ -20,25 +15,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class PlanCtgOptSearchDTO {
+public class PlanCtgOptSearchDTO extends AuthVO {
 
     private String rtneCtgCd; // 루틴 분류 코드
-    private String userId; // 사용자 아이디
-    private String userNm; // 성명
+    private String planUser; // 담당자
     private UseStatus useYn; // 사용 여부
 
-    // 슈퍼관리자가 아닌 경우 로그인 사용자 정보 고정
-    public void setUserInfo() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!isAuthAdmin(auth)) {
-            this.userId = ((UserVO) auth.getPrincipal()).getUserId();
-            this.userNm = ((UserVO) auth.getPrincipal()).getUserNm();
-        }
+    // Test 전용 생성자
+    public PlanCtgOptSearchDTO(String rtneCtgCd, String userId, String userNm, UseStatus useYn) {
+        super(userId, userNm);
+        this.rtneCtgCd = rtneCtgCd;
+        this.useYn = useYn;
     }
 
-    // 슈퍼관리자 권한 여부
-    public boolean isAuthAdmin(Authentication auth) {
-        return auth.getAuthorities().contains(new SimpleGrantedAuthority("AUTH_ADMIN"));
+    // 슈퍼관리자가 아닌 경우 로그인 사용자 정보 고정
+    public void fixUserInfo() {
+        if ("N".equals(getAuthAdmin())) {
+            setUserInfo();
+        }
     }
 }
