@@ -24,7 +24,7 @@
 
     <script type="text/javascript">
       $(function () {
-        if ("${planReportVO.authAdmin}" == "Y") $.util.getSearchCondition();
+        if ("${searchDTO.authAdmin}" == "Y") $.util.getSearchCondition();
         searchPlanReport();
       });
 
@@ -48,7 +48,7 @@
           type: "int",
           useNull: true
         }, {
-          name: "rtneStartDate", // 일시
+          name: "rtneDateTime", // 일시
           type: "String",
           useNull: true
         }, {
@@ -84,8 +84,8 @@
           url: "/pl/report/planReportSearch.do",
           reader: {
             type: "json",
-            root: "planReportList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
@@ -115,7 +115,7 @@
         var rtneNm = $('input[name="rtneNm"]').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           userId: userId,
           rtneStartDate: rtneStartDate,
@@ -184,7 +184,7 @@
             width: 45,
             align: "center",
             sortable: true,
-            dataIndex: "rtneStartDate",
+            dataIndex: "rtneDateTime",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -257,7 +257,7 @@
                 var form = $('form[name="planReportForm"]');
                 $(form).find('input[name="rtneCd"]').val(dataRecord.data.rtneCd);
                 $(form).find('input[name="planUser"]').val(dataRecord.data.planUser);
-                readPlanReport('U');
+                readPlanReport('UPDATE');
               }
             }
           },
@@ -330,7 +330,7 @@
         var userId = $(form).find('input[name="userId"]').val();
 
         $.ajax({
-          type: "post",
+          type: "get",
           url: "/pl/report/planReportRtneCtg.do",
           data: {
             userId: userId
@@ -358,14 +358,14 @@
       }
 
       // 상세
-      function readPlanReport(state) {
+      function readPlanReport(detailStatus) {
         var form = $('form[name="planReportForm"]');
-        var rtneCd = state === "U" ? $(form).find('input[name="rtneCd"]').val() : "";
+        var rtneCd = detailStatus === "UPDATE" ? $(form).find('input[name="rtneCd"]').val() : "";
 		var planUser = $(form).find('input[name="planUser"]').val();
-        if (state === "U" && rtneCd === "") {
+        if (detailStatus === "UPDATE" && rtneCd === "") {
           alert("일과를 선택하세요.");
         } else {
-          var title = state === "I" ? "일과 등록" : "일과 정보";
+          var title = detailStatus === "INSERT" ? "일과 등록" : "일과 정보";
           var width = 750;
           $.ajax({
             type: "post",
@@ -373,7 +373,7 @@
             data: {
               rtneCd: rtneCd,
               planUser: planUser,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -402,7 +402,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="planReportVO" name="planReportSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="planReportSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row padding_b10">
                         <div class="col-md-3 col-sm-12 col-xs-12 padding_l25 padding_r0">
@@ -411,14 +411,14 @@
                             </div>
                             <div class="col-md-10 col-sm-12 col-xs-12 padding_none code_search_box">
                                 <form:input path="userId" cssClass="form-control input-sm"
-                                            onkeydown="${planReportVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="아이디" readonly="${planReportVO.authAdmin eq 'N' ? 'true' : ''}"
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="아이디" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"
                                             onblur="searchRtneCtg();"/>
                                 <form:input path="userNm" cssClass="form-control input-sm"
-                                            onkeydown="${planReportVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="성명" readonly="${planReportVO.authAdmin eq 'N' ? 'true' : ''}"
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="성명" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"
                                             onblur="searchRtneCtg();"/>
-                                <c:if test="${planReportVO.authAdmin eq 'Y'}">
+                                <c:if test="${searchDTO.authAdmin eq 'Y'}">
                                     <button type="button" onclick="openUserPop(this);" class="btn btn-green search">
                                         <i class="fa fa-search margin_none"></i>
                                     </button>
@@ -471,9 +471,8 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="planReportVO" name="planReportForm" method="post">
-                <form:hidden path="rtneCd"/>
-                <form:hidden path="planUser"/>
+            <form:form modelAttribute="searchDTO" name="planReportForm" method="post">
+                <form:hidden path="rtneId"/>
                 <div class="contents-box grid-area outline_none">
                     <div class="grid-box">
                         <ul class="nav nav-pills">
@@ -510,10 +509,10 @@
                         </ul>
                         <div id="planReportGrid"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readPlanReport('I');" class="btn btn-red">
+                            <button type="button" onclick="readPlanReport('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readPlanReport('U');" class="btn btn-red">
+                            <button type="button" onclick="readPlanReport('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                         </div>

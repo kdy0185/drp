@@ -1,25 +1,21 @@
 package com.jsplan.drp.domain.pl.report.controller;
 
+import com.jsplan.drp.domain.pl.report.dto.PlanReportListDTO;
+import com.jsplan.drp.domain.pl.report.dto.PlanReportSearchDTO;
 import com.jsplan.drp.domain.pl.report.service.PlanReportService;
-import com.jsplan.drp.domain.pl.report.entity.PlanReportVO;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.entity.ComsVO;
-import com.jsplan.drp.global.obj.entity.UserVO;
+import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,28 +26,22 @@ import org.springframework.web.servlet.ModelAndView;
  * @Description : 데일리 리포트 Controller
  */
 @Controller
+@RequiredArgsConstructor
 public class PlanReportController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Resource(name = "PlanReportService")
-    private PlanReportService planReportService;
-
-    @Resource(name = "ComsService")
-    private ComsService comsService;
+    private final PlanReportService planReportService;
+    private final ComsService comsService;
 
     /**
      * <p>데일리 리포트</p>
      *
-     * @param planReportVO
-     * @param comsMenuVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
+     * @param comsMenuVO (메뉴 VO)
+     * @return ModelAndView (데일리 리포트 페이지 정보)
      */
-    @RequestMapping(value = "/pl/report/planReportList.do")
-    public ModelAndView planReportList(@ModelAttribute PlanReportVO planReportVO, ComsMenuVO comsMenuVO)
-        throws Exception {
+    @PostMapping(value = "/pl/report/planReportList.do")
+    public ModelAndView planReportList(@ModelAttribute ComsMenuVO comsMenuVO) {
         ModelAndView mav = new ModelAndView("pl/report/planReportList");
+        PlanReportSearchDTO searchDTO = new PlanReportSearchDTO();
 
         try {
             // ***************************** MENU : S *****************************
@@ -66,19 +56,11 @@ public class PlanReportController {
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
-            // 로그인 정보
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = auth.getPrincipal();
-            String userId = ((UserVO) principal).getUserId();
-            String userNm = ((UserVO) principal).getUserNm();
-
-            // 관리자가 아닐 경우 본인 일과만 조회 가능
-            if ("N".equals(planReportVO.getAuthAdmin())) {
-                planReportVO.setUserId(userId);
-                planReportVO.setUserNm(userNm);
-            }
+            // 기본 검색 조건 설정
+            searchDTO.fixUserInfo();
+            mav.addObject("searchDTO", searchDTO);
         } catch (Exception e) {
-            logger.error("{}", e);
+            e.printStackTrace();
         }
 
         return mav;
@@ -87,113 +69,82 @@ public class PlanReportController {
     /**
      * <p>분류 조회</p>
      *
-     * @param planReportVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (분류 목록)
      */
-    @RequestMapping(value = "/pl/report/planReportRtneCtg.do")
-    public @ResponseBody
-    List<PlanReportVO> planReportRtneCtg(
-        @ModelAttribute PlanReportVO planReportVO) throws Exception {
-        List<PlanReportVO> rtneCtgList = null;
-
-        try {
-            rtneCtgList = planReportService.selectPlanReportRtneCtgList(planReportVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-        return rtneCtgList;
+    @GetMapping(value = "/pl/report/planReportRtneCtg.do")
+    public @ResponseBody List<PlanReportListDTO> planReportRtneCtg(
+        @ModelAttribute PlanReportSearchDTO searchDTO) {
+        return planReportService.selectPlanReportRtneCtgList(searchDTO);
     }
 
     /**
      * <p>일과 조회</p>
      *
-     * @param planReportVO
-     * @return Map
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (일과 목록)
      */
-    @RequestMapping(value = "/pl/report/planReportSearch.do")
-    public @ResponseBody
-    Map<String, Object> planReportSearch(@ModelAttribute PlanReportVO planReportVO) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            int cnt = planReportService.selectPlanReportListCnt(planReportVO);
-            planReportVO.setTotalCnt(cnt);
-            planReportVO.setPaging();
-            List<PlanReportVO> planReportList = planReportService.selectPlanReportList(planReportVO);
-
-            map.put("cnt", cnt);
-            map.put("planReportList", planReportList);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return map;
+    @GetMapping(value = "/pl/report/planReportSearch.do")
+    public @ResponseBody Page<PlanReportListDTO> planReportSearch(
+        @ModelAttribute PlanReportSearchDTO searchDTO) {
+        return planReportService.selectPlanReportList(searchDTO);
     }
 
     /**
      * <p>데일리 리포트 엑셀 출력</p>
      *
-     * @param planReportVO
-     * @param map
-     * @return ExcelUtil
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @param map       (엑셀 출력 정보)
+     * @return ExcelUtil (엑셀 다운로드)
      */
-    @RequestMapping(value = "/pl/report/planReportExcel.do")
-    public ExcelUtil planReportExcel(@ModelAttribute PlanReportVO planReportVO, ModelMap map)
-        throws Exception {
+    @PostMapping(value = "/pl/report/planReportExcel.do")
+    public ExcelUtil planReportExcel(@ModelAttribute PlanReportSearchDTO searchDTO, ModelMap map) {
         List<String> colName = new ArrayList<String>();
         List<Integer> colWidth = new ArrayList<Integer>();
         List<String[]> colValue = new ArrayList<String[]>();
 
-        try {
-            // 데이터 조회
-            List<PlanReportVO> planReportExcelList = planReportService.selectPlanReportExcelList(planReportVO);
+        // 데이터 조회
+        List<PlanReportListDTO> excelList = planReportService.selectPlanReportExcelList(searchDTO);
 
-            // 컬럼명 설정
-            colName.add("순번");
-            colName.add("루틴 코드");
-            colName.add("일자");
-            colName.add("루틴 순서");
-            colName.add("일시");
-            colName.add("분류");
-            colName.add("일과");
-            colName.add("달성률");
-            colName.add("몰입도");
-            colName.add("담당자");
+        // 컬럼명 설정
+        colName.add("순번");
+        colName.add("루틴 코드");
+        colName.add("일자");
+        colName.add("루틴 순서");
+        colName.add("일시");
+        colName.add("분류");
+        colName.add("일과");
+        colName.add("달성률");
+        colName.add("몰입도");
+        colName.add("담당자");
 
-            // 컬럼 사이즈 설정
-            colWidth.add(2000);
-            colWidth.add(4000);
-            colWidth.add(4000);
-            colWidth.add(2000);
-            colWidth.add(8000);
-            colWidth.add(4000);
-            colWidth.add(8000);
-            colWidth.add(2000);
-            colWidth.add(4000);
-            colWidth.add(4000);
+        // 컬럼 사이즈 설정
+        colWidth.add(2000);
+        colWidth.add(4000);
+        colWidth.add(4000);
+        colWidth.add(2000);
+        colWidth.add(8000);
+        colWidth.add(4000);
+        colWidth.add(8000);
+        colWidth.add(2000);
+        colWidth.add(4000);
+        colWidth.add(4000);
 
-            // 데이터 설정
-            for (int i = 0; i < planReportExcelList.size(); i++) {
-                PlanReportVO vo = (PlanReportVO) planReportExcelList.get(i);
-                String rn = String.valueOf(vo.getRn());
-                String rtneCd = vo.getRtneCd();
-                String rtneDate = vo.getRtneDate();
-                String rtneOrd = vo.getRtneOrd();
-                String rtneStartDate = vo.getRtneStartDate();
-                String rtneCtgNm = vo.getRtneCtgNm();
-                String rtneNm = vo.getRtneNm();
-                String achvRate = vo.getAchvRate();
-                String concRate = vo.getConcRate();
-                String planUser = vo.getPlanUser();
-                String[] arr = {rn, rtneCd, rtneDate, rtneOrd, rtneStartDate, rtneCtgNm, rtneNm,
-                    achvRate, concRate, planUser};
-                colValue.add(arr);
-            }
-        } catch (Exception e) {
-            logger.error("{}", e);
+        // 데이터 설정
+        for (PlanReportListDTO listDTO : excelList) {
+            String rn = String.valueOf(listDTO.getRn());
+            String rtneId = String.valueOf(listDTO.getRtneId());
+            String rtneDate = String.valueOf(listDTO.getRtneDate());
+            String rtneOrd = String.valueOf(listDTO.getRtneOrd());
+            String rtneStartDate = listDTO.getRtneDateTime();
+            String rtneCtgNm = listDTO.getRtneCtgNm();
+            String rtneNm = listDTO.getRtneNm();
+            String achvRate = listDTO.getAchvRate();
+            String concRate = listDTO.getConcRate();
+            String planUser = listDTO.getPlanUser();
+            String[] arr = {rn, rtneId, rtneDate, rtneOrd, rtneStartDate, rtneCtgNm, rtneNm,
+                achvRate, concRate, planUser};
+            colValue.add(arr);
         }
 
         map.put("excelName", "데일리 리포트 목록");
