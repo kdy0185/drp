@@ -1,25 +1,22 @@
 package com.jsplan.drp.domain.pl.settle.controller;
 
+import com.jsplan.drp.domain.pl.settle.dto.PlanSettleDetailDTO;
+import com.jsplan.drp.domain.pl.settle.dto.PlanSettleListDTO;
+import com.jsplan.drp.domain.pl.settle.dto.PlanSettleSearchDTO;
 import com.jsplan.drp.domain.pl.settle.service.PlanSettleService;
-import com.jsplan.drp.domain.pl.settle.entity.PlanSettleVO;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.entity.ComsVO;
-import com.jsplan.drp.global.obj.entity.UserVO;
+import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,28 +27,22 @@ import org.springframework.web.servlet.ModelAndView;
  * @Description : 일일 결산 Controller
  */
 @Controller
+@RequiredArgsConstructor
 public class PlanSettleController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Resource(name = "PlanSettleService")
-    private PlanSettleService planSettleService;
-
-    @Resource(name = "ComsService")
-    private ComsService comsService;
+    private final PlanSettleService planSettleService;
+    private final ComsService comsService;
 
     /**
      * <p>일일 결산</p>
      *
-     * @param planSettleVO
-     * @param comsMenuVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
+     * @param comsMenuVO (메뉴 VO)
+     * @return ModelAndView (일일 결산 페이지 정보)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayList.do")
-    public ModelAndView planSettleDayList(@ModelAttribute PlanSettleVO planSettleVO, ComsMenuVO comsMenuVO)
-        throws Exception {
+    @PostMapping(value = "/pl/settle/planSettleDayList.do")
+    public ModelAndView planSettleDayList(@ModelAttribute ComsMenuVO comsMenuVO) {
         ModelAndView mav = new ModelAndView("pl/settle/planSettleDayList");
+        PlanSettleSearchDTO searchDTO = new PlanSettleSearchDTO();
 
         try {
             // ***************************** MENU : S *****************************
@@ -66,19 +57,11 @@ public class PlanSettleController {
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
-            // 로그인 정보
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = auth.getPrincipal();
-            String userId = ((UserVO) principal).getUserId();
-            String userNm = ((UserVO) principal).getUserNm();
-
-            // 관리자가 아닐 경우 본인 일과만 조회 가능
-            if ("N".equals(planSettleVO.getAuthAdmin())) {
-                planSettleVO.setUserId(userId);
-                planSettleVO.setUserNm(userNm);
-            }
+            // 기본 검색 조건 설정
+            searchDTO.fixUserInfo();
+            mav.addObject("searchDTO", searchDTO);
         } catch (Exception e) {
-            logger.error("{}", e);
+            e.printStackTrace();
         }
 
         return mav;
@@ -87,179 +70,131 @@ public class PlanSettleController {
     /**
      * <p>일일 결산 조회</p>
      *
-     * @param planSettleVO
-     * @return Map
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (일일 결산 목록)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDaySearch.do")
-    public @ResponseBody
-    Map<String, Object> planSettleDaySearch(@ModelAttribute PlanSettleVO planSettleVO) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            int cnt = planSettleService.selectPlanSettleDayListCnt(planSettleVO);
-            planSettleVO.setTotalCnt(cnt);
-            planSettleVO.setPaging();
-            List<PlanSettleVO> planSettleDayList = planSettleService.selectPlanSettleDayList(planSettleVO);
-
-            map.put("cnt", cnt);
-            map.put("planSettleDayList", planSettleDayList);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return map;
+    @GetMapping(value = "/pl/settle/planSettleDaySearch.do")
+    public @ResponseBody Page<PlanSettleListDTO> planSettleDaySearch(
+        @ModelAttribute PlanSettleSearchDTO searchDTO) {
+        return planSettleService.selectPlanSettleDayList(searchDTO);
     }
 
     /**
      * <p>일일 결산 상세</p>
      *
-     * @param planSettleVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return ModelAndView (일일 결산 상세 페이지 정보)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayDetail.do")
-    public ModelAndView planSettleDayDetail(@ModelAttribute PlanSettleVO planSettleVO)
-        throws Exception {
+    @PostMapping(value = "/pl/settle/planSettleDayDetail.do")
+    public ModelAndView planSettleDayDetail(@ModelAttribute PlanSettleSearchDTO searchDTO) {
         ModelAndView mav = new ModelAndView("pl/settle/planSettleDayDetail");
+        PlanSettleDetailDTO detailDTO = new PlanSettleDetailDTO();
 
-        try {
-            // 분류별 할당 시간
-            List<PlanSettleVO> timeList = planSettleService.selectPlanSettleDayTime(planSettleVO);
-            mav.addObject("timeList", timeList);
+        // 분류별 할당 시간
+        List<PlanSettleDetailDTO> timeList = planSettleService.selectPlanSettleDayTime(searchDTO);
+        mav.addObject("timeList", timeList);
 
-            // 일과별 달성률
-            List<PlanSettleVO> achvRateList = planSettleService.selectPlanSettleDayAchvRate(planSettleVO);
-            mav.addObject("achvRateList", achvRateList);
+        // 일과별 달성률
+        List<PlanSettleDetailDTO> achvRateList = planSettleService.selectPlanSettleDayAchvRate(
+            searchDTO);
+        mav.addObject("achvRateList", achvRateList);
 
-            // 일과별 몰입도
-            List<PlanSettleVO> concRateList = planSettleService.selectPlanSettleDayConcRate(planSettleVO);
-            mav.addObject("concRateList", concRateList);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
+        // 일과별 몰입도
+        List<PlanSettleDetailDTO> concRateList = planSettleService.selectPlanSettleDayConcRate(
+            searchDTO);
+        mav.addObject("concRateList", concRateList);
 
+        detailDTO.setRtneDate(searchDTO.getRtneDate());
+        mav.addObject("detailDTO", detailDTO);
         return mav;
     }
 
     /**
      * <p>분류별 할당 시간 조회</p>
      *
-     * @param planSettleVO
-     * @return Map
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (분류별 할당 시간 목록)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayTimeSearch.do")
+    @GetMapping(value = "/pl/settle/planSettleDayTimeSearch.do")
     public @ResponseBody
-    List<PlanSettleVO> planSettleDayTimeSearch(@ModelAttribute PlanSettleVO planSettleVO)
-        throws Exception {
-        List<PlanSettleVO> timeList = null;
-
-        try {
-            timeList = planSettleService.selectPlanSettleDayTime(planSettleVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return timeList;
+    List<PlanSettleDetailDTO> planSettleDayTimeSearch(
+        @ModelAttribute PlanSettleSearchDTO searchDTO) {
+        return planSettleService.selectPlanSettleDayTime(searchDTO);
     }
 
     /**
      * <p>일과별 달성률 조회</p>
      *
-     * @param planSettleVO
-     * @return Map
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (일과별 달성률 목록)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayAchvRateSearch.do")
+    @GetMapping(value = "/pl/settle/planSettleDayAchvRateSearch.do")
     public @ResponseBody
-    List<PlanSettleVO> planSettleDayAchvRateSearch(@ModelAttribute PlanSettleVO planSettleVO)
-        throws Exception {
-        List<PlanSettleVO> achvRateList = null;
-
-        try {
-            achvRateList = planSettleService.selectPlanSettleDayAchvRate(planSettleVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return achvRateList;
+    List<PlanSettleDetailDTO> planSettleDayAchvRateSearch(
+        @ModelAttribute PlanSettleSearchDTO searchDTO) {
+        return planSettleService.selectPlanSettleDayAchvRate(searchDTO);
     }
 
     /**
      * <p>일과별 몰입도 조회</p>
      *
-     * @param planSettleVO
-     * @return Map
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (일과별 몰입도 목록)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayConcRateSearch.do")
+    @GetMapping(value = "/pl/settle/planSettleDayConcRateSearch.do")
     public @ResponseBody
-    List<PlanSettleVO> planSettleDayConcRateSearch(@ModelAttribute PlanSettleVO planSettleVO)
-        throws Exception {
-        List<PlanSettleVO> concRateList = null;
-
-        try {
-            concRateList = planSettleService.selectPlanSettleDayConcRate(planSettleVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return concRateList;
+    List<PlanSettleDetailDTO> planSettleDayConcRateSearch(
+        @ModelAttribute PlanSettleSearchDTO searchDTO) {
+        return planSettleService.selectPlanSettleDayConcRate(searchDTO);
     }
 
     /**
      * <p>일일 결산 엑셀 출력</p>
      *
-     * @param planSettleVO
-     * @param map
-     * @return ExcelUtil
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @param map       (엑셀 출력 정보)
+     * @return ExcelUtil (엑셀 다운로드)
      */
-    @RequestMapping(value = "/pl/settle/planSettleDayExcel.do")
-    public ExcelUtil planSettleDayExcel(@ModelAttribute PlanSettleVO planSettleVO, ModelMap map)
-        throws Exception {
+    @PostMapping(value = "/pl/settle/planSettleDayExcel.do")
+    public ExcelUtil planSettleDayExcel(@ModelAttribute PlanSettleSearchDTO searchDTO,
+        ModelMap map) {
         List<String> colName = new ArrayList<String>();
         List<Integer> colWidth = new ArrayList<Integer>();
         List<String[]> colValue = new ArrayList<String[]>();
 
-        try {
-            // 데이터 조회
-            List<PlanSettleVO> planSettleDayExcelList = planSettleService.selectPlanSettleDayExcelList(planSettleVO);
+        // 데이터 조회
+        List<PlanSettleListDTO> excelList = planSettleService.selectPlanSettleDayExcelList(
+            searchDTO);
 
-            // 컬럼명 설정
-            colName.add("순번");
-            colName.add("일자");
-            colName.add("달성률");
-            colName.add("몰입도");
-            colName.add("점수");
-            colName.add("메모");
-            colName.add("담당자");
+        // 컬럼명 설정
+        colName.add("순번");
+        colName.add("일자");
+        colName.add("달성률");
+        colName.add("몰입도");
+        colName.add("점수");
+        colName.add("메모");
+        colName.add("담당자");
 
-            // 컬럼 사이즈 설정
-            colWidth.add(2000);
-            colWidth.add(4000);
-            colWidth.add(2000);
-            colWidth.add(4000);
-            colWidth.add(2000);
-            colWidth.add(8000);
-            colWidth.add(4000);
+        // 컬럼 사이즈 설정
+        colWidth.add(2000);
+        colWidth.add(4000);
+        colWidth.add(2000);
+        colWidth.add(4000);
+        colWidth.add(2000);
+        colWidth.add(8000);
+        colWidth.add(4000);
 
-            // 데이터 설정
-            for (int i = 0; i < planSettleDayExcelList.size(); i++) {
-                PlanSettleVO vo = (PlanSettleVO) planSettleDayExcelList.get(i);
-                String rn = String.valueOf(vo.getRn());
-                String rtneDate = vo.getRtneDate();
-                String achvRate = vo.getAchvRate();
-                String concRate = vo.getConcRate();
-                String dailyScore = vo.getDailyScore();
-                String memo = vo.getMemo();
-                String planUser = vo.getPlanUser();
-                String[] arr = {rn, rtneDate, achvRate, concRate, dailyScore, memo, planUser};
-                colValue.add(arr);
-            }
-        } catch (Exception e) {
-            logger.error("{}", e);
+        // 데이터 설정
+        for (PlanSettleListDTO listDTO : excelList) {
+            String rn = String.valueOf(listDTO.getRn());
+            String rtneDate = String.valueOf(listDTO.getRtneDate());
+            String achvRate = listDTO.getAchvRate();
+            String concRate = listDTO.getConcRate();
+            String dailyScore = String.valueOf(listDTO.getDailyScore());
+            String memo = listDTO.getMemo();
+            String planUser = listDTO.getPlanUser();
+            String[] arr = {rn, rtneDate, achvRate, concRate, dailyScore, memo, planUser};
+            colValue.add(arr);
         }
 
         map.put("excelName", "일일 결산 목록");

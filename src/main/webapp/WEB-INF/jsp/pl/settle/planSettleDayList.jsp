@@ -24,7 +24,7 @@
 
     <script type="text/javascript">
       $(function () {
-        if ("${planSettleVO.authAdmin}" == "Y") $.util.getSearchCondition();
+        if ("${searchDTO.authAdmin}" === "Y") $.util.getSearchCondition();
         searchPlanSettleDay();
       });
 
@@ -72,8 +72,8 @@
           url: "/pl/settle/planSettleDaySearch.do",
           reader: {
             type: "json",
-            root: "planSettleDayList",
-            totalProperty: "cnt"
+            root: "content",
+            totalProperty: "totalElements"
           },
           simpleSortMode: true
         },
@@ -101,7 +101,7 @@
         var rtneEndDate = $('input[name="rtneEndDate"]').val();
         store.pageSize = pageSize;
         operation.params = {
-          pageNo: store.currentPage,
+          pageNo: store.currentPage - 1,
           pageSize: pageSize,
           userId: userId,
           rtneStartDate: rtneStartDate,
@@ -329,7 +329,7 @@
                 <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="planSettleVO" name="planSettleDaySearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="planSettleDaySearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12 padding_l25 padding_r0">
@@ -338,12 +338,12 @@
                             </div>
                             <div class="col-md-10 col-sm-12 col-xs-12 padding_none code_search_box">
                                 <form:input path="userId" cssClass="form-control input-sm"
-                                            onkeydown="${planSettleVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="아이디" readonly="${planSettleVO.authAdmin eq 'N' ? 'true' : ''}"/>
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="아이디" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"/>
                                 <form:input path="userNm" cssClass="form-control input-sm"
-                                            onkeydown="${planSettleVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="성명" readonly="${planSettleVO.authAdmin eq 'N' ? 'true' : ''}"/>
-                                <c:if test="${planSettleVO.authAdmin eq 'Y'}">
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="성명" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"/>
+                                <c:if test="${searchDTO.authAdmin eq 'Y'}">
                                     <button type="button" onclick="openUserPop(this);" class="btn btn-green search">
                                         <i class="fa fa-search margin_none"></i>
                                     </button>
@@ -375,7 +375,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="planSettleVO" name="planSettleDayForm" method="post">
+            <form:form modelAttribute="searchDTO" name="planSettleDayForm" method="post">
                 <form:hidden path="rtneDate"/>
                 <form:hidden path="planUser"/>
                 <div class="contents-box grid-area outline_none">

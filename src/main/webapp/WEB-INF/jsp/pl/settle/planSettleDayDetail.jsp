@@ -256,11 +256,11 @@
   }
 </script>
 
-<form:form modelAttribute="planSettleVO" name="planSettleDayDetailForm" method="post">
+<form:form modelAttribute="detailDTO" name="planSettleDayDetailForm" method="post">
     <ul class="nav nav-pills">
         <li class="text-left">
             <p class="contents-title">
-                <i class="fa fa-arrow-circle-right"></i>일일 결산 상세 (${planSettleVO.rtneDate})
+                <i class="fa fa-arrow-circle-right"></i>일일 결산 상세 (${detailDTO.rtneDate})
             </p>
         </li>
         <li class="pull-right">
