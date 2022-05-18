@@ -26,6 +26,7 @@ public class UserGrpMngDetailDTO {
     private String modDate; // 수정 일시
     private DetailStatus detailStatus; // 등록/수정 구분
 
+    // 상세 조회 시 구분값 설정
     public void setDetailStatus(DetailStatus detailStatus) {
         this.detailStatus = detailStatus;
     }

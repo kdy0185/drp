@@ -24,7 +24,7 @@
 
     <script type="text/javascript">
       $(function () {
-        if ("${searchDTO.authAdmin}" == "Y") $.util.getSearchCondition();
+        if ("${searchDTO.authAdmin}" === "Y") $.util.getSearchCondition();
         searchPlanReport();
       });
 
