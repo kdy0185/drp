@@ -28,7 +28,7 @@ public class AuthVO {
     /* 권한 */
     private String authAdmin; // 슈퍼관리자 권한 여부
 
-    public AuthVO(String userId, String userNm) {
+    protected AuthVO(String userId, String userNm) {
         this.userId = userId;
         this.userNm = userNm;
     }
