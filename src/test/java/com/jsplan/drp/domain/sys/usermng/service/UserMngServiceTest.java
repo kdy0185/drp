@@ -101,8 +101,8 @@ class UserMngServiceTest {
 
         listDTO = new UserMngListDTO(grpCd, grpNm, userId, userNm, mobileNum, email, userType,
             useYn, regDate, modDate);
-        detailDTO = new UserMngDetailDTO(grpCd, userId, userNm, mobileNum, email, userType, useYn,
-            regDate, modDate);
+        detailDTO = new UserMngDetailDTO(grpCd, grpNm, userId, userNm, mobileNum, email, userType,
+            useYn, regDate, modDate);
     }
 
     @Test

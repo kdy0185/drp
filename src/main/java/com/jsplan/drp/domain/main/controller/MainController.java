@@ -1,17 +1,21 @@
 package com.jsplan.drp.domain.main.controller;
 
 import com.jsplan.drp.domain.main.service.MainService;
-import com.jsplan.drp.domain.main.entity.MainVO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
+import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
 import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.obj.vo.AuthVO;
 import java.util.List;
-import javax.annotation.Resource;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import net.sf.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,26 +27,20 @@ import org.springframework.web.servlet.ModelAndView;
  * @Description : 메인 화면 Controller
  */
 @Controller
+@RequiredArgsConstructor
 public class MainController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Resource(name = "MainService")
-    private MainService mainService;
-
-    @Resource(name = "ComsService")
-    private ComsService comsService;
+    private final MainService mainService;
+    private final ComsService comsService;
 
     /**
      * <p>메인 화면</p>
      *
-     * @param mainVO
-     * @return MainVO
-     * @throws Exception throws Exception
+     * @param comsMenuVO (메뉴 VO)
+     * @return ModelAndView (메인 페이지 정보)
      */
     @RequestMapping(value = "/main/main/main.do")
-    public ModelAndView main(@ModelAttribute MainVO mainVO, ComsMenuVO comsMenuVO)
-        throws Exception {
+    public ModelAndView main(@ModelAttribute ComsMenuVO comsMenuVO) {
         ModelAndView mav = new ModelAndView("main/main/main");
 
         try {
@@ -52,10 +50,10 @@ public class MainController {
             // ***************************** MENU : E *****************************
 
             // 일정 목록
-            JSONArray mainSkedList = mainService.selectMainSkedList(mainVO);
+            JSONArray mainSkedList = mainService.selectMainSkedList();
             mav.addObject("mainSkedList", mainSkedList);
         } catch (Exception e) {
-            logger.error("{}", e);
+            e.printStackTrace();
         }
 
         return mav;
@@ -64,13 +62,13 @@ public class MainController {
     /**
      * <p>사용자 상세</p>
      *
-     * @param mainVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return ModelAndView (사용자 상세 페이지 정보)
      */
-    @RequestMapping(value = "/main/myinfo/myInfoDetail.do")
-    public ModelAndView myInfoDetail(@ModelAttribute MainVO mainVO) throws Exception {
+    @PostMapping(value = "/main/myinfo/myInfoDetail.do")
+    public ModelAndView myInfoDetail(@ModelAttribute UserMngRequest request) {
         ModelAndView mav = new ModelAndView("main/myinfo/myInfoDetail");
+        request.setUserId(new AuthVO().setUserInfo().getUserId());
 
         try {
             // 공통 코드 : 사용자 유형
@@ -78,10 +76,10 @@ public class MainController {
             mav.addObject("userTypeList", userTypeList);
 
             // 사용자 기본 정보
-            MainVO vo = mainService.selectMyInfoDetail(mainVO);
-            mav.addObject("mainVO", vo);
+            UserMngDetailDTO detailDTO = mainService.selectMyInfoDetail(request);
+            mav.addObject("detailDTO", detailDTO);
         } catch (Exception e) {
-            logger.error("{}", e);
+            e.printStackTrace();
         }
 
         return mav;
@@ -90,22 +88,12 @@ public class MainController {
     /**
      * <p>사용자 수정</p>
      *
-     * @param mainVO
-     * @return String
-     * @throws Exception throws Exception
+     * @param request (사용자 정보)
+     * @return UserMngResponse (응답 정보)
      */
-    @RequestMapping(value = "/main/myinfo/myInfoUpdate.do")
-    public @ResponseBody
-    String myInfoUpdate(@ModelAttribute MainVO mainVO) throws Exception {
-        String code = null;
-
-        try {
-            code = mainService.updateMyInfoData(mainVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-            code = e.getClass().getName();
-        }
-
-        return code;
+    @PutMapping(value = "/main/myinfo/myInfoUpdate.do")
+    public @ResponseBody UserMngResponse myInfoUpdate(
+        @ModelAttribute @Valid UserMngRequest request) {
+        return mainService.updateMyInfoData(request);
     }
 }

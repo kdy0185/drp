@@ -33,11 +33,12 @@ public class AuthVO {
         this.userNm = userNm;
     }
 
-    public void setUserInfo() {
+    public AuthVO setUserInfo() {
         if (null != auth && auth.isAuthenticated()) {
             userId = ((UserVO) auth.getPrincipal()).getUserId();
             userNm = ((UserVO) auth.getPrincipal()).getUserNm();
         }
+        return this;
     }
 
     public String getAuthAdmin() {

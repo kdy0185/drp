@@ -137,8 +137,10 @@ public class UserMngService {
     @Transactional
     public UserMngResponse updateUserMngData(UserMngRequest request) {
         // BCrypt 패스워드 암호화
-        String encodePw = passwordEncoder.encode(request.getUserPw());
-        request.setUserPw(encodePw);
+        if (!StringUtil.isBlank(request.getUserPw())) {
+            String encodePw = passwordEncoder.encode(request.getUserPw());
+            request.setUserPw(encodePw);
+        }
 
         UserMng userMng = userMngRepository.findById(request.getUserId())
             .orElseThrow(NoSuchElementException::new);

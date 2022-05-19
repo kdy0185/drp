@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class UserMngDetailDTO {
 
     private String grpCd; // 그룹 코드
+    private String grpNm; // 그룹명
     private String userId; // 사용자 아이디
     private String userNm; // 성명
     private String userPw; // 비밀번호
@@ -43,10 +44,11 @@ public class UserMngDetailDTO {
     }
 
     @QueryProjection
-    public UserMngDetailDTO(String grpCd, String userId, String userNm, String mobileNum,
+    public UserMngDetailDTO(String grpCd, String grpNm, String userId, String userNm, String mobileNum,
         String email, String userType, UseStatus useYn, LocalDateTime regDate,
         LocalDateTime modDate) {
         this.grpCd = grpCd;
+        this.grpNm = grpNm;
         this.userId = userId;
         this.userNm = userNm;
         this.mobileNum = mobileNum;

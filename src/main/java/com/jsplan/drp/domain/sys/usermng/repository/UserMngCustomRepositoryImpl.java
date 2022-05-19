@@ -154,6 +154,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     public UserMngDetailDTO findUserMngByUserId(String userId) {
         return select(new QUserMngDetailDTO(
             userMng.userGrpMng.grpCd,
+            userMng.userGrpMng.grpNm,
             userMng.userId,
             userMng.userNm,
             userMng.mobileNum,

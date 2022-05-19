@@ -116,8 +116,14 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.userAuthMng.add(userAuthMng);
     }
 
-    // 사용자 수정
+    // 사용자 수정 (사용자 관리)
     public void updateUserMng(UserMngRequest request) {
+        updateMyInfo(request);
+        setUserAuthMng(request.getAuthCd());
+    }
+
+    // 사용자 수정 (메인 화면)
+    public void updateMyInfo(UserMngRequest request) {
         this.userNm = request.getUserNm();
         if (!StringUtil.isBlank(request.getUserPw())) {
             this.userPw = request.getUserPw();
@@ -126,7 +132,6 @@ public class UserMng extends BaseTimeEntity implements Persistable<String> {
         this.email = request.getEmail();
         this.userType = request.getUserType();
         this.useYn = request.getUseYn();
-        setUserAuthMng(request.getAuthCd());
     }
 
     // 권한 매핑 정보 수정
