@@ -1,7 +1,7 @@
 package com.jsplan.drp.global.lsnr;
 
 import com.jsplan.drp.global.obj.service.LoginAttemptService;
-import javax.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
  * @Description : 인증 성공 Listener
  */
 @Component
+@RequiredArgsConstructor
 public class AuthenticationSuccessEventListener implements
     ApplicationListener<AuthenticationSuccessEvent> {
 
-    @Resource
-    private LoginAttemptService loginAttemptService;
+    private final LoginAttemptService loginAttemptService;
 
     /**
      * <p>인증 성공 시 event 설정</p>
