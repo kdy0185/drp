@@ -44,6 +44,9 @@ public class MenuMng extends BaseTimeEntity implements Persistable<String> {
     @Column(name = "MENU_CD", length = 5)
     private String menuCd; // 메뉴 코드
 
+    @Column(name = "UPPER_MENU_CD", length = 5)
+    private String upperMenuCd; // 상위 메뉴 코드
+
     @Column(name = "MENU_NM", nullable = false)
     private String menuNm; // 메뉴명
 
@@ -67,7 +70,7 @@ public class MenuMng extends BaseTimeEntity implements Persistable<String> {
     private UseStatus useYn; // 사용 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UPPER_MENU_CD")
+    @JoinColumn(name = "UPPER_MENU_CD", insertable = false, updatable = false)
     private MenuMng upperMenuMng; // 상위 메뉴 엔티티
 
     @OneToMany(mappedBy = "upperMenuMng")

@@ -278,7 +278,7 @@
         var searchWord = $(obj).val();
 
         $.ajax({
-          type: "post",
+          type: "get",
           url: "/coms/comsUserSearch.do",
           data: {
             searchCd: searchCd,
@@ -399,7 +399,7 @@
         <%@ include file="/WEB-INF/jsp/cmmn/layout/left.jsp" %>
         <div class="contents-area col-md-10 col-sm-10 col-xs-12">
             <div class="sc-title">
-                <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
+                <span>${comsMenuDTO.menuNm}</span><em class="pull-right">${comsMenuDTO.upperMenuNm} &gt; ${comsMenuDTO.menuNm}</em>
             </div>
 
             <form:form modelAttribute="searchDTO" name="planReportSearchForm" method="post">

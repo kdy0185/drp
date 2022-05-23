@@ -45,7 +45,7 @@
         <img src="/img/logo.png" onclick="moveMain();" style="cursor: pointer;" alt="">
     </h1>
     <div class="function_btn">
-        <c:if test="${fn:substring(comsMenuVO.menuCd, 0, 1) ne 'A'}">
+        <c:if test="${fn:substring(comsMenuDTO.menuCd, 0, 1) ne 'A'}">
             <button type="button" onclick="$.util.menuSlide();" class="btn btn-green width-slider">
                 <i class="icon-arrow-thin-left"></i>
             </button>
@@ -55,22 +55,22 @@
         </c:if>
     </div>
     <ul class="menu">
-        <c:forEach var="menu1VO" items="${menuList}" varStatus="menu1Status">
-            <c:if test="${menu1VO.menuLv eq 1}">
-                <sec:authorize access="hasAnyAuthority(${menu1VO.authCd})">
+        <c:forEach var="menu1DTO" items="${menuList}" varStatus="menu1Status">
+            <c:if test="${menu1DTO.menuLv eq 1}">
+                <sec:authorize access="hasAnyAuthority(${menu1DTO.authCd})">
 
                     <!-- 2 depth 최상단 메뉴 조회 : S -->
                     <c:set var="menu2Loop" value="true"/>
-                    <c:forEach var="menu2VO" items="${menuList}" varStatus="menu2Status">
-                        <c:if test="${menu2VO.menuLv eq 2 && menu2VO.upperMenuCd eq menu1VO.menuCd && menu2Loop}">
-                            <sec:authorize access="hasAnyAuthority(${menu2VO.authCd})">
+                    <c:forEach var="menu2DTO" items="${menuList}" varStatus="menu2Status">
+                        <c:if test="${menu2DTO.menuLv eq 2 && menu2DTO.upperMenuCd eq menu1DTO.menuCd && menu2Loop}">
+                            <sec:authorize access="hasAnyAuthority(${menu2DTO.authCd})">
                                 <c:choose>
-                                    <c:when test="${menu2VO.lastYn eq 'Y'}">
-                                        <li class="color_${fn:substring(menu2VO.menuCd, 0, 1)}">
-                                            <a href="javascript:$.util.moveMenu('${menu2VO.menuUrl}', '${menu2VO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
-                                               class="bg bg2 collapsed ${fn:substring(menu2VO.menuCd, 0, 1) eq fn:substring(comsMenuVO.menuCd, 0, 1) ? 'active' : ''}">
-                                                <i class="icon-file-list icon${fn:substring(menu2VO.menuCd, 0, 1)}"></i>
-                                                <span>${pageContext.response.locale.language eq 'ko' ? menu1VO.menuNm : menu1VO.menuEngNm}</span>
+                                    <c:when test="${menu2DTO.lastYn eq 'Y'}">
+                                        <li class="color_${fn:substring(menu2DTO.menuCd, 0, 1)}">
+                                            <a href="javascript:$.util.moveMenu('${menu2DTO.menuUrl}', '${menu2DTO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
+                                               class="bg bg2 collapsed ${fn:substring(menu2DTO.menuCd, 0, 1) eq fn:substring(comsMenuDTO.menuCd, 0, 1) ? 'active' : ''}">
+                                                <i class="icon-file-list icon${fn:substring(menu2DTO.menuCd, 0, 1)}"></i>
+                                                <span>${pageContext.response.locale.language eq 'ko' ? menu1DTO.menuNm : menu1DTO.menuEngNm}</span>
                                             </a>
                                         </li>
                                         <c:set var="menu2Loop" value="false"/>
@@ -79,14 +79,14 @@
 
                                         <!-- 3 depth 최상단 메뉴 조회 : S -->
                                         <c:set var="menu3Loop" value="true"/>
-                                        <c:forEach var="menu3VO" items="${menuList}" varStatus="menu3Status">
-                                            <c:if test="${menu3VO.menuLv eq 3 && menu3VO.upperMenuCd eq menu2VO.menuCd && menu3Loop}">
-                                                <sec:authorize access="hasAnyAuthority(${menu3VO.authCd})">
-                                                    <li class="color_${fn:substring(menu2VO.menuCd, 0, 1)}">
-                                                        <a href="javascript:$.util.moveMenu('${menu3VO.menuUrl}', '${menu3VO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
-                                                           class="bg bg2 collapsed ${fn:substring(menu3VO.menuCd, 0, 1) eq fn:substring(comsMenuVO.menuCd, 0, 1) ? 'active' : ''}">
-                                                            <i class="icon-file-list icon${fn:substring(menu2VO.menuCd, 0, 1)}"></i>
-                                                            <span>${pageContext.response.locale.language eq 'ko' ? menu1VO.menuNm : menu1VO.menuEngNm}</span>
+                                        <c:forEach var="menu3DTO" items="${menuList}" varStatus="menu3Status">
+                                            <c:if test="${menu3DTO.menuLv eq 3 && menu3DTO.upperMenuCd eq menu2DTO.menuCd && menu3Loop}">
+                                                <sec:authorize access="hasAnyAuthority(${menu3DTO.authCd})">
+                                                    <li class="color_${fn:substring(menu2DTO.menuCd, 0, 1)}">
+                                                        <a href="javascript:$.util.moveMenu('${menu3DTO.menuUrl}', '${menu3DTO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
+                                                           class="bg bg2 collapsed ${fn:substring(menu3DTO.menuCd, 0, 1) eq fn:substring(comsMenuDTO.menuCd, 0, 1) ? 'active' : ''}">
+                                                            <i class="icon-file-list icon${fn:substring(menu2DTO.menuCd, 0, 1)}"></i>
+                                                            <span>${pageContext.response.locale.language eq 'ko' ? menu1DTO.menuNm : menu1DTO.menuEngNm}</span>
                                                         </a>
                                                     </li>
                                                     <c:set var="menu3Loop" value="false"/>

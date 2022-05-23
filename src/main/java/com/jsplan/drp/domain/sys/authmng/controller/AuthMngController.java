@@ -9,11 +9,11 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthUserMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.service.AuthMngService;
 import com.jsplan.drp.global.bean.AvailableRoleHierarchy;
 import com.jsplan.drp.global.bean.ReloadableFilterInvocationSecurityMetadataSource;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
+import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.vo.DataStatus;
 import com.jsplan.drp.global.obj.vo.DetailStatus;
-import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,19 +51,19 @@ public class AuthMngController {
     /**
      * <p>권한 관리</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (권한 관리 페이지 정보)
      */
     @PostMapping(value = "/sys/authmng/authMngList.do")
-    public ModelAndView authMngList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView authMngList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("sys/authmng/authMngList");
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // 기본 검색 조건 설정
@@ -181,7 +181,7 @@ public class AuthMngController {
 
         try {
             // ***************************** PAGE : S *****************************
-            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
+            List<ComsDTO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
@@ -190,7 +190,7 @@ public class AuthMngController {
             mav.addObject("searchDTO", searchDTO);
 
             // 공통 코드 : 그룹
-            List<ComsVO> grpList = comsService.selectComsGrpList();
+            List<ComsDTO> grpList = comsService.selectComsGrpList();
             mav.addObject("grpList", grpList);
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,8 +4,8 @@ import com.jsplan.drp.domain.main.service.MainService;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.vo.AuthVO;
 import java.util.List;
@@ -36,16 +36,16 @@ public class MainController {
     /**
      * <p>메인 화면</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (메인 페이지 정보)
      */
     @RequestMapping(value = "/main/main/main.do")
-    public ModelAndView main(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView main(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("main/main/main");
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
             // ***************************** MENU : E *****************************
 
@@ -72,7 +72,7 @@ public class MainController {
 
         try {
             // 공통 코드 : 사용자 유형
-            List<ComsVO> userTypeList = comsService.selectComsCodeList("USER_TYPE");
+            List<ComsDTO> userTypeList = comsService.selectComsCodeList("USER_TYPE");
             mav.addObject("userTypeList", userTypeList);
 
             // 사용자 기본 정보

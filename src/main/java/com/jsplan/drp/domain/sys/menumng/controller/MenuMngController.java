@@ -7,10 +7,10 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngResponse;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTO;
 import com.jsplan.drp.domain.sys.menumng.service.MenuMngService;
 import com.jsplan.drp.global.bean.ReloadableFilterInvocationSecurityMetadataSource;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
+import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.vo.DataStatus;
 import com.jsplan.drp.global.obj.vo.DetailStatus;
-import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +46,19 @@ public class MenuMngController {
     /**
      * <p>메뉴 관리</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (메뉴 관리 페이지 정보)
      */
     @PostMapping(value = "/sys/menumng/menuMngList.do")
-    public ModelAndView menuMngList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView menuMngList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("sys/menumng/menuMngList");
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // 기본 검색 조건 설정

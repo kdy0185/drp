@@ -6,7 +6,7 @@ import com.jsplan.drp.domain.pl.ctgopt.dto.PlanCtgOptRequest;
 import com.jsplan.drp.domain.pl.ctgopt.dto.PlanCtgOptResponse;
 import com.jsplan.drp.domain.pl.ctgopt.dto.PlanCtgOptSearchDTO;
 import com.jsplan.drp.domain.pl.ctgopt.service.PlanCtgOptService;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.obj.vo.DetailStatus;
 import com.jsplan.drp.global.util.ExcelUtil;
@@ -42,20 +42,20 @@ public class PlanCtgOptController {
     /**
      * <p>분류 옵션 설정</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (분류 옵션 설정 페이지 정보)
      */
     @PostMapping(value = "/pl/ctgopt/planCtgOptList.do")
-    public ModelAndView planCtgOptList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView planCtgOptList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("pl/ctgopt/planCtgOptList");
         PlanCtgOptSearchDTO searchDTO = new PlanCtgOptSearchDTO();
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // 기본 검색 조건 설정

@@ -1,19 +1,18 @@
 package com.jsplan.drp.global.obj.service;
 
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
-import com.jsplan.drp.global.obj.mapper.ComsMapper;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
+import com.jsplan.drp.global.obj.repository.ComsRepository;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Class : ComsService
@@ -25,46 +24,41 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("ComsService")
 public class ComsService {
 
-    @Resource
-    private ComsMapper ComsMapper;
+    @Autowired
+    private ComsRepository comsRepository;
 
     /**
      * <p>메뉴 목록</p>
      *
-     * @return List
-     * @throws Exception throws Exception
+     * @return List (메뉴 목록)
      */
-    public List<ComsMenuVO> selectComsMenuList() throws Exception {
-        return ComsMapper.selectComsMenuList();
+    public List<ComsMenuDTO> selectComsMenuList() {
+        return comsRepository.selectComsMenuList();
     }
 
     /**
      * <p>메뉴 상세</p>
      *
-     * @param menuCd
-     * @return ComsMenuVO
-     * @throws Exception throws Exception
+     * @param menuCd (메뉴 코드)
+     * @return ComsMenuDTO (메뉴 정보)
      */
-    public ComsMenuVO selectComsMenuDetail(String menuCd) throws Exception {
-        return ComsMapper.selectComsMenuDetail(menuCd);
+    public ComsMenuDTO selectComsMenuDetail(String menuCd) {
+        return comsRepository.selectComsMenuDetail(menuCd);
     }
 
     /**
      * <p>URL별 권한 목록</p>
      *
-     * @return LinkedHashMap<RequestMatcher, List < ConfigAttribute>>
-     * @throws Exception throws Exception
+     * @return LinkedHashMap (URL별 권한 목록)
      */
-    @Transactional
-    public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> selectComsUrlAuthList()
-        throws Exception {
-        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> urlAuthMap = new LinkedHashMap<RequestMatcher, List<ConfigAttribute>>();
-        List<ComsMenuVO> list = ComsMapper.selectComsUrlAuthList();
-        Iterator<ComsMenuVO> itr = list.iterator();
-        ComsMenuVO vo;
+    public LinkedHashMap<RequestMatcher, List<ConfigAttribute>> selectComsUrlAuthList() {
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> urlAuthMap = new LinkedHashMap<>();
+        List<ComsMenuDTO> list = comsRepository.selectComsUrlAuthList();
+        Iterator<ComsMenuDTO> itr = list.iterator();
+        ComsMenuDTO vo;
         String preMenuUrl = null;
         String menuUrl, authCd;
-        Object antUrl;
+        RequestMatcher antUrl;
 
         // 조회된 URL별 권한 목록을 LinkedHashMap 형식으로 변환
         while (itr.hasNext()) {
@@ -72,15 +66,13 @@ public class ComsService {
             menuUrl = vo.getMenuUrl();
             authCd = vo.getAuthCd();
             antUrl = new AntPathRequestMatcher(menuUrl); // RequestKey 형식으로 URL 변환
-            List<ConfigAttribute> configList = new LinkedList<ConfigAttribute>();
+            List<ConfigAttribute> configList = new LinkedList<>();
 
             // 해당 URL에 대한 권한이 여러 개 매핑되어 있는 경우
             if (preMenuUrl != null && menuUrl.equals(preMenuUrl)) {
                 // 해당 URL에서 조회된 이전 Row의 권한을 모두 configList에 추가
-                List<ConfigAttribute> preAuthList = urlAuthMap.get(antUrl);
-                Iterator<ConfigAttribute> preAuthItr = preAuthList.iterator();
-                while (preAuthItr.hasNext()) {
-                    SecurityConfig tempConfig = (SecurityConfig) preAuthItr.next();
+                for (ConfigAttribute configAttribute : urlAuthMap.get(antUrl)) {
+                    SecurityConfig tempConfig = (SecurityConfig) configAttribute;
                     configList.add(tempConfig);
                 }
             }
@@ -88,7 +80,7 @@ public class ComsService {
             // 해당 URL에서 조회된 현재 Row의 권한을 configList에 추가
             configList.add(new SecurityConfig(authCd));
             // 같은 URL - RequestKey일 경우 새로 추출한 configList로 덮어쓰기
-            urlAuthMap.put((RequestMatcher) antUrl, configList);
+            urlAuthMap.put(antUrl, configList);
             preMenuUrl = menuUrl;
         }
 
@@ -98,13 +90,12 @@ public class ComsService {
     /**
      * <p>계층화 권한 목록</p>
      *
-     * @return String
-     * @throws Exception throws Exception
+     * @return String (계층화 권한 목록)
      */
-    public String selectHierarchicalAuthList() throws Exception {
-        List<ComsMenuVO> authList = ComsMapper.selectHierarchicalAuthList();
+    public String selectHierarchicalAuthList() {
+        List<ComsMenuDTO> authList = comsRepository.selectHierarchicalAuthList();
         StringBuilder hierarchyStrings = new StringBuilder();
-        for (ComsMenuVO vo : authList) {
+        for (ComsMenuDTO vo : authList) {
             hierarchyStrings.append(vo.getUpperAuthCd());
             hierarchyStrings.append(" > ");
             hierarchyStrings.append(vo.getAuthCd());
@@ -116,32 +107,30 @@ public class ComsService {
     /**
      * <p>공통 코드 목록</p>
      *
-     * @param comCd
-     * @return List
-     * @throws Exception throws Exception
+     * @param grpCd (그룹 코드)
+     * @return List (공통 코드 목록)
      */
-    public List<ComsVO> selectComsCodeList(String comCd) throws Exception {
-        return ComsMapper.selectComsCodeList(comCd);
+    public List<ComsDTO> selectComsCodeList(String grpCd) {
+        return comsRepository.selectComsCodeList(grpCd);
     }
 
     /**
      * <p>그룹 목록</p>
      *
-     * @return List
-     * @throws Exception throws Exception
+     * @return List (그룹 목록)
      */
-    public List<ComsVO> selectComsGrpList() throws Exception {
-        return ComsMapper.selectComsGrpList();
+    public List<ComsDTO> selectComsGrpList() {
+        return comsRepository.selectComsGrpList();
     }
 
     /**
      * <p>담당자 목록</p>
      *
-     * @param comsVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param comsDTO (담당자 정보)
+     * @return List (담당자 목록)
      */
-    public List<ComsVO> selectComsUserList(ComsVO comsVO) throws Exception {
-        return ComsMapper.selectComsUserList(comsVO);
+    public List<ComsDTO> selectComsUserList(ComsDTO comsDTO) {
+        return comsRepository.selectComsUserList(comsDTO.getGrpCd(), comsDTO.getSearchCd(),
+            comsDTO.getSearchWord());
     }
 }

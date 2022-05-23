@@ -4,8 +4,8 @@ import com.jsplan.drp.domain.pl.settle.dto.PlanSettleDetailDTO;
 import com.jsplan.drp.domain.pl.settle.dto.PlanSettleListDTO;
 import com.jsplan.drp.domain.pl.settle.dto.PlanSettleSearchDTO;
 import com.jsplan.drp.domain.pl.settle.service.PlanSettleService;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
@@ -36,24 +36,24 @@ public class PlanSettleController {
     /**
      * <p>일일 결산</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (일일 결산 페이지 정보)
      */
     @PostMapping(value = "/pl/settle/planSettleDayList.do")
-    public ModelAndView planSettleDayList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView planSettleDayList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("pl/settle/planSettleDayList");
         PlanSettleSearchDTO searchDTO = new PlanSettleSearchDTO();
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // ***************************** PAGE : S *****************************
-            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
+            List<ComsDTO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
