@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @Class : UserRepositoryTest
  * @Author : KDW
  * @Date : 2022-05-19
- * @Description : 사용자 계정 Service Test
+ * @Description : 사용자 계정 Repository Test
  */
 @SpringBootTest
 @Transactional
