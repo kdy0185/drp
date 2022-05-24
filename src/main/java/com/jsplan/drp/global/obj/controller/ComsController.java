@@ -1,21 +1,20 @@
 package com.jsplan.drp.global.obj.controller;
 
+import com.jsplan.drp.global.obj.dto.ComsDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
-import com.jsplan.drp.global.obj.entity.ComsVO;
 import com.jsplan.drp.global.util.StringUtil;
 import com.jsplan.drp.global.util.io.FileDownload;
 import com.jsplan.drp.global.util.io.FileUtil;
 import java.io.File;
 import java.util.List;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,12 +26,10 @@ import org.springframework.web.servlet.ModelAndView;
  */
 
 @Controller
+@RequiredArgsConstructor
 public class ComsController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Resource(name = "ComsService")
-    private ComsService comsService;
+    private final ComsService comsService;
 
     @Value("${project.path.upload}")
     private String uploadPath;
@@ -40,50 +37,37 @@ public class ComsController {
     /**
      * <p>담당자 선택 팝업</p>
      *
-     * @param comsVO
-     * @return ModelAndView
-     * @throws Exception throws Exception
+     * @param comsDTO (담당자 정보)
+     * @return ModelAndView (담당자 선택 페이지 정보)
      */
-    @RequestMapping(value = "/coms/comsUserPop.do")
-    public ModelAndView comsUserPop(@ModelAttribute ComsVO comsVO) throws Exception {
-        ModelAndView mav = new ModelAndView("coms/comsUserPop");
-        return mav;
+    @PostMapping(value = "/coms/comsUserPop.do")
+    public ModelAndView comsUserPop(@ModelAttribute ComsDTO comsDTO) {
+        return new ModelAndView("coms/comsUserPop");
     }
 
     /**
      * <p>담당자 조회</p>
      *
-     * @param comsVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param comsDTO (담당자 정보)
+     * @return List (담당자 목록)
      */
-    @RequestMapping(value = "/coms/comsUserSearch.do")
-    public @ResponseBody
-    List<ComsVO> comsUserSearch(@ModelAttribute ComsVO comsVO) throws Exception {
-        List<ComsVO> userList = null;
-
-        try {
-            userList = comsService.selectComsUserList(comsVO);
-        } catch (Exception e) {
-            logger.error("{}", e);
-        }
-
-        return userList;
+    @GetMapping(value = "/coms/comsUserSearch.do")
+    public @ResponseBody List<ComsDTO> comsUserSearch(@ModelAttribute ComsDTO comsDTO) {
+        return comsService.selectComsUserList(comsDTO);
     }
 
     /**
      * <p>공통 파일 다운로드</p>
      *
-     * @param comsVO
-     * @throws Exception throws Exception
+     * @param comsDTO (파일 정보)
      */
-    @RequestMapping(value = "/coms/comsFileDownLoad.do")
-    public void comsFileDownLoad(@ModelAttribute ComsVO comsVO, HttpServletRequest request,
-        HttpServletResponse response) throws Exception {
+    @PostMapping(value = "/coms/comsFileDownLoad.do")
+    public void comsFileDownLoad(@ModelAttribute ComsDTO comsDTO, HttpServletRequest request,
+        HttpServletResponse response) {
         // 파일을 찾는데 필요한 초기값 세팅
-        String filePath = comsVO.getPath();
-        String orginFileNm = comsVO.getName();
-        String uuidFileNm = comsVO.getUuid();
+        String filePath = comsDTO.getPath();
+        String orginFileNm = comsDTO.getName();
+        String uuidFileNm = comsDTO.getUuid();
 
         // uuid가 없지만 다운로드는 해야하는 경우 uuid에 name을 넣어서 사용
         if (StringUtil.isEmpty(

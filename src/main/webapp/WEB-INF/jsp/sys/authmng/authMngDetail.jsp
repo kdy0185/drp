@@ -87,7 +87,7 @@
   }
 </script>
 <form:form modelAttribute="detailDTO" name="authMngDetailForm" method="post">
-    <form:hidden path="state"/>
+    <form:hidden path="detailStatus"/>
     <table class="table blue-base-table">
         <colgroup>
             <col style="width: 15%"/>
@@ -100,7 +100,7 @@
             <th class="top-line"><span class="star-mark">권한 코드</span></th>
             <td class="top-line">
                 <form:input path="authCd" cssClass="form-control input-sm width_95 required"
-                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}"/>
+                            readonly="${detailDTO.detailStatus eq 'UPDATE' ? 'true' : 'false'}"/>
             </td>
             <th class="top-line"><span class="star-unmark">상위 권한 코드</span></th>
             <td class="top-line">
@@ -132,12 +132,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${detailDTO.state eq 'I'}">
+        <c:if test="${detailDTO.detailStatus eq 'INSERT'}">
             <button type="button" onclick="insertAuthMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${detailDTO.state eq 'U'}">
+        <c:if test="${detailDTO.detailStatus eq 'UPDATE'}">
             <button type="button" onclick="updateAuthMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>

@@ -2,8 +2,8 @@ package com.jsplan.drp.domain.sys.codemng.dto;
 
 import com.jsplan.drp.domain.sys.codemng.entity.CodeMng;
 import com.jsplan.drp.domain.sys.codemng.entity.CodeMngId;
-import com.jsplan.drp.global.obj.entity.BaseListDTO;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.dto.BaseListDTO;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.util.FilterUtil;
 import com.jsplan.drp.global.util.StringUtil;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class CodeMngRequest extends BaseListDTO {
     private String useYn; // 사용 여부
     private String detl; // 비고
     private Integer ord; // 정렬 순서
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private String detailStatus; // 등록/수정 구분
     private String jsonData; // 저장할 JSON 데이터
 
     // JSON String 데이터 → JSONArray 형태로 변환

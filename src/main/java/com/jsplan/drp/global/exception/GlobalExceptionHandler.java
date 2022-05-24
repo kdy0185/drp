@@ -1,7 +1,7 @@
 package com.jsplan.drp.global.exception;
 
-import com.jsplan.drp.global.exception.entity.ErrorResponse;
-import com.jsplan.drp.global.exception.entity.ErrorStatus;
+import com.jsplan.drp.global.exception.entity.dto.ErrorResponse;
+import com.jsplan.drp.global.exception.entity.vo.ErrorStatus;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;

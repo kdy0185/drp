@@ -12,41 +12,41 @@
 %>
 <sec:authorize access="isAuthenticated()">
     <div id="accordion" class="left-side col-md-2 col-sm-2 col-xs-12">
-        <ul id="ulAccordion" class="left-menu panel color_${fn:substring(comsMenuVO.menuCd, 0, 1)}">
+        <ul id="ulAccordion" class="left-menu panel color_${fn:substring(comsMenuDTO.menuCd, 0, 1)}">
 
             <!-- 2 depth 메뉴 조회 : S -->
-            <c:forEach var="menu2VO" items="${menuList}" varStatus="menu2Status">
-                <c:if test="${menu2VO.menuLv eq 2 && fn:substring(menu2VO.menuCd, 0, 1) eq fn:substring(comsMenuVO.menuCd, 0, 1)}">
-                    <sec:authorize access="hasAnyAuthority(${menu2VO.authCd})">
+            <c:forEach var="menu2DTO" items="${menuList}" varStatus="menu2Status">
+                <c:if test="${menu2DTO.menuLv eq 2 && fn:substring(menu2DTO.menuCd, 0, 1) eq fn:substring(comsMenuDTO.menuCd, 0, 1)}">
+                    <sec:authorize access="hasAnyAuthority(${menu2DTO.authCd})">
                         <c:choose>
-                            <c:when test="${menu2VO.lastYn eq 'Y'}">
+                            <c:when test="${menu2DTO.lastYn eq 'Y'}">
                                 <li class="non_depth">
-                                    <a href="javascript:$.util.moveMenu('${menu2VO.menuUrl}', '${menu2VO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
-                                       class="bg bg2 collapsed ${menu2VO.menuCd eq comsMenuVO.menuCd ? 'active' : ''}">
-                                        <span>${pageContext.response.locale.language eq 'ko' ? menu2VO.menuNm : menu2VO.menuEngNm}</span>
+                                    <a href="javascript:$.util.moveMenu('${menu2DTO.menuUrl}', '${menu2DTO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
+                                       class="bg bg2 collapsed ${menu2DTO.menuCd eq comsMenuDTO.menuCd ? 'active' : ''}">
+                                        <span>${pageContext.response.locale.language eq 'ko' ? menu2DTO.menuNm : menu2DTO.menuEngNm}</span>
                                     </a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li>
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse${menu2Status.count}"
-                                       class="bg bg2 collapsed ${fn:substring(menu2VO.menuCd, 0, 4) eq fn:substring(comsMenuVO.upperMenuCd, 0, 4) ? 'active' : ''}">
+                                       class="bg bg2 collapsed ${fn:substring(menu2DTO.menuCd, 0, 4) eq fn:substring(comsMenuDTO.upperMenuCd, 0, 4) ? 'active' : ''}">
                                         <i class="fa fa-home"></i>
-                                        <span>${pageContext.response.locale.language eq 'ko' ? menu2VO.menuNm : menu2VO.menuEngNm}</span>
+                                        <span>${pageContext.response.locale.language eq 'ko' ? menu2DTO.menuNm : menu2DTO.menuEngNm}</span>
                                     </a>
                                 </li>
                                 <div id="sub_accordion${menu2Status.count}">
                                     <ul id="collapse${menu2Status.count}"
-                                        class="left-subMenu collapse${fn:substring(menu2VO.menuCd, 0, 4) eq fn:substring(comsMenuVO.upperMenuCd, 0, 4) ? '1 active' : ''}">
+                                        class="left-subMenu collapse${fn:substring(menu2DTO.menuCd, 0, 4) eq fn:substring(comsMenuDTO.upperMenuCd, 0, 4) ? '1 active' : ''}">
 
                                         <!-- 3 depth 메뉴 조회 : S -->
-                                        <c:forEach var="menu3VO" items="${menuList}" varStatus="menu3Status">
-                                            <c:if test="${menu3VO.menuLv eq 3 && menu3VO.upperMenuCd eq menu2VO.menuCd}">
-                                                <sec:authorize access="hasAnyAuthority(${menu3VO.authCd})">
+                                        <c:forEach var="menu3DTO" items="${menuList}" varStatus="menu3Status">
+                                            <c:if test="${menu3DTO.menuLv eq 3 && menu3DTO.upperMenuCd eq menu2DTO.menuCd}">
+                                                <sec:authorize access="hasAnyAuthority(${menu3DTO.authCd})">
                                                     <li class="non_depth">
-                                                        <a href="javascript:$.util.moveMenu('${menu3VO.menuUrl}', '${menu3VO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
-                                                           class="bg bg2 collapsed ${menu3VO.menuCd eq comsMenuVO.menuCd ? 'active' : ''}">
-                                                            <span>${pageContext.response.locale.language eq 'ko' ? menu3VO.menuNm : menu3VO.menuEngNm}</span>
+                                                        <a href="javascript:$.util.moveMenu('${menu3DTO.menuUrl}', '${menu3DTO.menuCd}', '${_csrf.parameterName}', '${_csrf.token}');"
+                                                           class="bg bg2 collapsed ${menu3DTO.menuCd eq comsMenuDTO.menuCd ? 'active' : ''}">
+                                                            <span>${pageContext.response.locale.language eq 'ko' ? menu3DTO.menuNm : menu3DTO.menuEngNm}</span>
                                                         </a>
                                                     </li>
                                                 </sec:authorize>

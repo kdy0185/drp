@@ -8,7 +8,8 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngListDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequestBuilder;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴 목록 조회 테스트")
-    public void searchMenuMngList() throws Exception {
+    public void searchMenuMngList() {
         // given
         String menuCd = "P0000";
         String searchCd = "menuNm";
@@ -74,7 +75,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴 상세 조회 테스트")
-    public void findMenuMngByMenuCd() throws Exception {
+    public void findMenuMngByMenuCd() {
         // given
         String menuCd = "P0100";
 
@@ -88,7 +89,7 @@ class MenuMngRepositoryTest {
 
     @Test
     @DisplayName("메뉴별 권한 목록 조회 테스트")
-    public void searchMenuAuthMngList() throws Exception {
+    public void searchMenuAuthMngList() {
         // given
         String menuCd = "P0201,P0202,P0203";
         List<String> menuCdList = List.of(menuCd.split(","));
@@ -108,7 +109,7 @@ class MenuMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 등록 테스트")
-    public void insertMenuMngData() throws Exception {
+    public void insertMenuMngData() {
         // when
         MenuMng savedMenuMng = menuMngRepository.save(request.toEntity());
         String findMenuCd = menuMngRepository.findMenuMngByMenuCd(savedMenuMng.getMenuCd())
@@ -121,11 +122,12 @@ class MenuMngRepositoryTest {
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 수정 테스트")
-    public void updateMenuMngData() throws Exception {
+    public void updateMenuMngData() {
         // given
         String menuCd = "P0100";
         String menuNm = "메뉴 수정";
         String menuUrl = "/pl/test/planModifyList.do";
+        LocalDateTime beforeDate = LocalDateTime.now();
 
         // when
         MenuMngRequest request = MenuMngRequestBuilder.build(menuCd, upperMenuCd, menuNm, null,
@@ -138,12 +140,13 @@ class MenuMngRepositoryTest {
         // then
         assertThat(menuMng.getMenuNm()).isEqualTo(menuNm);
         assertThat(menuMng.getMenuUrl()).isEqualTo(menuUrl);
+        assertThat(menuMng.getModDate()).isAfter(beforeDate);
     }
 
     @Test
     @WithUserDetails(userDetailsServiceBeanName = "UserService", value = "sys_app")
     @DisplayName("메뉴 삭제 테스트")
-    public void deleteMenuMngData() throws Exception {
+    public void deleteMenuMngData() {
         // when
         menuMngRepository.saveAndFlush(request.toEntity());
 

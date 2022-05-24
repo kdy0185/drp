@@ -14,7 +14,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngDetailDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequest;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngRequestBuilder;
 import com.jsplan.drp.domain.sys.menumng.service.MenuMngService;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.Locale;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
@@ -129,7 +129,7 @@ class MenuMngControllerTest {
         mockMvc.perform(post("/sys/menumng/menuMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("menuCd", menuCd)
-                .param("state", "U")
+                .param("detailStatus", "UPDATE")
             ).andExpect(view().name("sys/menumng/menuMngDetail"))
             .andExpect(status().isOk());
     }

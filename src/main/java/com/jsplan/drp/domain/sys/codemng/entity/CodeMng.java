@@ -2,7 +2,7 @@ package com.jsplan.drp.domain.sys.codemng.entity;
 
 import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequest;
 import com.jsplan.drp.global.obj.entity.BaseEntity;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

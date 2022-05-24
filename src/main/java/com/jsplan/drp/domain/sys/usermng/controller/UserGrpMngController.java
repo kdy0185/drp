@@ -6,9 +6,10 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngRequest;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngResponse;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.service.UserGrpMngService;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,23 +42,23 @@ public class UserGrpMngController {
     /**
      * <p>그룹 관리</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (그룹 관리 페이지 정보)
      */
     @PostMapping(value = "/sys/usermng/userGrpMngList.do")
-    public ModelAndView userGrpMngList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView userGrpMngList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("sys/usermng/userGrpMngList");
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // ***************************** PAGE : S *****************************
-            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
+            List<ComsDTO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 
@@ -92,11 +93,11 @@ public class UserGrpMngController {
         ModelAndView mav = new ModelAndView("sys/usermng/userGrpMngDetail");
         UserGrpMngDetailDTO detailDTO = new UserGrpMngDetailDTO();
 
-        if ("U".equals(request.getState())) {
+        if (DetailStatus.UPDATE.equals(request.getDetailStatus())) {
             detailDTO = userGrpMngService.selectUserGrpMngDetail(request);
         }
 
-        detailDTO.setState(request.getState());
+        detailDTO.setDetailStatus(request.getDetailStatus());
         mav.addObject("detailDTO", detailDTO);
         return mav;
     }

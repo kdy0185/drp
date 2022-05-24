@@ -12,7 +12,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserAuthMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
 import com.jsplan.drp.global.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -154,6 +154,7 @@ public class UserMngCustomRepositoryImpl extends Querydsl5RepositorySupport impl
     public UserMngDetailDTO findUserMngByUserId(String userId) {
         return select(new QUserMngDetailDTO(
             userMng.userGrpMng.grpCd,
+            userMng.userGrpMng.grpNm,
             userMng.userId,
             userMng.userNm,
             userMng.mobileNum,

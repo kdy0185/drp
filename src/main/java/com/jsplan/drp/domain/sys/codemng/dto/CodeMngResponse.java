@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.codemng.dto;
 
-import com.jsplan.drp.global.obj.entity.CodeMngDataStatus;
+import com.jsplan.drp.domain.sys.codemng.vo.CodeMngDataStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

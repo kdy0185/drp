@@ -1,6 +1,6 @@
 package com.jsplan.drp.domain.sys.authmng.dto;
 
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import lombok.Getter;
 import lombok.Setter;
 

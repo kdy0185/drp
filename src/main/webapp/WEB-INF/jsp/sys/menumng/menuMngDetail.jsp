@@ -171,7 +171,7 @@
   }
 </script>
 <form:form modelAttribute="detailDTO" name="menuMngDetailForm" method="post">
-    <form:hidden path="state"/>
+    <form:hidden path="detailStatus"/>
     <form:hidden path="authCd"/>
     <table class="table blue-base-table">
         <colgroup>
@@ -185,7 +185,7 @@
             <th class="top-line"><span class="star-mark">메뉴 코드</span></th>
             <td class="top-line">
                 <form:input path="menuCd" cssClass="form-control input-sm width_42 menuCdReq"
-                            readonly="${detailDTO.state eq 'U' ? 'true' : 'false'}" onblur="getMenuInfo();"/>
+                            readonly="${detailDTO.detailStatus eq 'UPDATE' ? 'true' : 'false'}" onblur="getMenuInfo();"/>
             </td>
             <th class="top-line" rowspan="5"><span class="star-unmark">권한</span></th>
             <td class="top-line padding_none" rowspan="5">
@@ -233,12 +233,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${detailDTO.state eq 'I'}">
+        <c:if test="${detailDTO.detailStatus eq 'INSERT'}">
             <button type="button" onclick="insertMenuMng();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${detailDTO.state eq 'U'}">
+        <c:if test="${detailDTO.detailStatus eq 'UPDATE'}">
             <button type="button" onclick="updateMenuMng();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>

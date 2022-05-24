@@ -24,7 +24,7 @@
 
     <script type="text/javascript">
       $(function () {
-        if ("${planCtgOptVO.authAdmin}" == "Y") $.util.getSearchCondition();
+        if ("${searchDTO.authAdmin}" === "Y") $.util.getSearchCondition();
       });
 
       // Ext Tree Model 정의 - 분류 옵션 설정
@@ -43,11 +43,11 @@
           type: "float",
           useNull: true
         }, {
-          name: "recgMinTime", // 권장 시간
+          name: "recgTime", // 권장 시간
           type: "String",
           useNull: true
         }, {
-          name: "rtneStartDate", // 적용 기간
+          name: "rtneDate", // 적용 기간
           type: "String",
           useNull: true
         }, {
@@ -142,7 +142,7 @@
             width: 30,
             align: "center",
             sortable: true,
-            dataIndex: "recgMinTime",
+            dataIndex: "recgTime",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -152,7 +152,7 @@
             width: 45,
             align: "center",
             sortable: true,
-            dataIndex: "rtneStartDate",
+            dataIndex: "rtneDate",
             renderer: function (val, metadata, record) {
               metadata.style = "cursor: pointer;";
               return val;
@@ -195,7 +195,7 @@
                 var form = $('form[name="planCtgOptForm"]');
                 $(form).find('input[name="rtneCtgCd"]').val(node.data.rtneCtgCd);
                 $(form).find('input[name="planUser"]').val(node.data.planUser);
-                readPlanCtgOpt('U');
+                readPlanCtgOpt('UPDATE');
               }
             }
           },
@@ -210,7 +210,7 @@
         var searchWord = $(obj).val();
 
         $.ajax({
-          type: "post",
+          type: "get",
           url: "/coms/comsUserSearch.do",
           data: {
             searchCd: searchCd,
@@ -263,17 +263,17 @@
       }
 
       // 상세
-      function readPlanCtgOpt(state) {
+      function readPlanCtgOpt(detailStatus) {
         var form = $('form[name="planCtgOptForm"]');
         var planCtgOptCnt = mainTree.getSelectionModel().getCount();
-        var rtneCtgCd = state === "U" ? $(form).find('input[name="rtneCtgCd"]').val() : "";
-        var planUser = state === "U" ? $(form).find('input[name="planUser"]').val() : "";
-        if (state === "U" && planCtgOptCnt === 0) {
+        var rtneCtgCd = detailStatus === "UPDATE" ? $(form).find('input[name="rtneCtgCd"]').val() : "";
+        var planUser = detailStatus === "UPDATE" ? $(form).find('input[name="planUser"]').val() : "";
+        if (detailStatus === "UPDATE" && planCtgOptCnt === 0) {
           alert("분류를 선택하세요.");
-        } else if (state === "U" && planCtgOptCnt > 1) {
+        } else if (detailStatus === "UPDATE" && planCtgOptCnt > 1) {
           alert("1개의 분류만 선택하세요.");
         } else {
-          var title = state === "I" ? "분류 옵션 등록" : "분류 옵션 정보";
+          var title = detailStatus === "INSERT" ? "분류 옵션 등록" : "분류 옵션 정보";
           var width = 750;
           $.ajax({
             type: "post",
@@ -281,7 +281,7 @@
             data: {
               rtneCtgCd: rtneCtgCd,
               planUser: planUser,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -294,7 +294,7 @@
       // 목록
       function moveList() {
         var url = "/pl/ctgopt/planCtgOptList.do";
-        var menuCd = "${comsMenuVO.menuCd}";
+        var menuCd = "${comsMenuDTO.menuCd}";
         var csrfParam = "${_csrf.parameterName}";
         var csrfToken = "${_csrf.token}";
         $.util.moveMenu(url, menuCd, csrfParam, csrfToken);
@@ -316,10 +316,10 @@
         <%@ include file="/WEB-INF/jsp/cmmn/layout/left.jsp" %>
         <div class="contents-area col-md-10 col-sm-10 col-xs-12">
             <div class="sc-title">
-                <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
+                <span>${comsMenuDTO.menuNm}</span><em class="pull-right">${comsMenuDTO.upperMenuNm} &gt; ${comsMenuDTO.menuNm}</em>
             </div>
 
-            <form:form modelAttribute="planCtgOptVO" name="planCtgOptSearchForm" method="post">
+            <form:form modelAttribute="searchDTO" name="planCtgOptSearchForm" method="post">
                 <div class="contents-box search-area margin_none">
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12 padding_l25 padding_r0">
@@ -328,12 +328,12 @@
                             </div>
                             <div class="col-md-10 col-sm-12 col-xs-12 padding_none code_search_box">
                                 <form:input path="userId" cssClass="form-control input-sm"
-                                            onkeydown="${planCtgOptVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="아이디" readonly="${planCtgOptVO.authAdmin eq 'N' ? 'true' : ''}"/>
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="아이디" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"/>
                                 <form:input path="userNm" cssClass="form-control input-sm"
-                                            onkeydown="${planCtgOptVO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
-                                            placeholder="성명" readonly="${planCtgOptVO.authAdmin eq 'N' ? 'true' : ''}"/>
-                                <c:if test="${planCtgOptVO.authAdmin eq 'Y'}">
+                                            onkeydown="${searchDTO.authAdmin eq 'Y' ? 'javascript:if(event.keyCode==13){searchUser(this);}':''}"
+                                            placeholder="성명" readonly="${searchDTO.authAdmin eq 'N' ? 'true' : ''}"/>
+                                <c:if test="${searchDTO.authAdmin eq 'Y'}">
                                     <button type="button" onclick="openUserPop(this);" class="btn btn-green search">
                                         <i class="fa fa-search margin_none"></i>
                                     </button>
@@ -363,7 +363,7 @@
                 </div>
             </form:form>
 
-            <form:form modelAttribute="planCtgOptVO" name="planCtgOptForm" method="post">
+            <form:form modelAttribute="searchDTO" name="planCtgOptForm" method="post">
                 <form:hidden path="rtneCtgCd"/>
                 <form:hidden path="planUser"/>
                 <div class="contents-box grid-area outline_none">
@@ -392,10 +392,10 @@
                         </ul>
                         <div id="planCtgOptTree"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readPlanCtgOpt('I');" class="btn btn-red">
+                            <button type="button" onclick="readPlanCtgOpt('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readPlanCtgOpt('U');" class="btn btn-red">
+                            <button type="button" onclick="readPlanCtgOpt('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                         </div>

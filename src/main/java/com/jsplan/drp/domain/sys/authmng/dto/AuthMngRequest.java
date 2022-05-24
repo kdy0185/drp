@@ -1,6 +1,7 @@
 package com.jsplan.drp.domain.sys.authmng.dto;
 
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -35,7 +36,7 @@ public class AuthMngRequest {
     @NotNull(message = "{js.valid.msg.required}")
     private Integer authOrd; // 권한 순서
 
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // Test 전용 생성자
     AuthMngRequest(String authCd, String upperAuthCd, String authNm, String authDesc,

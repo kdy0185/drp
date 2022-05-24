@@ -216,7 +216,7 @@
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
                 var form = $('form[name="userGrpMngForm"]');
                 $(form).find('input[name="grpCd"]').val(dataRecord.data.grpCd);
-                readUserGrpMng('U');
+                readUserGrpMng('UPDATE');
               }
             }
           },
@@ -238,20 +238,20 @@
       }
 
       // 상세
-      function readUserGrpMng(state) {
+      function readUserGrpMng(detailStatus) {
         var form = $('form[name="userGrpMngForm"]');
-        var grpCd = state === "U" ? $(form).find('input[name="grpCd"]').val() : "";
-        if (state === "U" && grpCd === "") {
+        var grpCd = detailStatus === "UPDATE" ? $(form).find('input[name="grpCd"]').val() : "";
+        if (detailStatus === "UPDATE" && grpCd === "") {
           alert("그룹을 선택하세요.");
         } else {
-          var title = state === "I" ? "그룹 등록" : "그룹 정보";
+          var title = detailStatus === "INSERT" ? "그룹 등록" : "그룹 정보";
           var width = 750;
           $.ajax({
             type: "post",
             url: "/sys/usermng/userGrpMngDetail.do",
             data: {
               grpCd: grpCd,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -277,7 +277,7 @@
         <%@ include file="/WEB-INF/jsp/cmmn/layout/left.jsp" %>
         <div class="contents-area col-md-10 col-sm-10 col-xs-12">
             <div class="sc-title">
-                <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
+                <span>${comsMenuDTO.menuNm}</span><em class="pull-right">${comsMenuDTO.upperMenuNm} &gt; ${comsMenuDTO.menuNm}</em>
             </div>
 
             <form:form modelAttribute="searchDTO" name="userGrpMngSearchForm" method="post">
@@ -341,10 +341,10 @@
                         </ul>
                         <div id="userGrpMngGrid"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readUserGrpMng('I');" class="btn btn-red">
+                            <button type="button" onclick="readUserGrpMng('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readUserGrpMng('U');" class="btn btn-red">
+                            <button type="button" onclick="readUserGrpMng('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                         </div>

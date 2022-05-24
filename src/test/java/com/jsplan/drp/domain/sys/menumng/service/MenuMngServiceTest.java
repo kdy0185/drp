@@ -18,7 +18,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngSearchDTOBuilder;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
 import com.jsplan.drp.domain.sys.menumng.repository.MenuMngRepository;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +87,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴 목록 조회 테스트")
-    public void selectMenuMngList() throws Exception {
+    public void selectMenuMngList() {
         // given
         List<MenuMngListDTO> menuMngList = new ArrayList<>();
         menuMngList.add(listDTO);
@@ -107,7 +107,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴 상세 조회 테스트")
-    public void selectMenuMngDetail() throws Exception {
+    public void selectMenuMngDetail() {
         // mocking
         given(menuMngRepository.findMenuMngByMenuCd(anyString())).willReturn(detailDTO);
 
@@ -121,7 +121,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴별 권한 목록 조회 테스트")
-    public void selectMenuAuthMngList() throws Exception {
+    public void selectMenuAuthMngList() {
         // given
         request.setMenuCd("P0201,P0202,P0203");
         request.setAuthCd("AUTH_NORMAL");
@@ -144,7 +144,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴 등록 테스트")
-    public void insertMenuMngData() throws Exception {
+    public void insertMenuMngData() {
         // mocking
         given(menuMngRepository.save(any())).willReturn(menuMng);
         given(menuMngRepository.findMenuMngByMenuCd(anyString())).willReturn(detailDTO);
@@ -159,7 +159,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴 수정 테스트")
-    public void updateMenuMngData() throws Exception {
+    public void updateMenuMngData() {
         // given
         request = MenuMngRequestBuilder.build(menuCd, upperMenuCd, "메뉴 수정", null,
             "/pl/test/planModifyList.do", null, menuLv, menuOrd, useYn, authCd);
@@ -177,7 +177,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("메뉴 삭제 테스트")
-    public void deleteMenuMngData() throws Exception {
+    public void deleteMenuMngData() {
         // when
         menuMngService.deleteMenuMngData(request);
 
@@ -187,7 +187,7 @@ class MenuMngServiceTest {
 
     @Test
     @DisplayName("권한 설정 적용 테스트")
-    public void updateMenuAuthMngData() throws Exception {
+    public void updateMenuAuthMngData() {
         // given
         String menuCdList = "P0400";
         String authCdList = "AUTH_NORMAL";

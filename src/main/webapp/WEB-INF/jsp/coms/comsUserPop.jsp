@@ -23,7 +23,7 @@
     var grpCd = $(form).find('input[name="grpCd"]').val();
 
     $.ajax({
-      type: "post",
+      type: "get",
       url: "/coms/comsUserSearch.do",
       data: {
         searchCd: searchCd,
@@ -101,7 +101,7 @@
   }
 </script>
 
-<form:form modelAttribute="comsVO" name="comsUserForm" method="post">
+<form:form modelAttribute="comsDTO" name="comsUserForm" method="post">
     <form:hidden path="selectFormNm"/>
     <form:hidden path="selectInputId1"/>
     <form:hidden path="selectInputId2"/>

@@ -94,7 +94,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 목록 조회 테스트")
-    public void selectUserGrpMngList() throws Exception {
+    public void selectUserGrpMngList() {
         // given
         List<UserGrpMngListDTO> list = new ArrayList<>();
         list.add(listDTO);
@@ -114,7 +114,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 상세 조회 테스트")
-    public void selectUserGrpMngDetail() throws Exception {
+    public void selectUserGrpMngDetail() {
         // mocking
         given(userGrpMngRepository.findUserGrpMngByGrpCd(anyString())).willReturn(detailDTO);
 
@@ -130,7 +130,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 등록 테스트")
-    public void insertUserGrpMngData() throws Exception {
+    public void insertUserGrpMngData() {
         // mocking
         given(userGrpMngRepository.save(any())).willReturn(userGrpMng);
         given(userGrpMngRepository.findUserGrpMngByGrpCd(anyString())).willReturn(detailDTO);
@@ -145,7 +145,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 수정 테스트")
-    public void updateUserGrpMngData() throws Exception {
+    public void updateUserGrpMngData() {
         // given
         request = UserGrpMngRequestBuilder.build("GRP_TEST", "그룹 수정", "설명 수정");
 
@@ -162,7 +162,7 @@ class UserGrpMngServiceTest {
 
     @Test
     @DisplayName("그룹 삭제 테스트")
-    public void deleteUserGrpMngData() throws Exception {
+    public void deleteUserGrpMngData() {
         // when
         userGrpMngService.deleteUserGrpMngData(request);
 

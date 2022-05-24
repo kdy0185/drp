@@ -8,7 +8,7 @@ import com.jsplan.drp.domain.sys.usermng.dto.UserMngResponse;
 import com.jsplan.drp.domain.sys.usermng.dto.UserMngSearchDTO;
 import com.jsplan.drp.domain.sys.usermng.entity.UserMng;
 import com.jsplan.drp.domain.sys.usermng.repository.UserMngRepository;
-import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus;
 import com.jsplan.drp.global.util.StringUtil;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -137,8 +137,10 @@ public class UserMngService {
     @Transactional
     public UserMngResponse updateUserMngData(UserMngRequest request) {
         // BCrypt 패스워드 암호화
-        String encodePw = passwordEncoder.encode(request.getUserPw());
-        request.setUserPw(encodePw);
+        if (!StringUtil.isBlank(request.getUserPw())) {
+            String encodePw = passwordEncoder.encode(request.getUserPw());
+            request.setUserPw(encodePw);
+        }
 
         UserMng userMng = userMngRepository.findById(request.getUserId())
             .orElseThrow(NoSuchElementException::new);

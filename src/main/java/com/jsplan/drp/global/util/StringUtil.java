@@ -522,6 +522,21 @@ public class StringUtil {
     }
 
     /**
+     * <p>Single Quotation 삽입</p>
+     *
+     * <pre>
+     * StringUtil.quote(null)    = null
+     * StringUtil.quote("abc")    = "'abc'"
+     * </pre>
+     *
+     * @param str (적용할 문자)
+     * @return String (변경 후 문자)
+     */
+    public static String quote(String str) {
+        return str != null ? "'" + str + "'" : null;
+    }
+
+    /**
      * <p>특정 문자의 구간별 추가 삽입</p>
      *
      * <pre>

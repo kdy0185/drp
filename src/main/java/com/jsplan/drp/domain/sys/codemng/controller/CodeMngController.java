@@ -9,8 +9,8 @@ import com.jsplan.drp.domain.sys.codemng.dto.CodeMngRequest;
 import com.jsplan.drp.domain.sys.codemng.dto.CodeMngResponse;
 import com.jsplan.drp.domain.sys.codemng.dto.CodeMngSearchDTO;
 import com.jsplan.drp.domain.sys.codemng.service.CodeMngService;
-import com.jsplan.drp.global.obj.entity.ComsMenuVO;
-import com.jsplan.drp.global.obj.entity.ComsVO;
+import com.jsplan.drp.global.obj.dto.ComsDTO;
+import com.jsplan.drp.global.obj.dto.ComsMenuDTO;
 import com.jsplan.drp.global.obj.service.ComsService;
 import com.jsplan.drp.global.util.ExcelUtil;
 import java.util.ArrayList;
@@ -44,23 +44,23 @@ public class CodeMngController {
     /**
      * <p>코드 관리</p>
      *
-     * @param comsMenuVO (메뉴 VO)
+     * @param comsMenuDTO (메뉴 정보)
      * @return ModelAndView (코드 관리 페이지 정보)
      */
     @PostMapping(value = "/sys/codemng/codeMngList.do")
-    public ModelAndView codeMngList(@ModelAttribute ComsMenuVO comsMenuVO) {
+    public ModelAndView codeMngList(@ModelAttribute ComsMenuDTO comsMenuDTO) {
         ModelAndView mav = new ModelAndView("sys/codemng/codeMngList");
 
         try {
             // ***************************** MENU : S *****************************
-            List<ComsMenuVO> menuList = comsService.selectComsMenuList();
+            List<ComsMenuDTO> menuList = comsService.selectComsMenuList();
             mav.addObject("menuList", menuList);
-            comsMenuVO = comsService.selectComsMenuDetail(comsMenuVO.getMenuCd());
-            mav.addObject("comsMenuVO", comsMenuVO);
+            comsMenuDTO = comsService.selectComsMenuDetail(comsMenuDTO.getMenuCd());
+            mav.addObject("comsMenuDTO", comsMenuDTO);
             // ***************************** MENU : E *****************************
 
             // ***************************** PAGE : S *****************************
-            List<ComsVO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
+            List<ComsDTO> pageList = comsService.selectComsCodeList("PAGE_SIZE");
             mav.addObject("pageList", pageList);
             // ***************************** PAGE : E *****************************
 

@@ -7,7 +7,7 @@ import com.jsplan.drp.domain.sys.usermng.entity.UserGrpMng;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngDetailDTO;
 import com.jsplan.drp.domain.sys.usermng.dto.UserGrpMngListDTO;
 import com.jsplan.drp.domain.sys.usermng.repository.UserGrpMngRepository;
-import com.jsplan.drp.global.obj.entity.DataStatus;
+import com.jsplan.drp.global.obj.vo.DataStatus;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

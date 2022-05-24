@@ -1,9 +1,12 @@
 package com.jsplan.drp.domain.pl.report.service;
 
-import com.jsplan.drp.domain.pl.report.entity.PlanReportVO;
-import com.jsplan.drp.domain.pl.report.mapper.PlanReportMapper;
+import com.jsplan.drp.domain.pl.report.dto.PlanReportListDTO;
+import com.jsplan.drp.domain.pl.report.dto.PlanReportSearchDTO;
+import com.jsplan.drp.domain.pl.report.repository.PlanReportRepository;
 import java.util.List;
-import javax.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,54 +15,44 @@ import org.springframework.stereotype.Service;
  * @Date : 2022-01-26
  * @Description : 데일리 리포트 Service
  */
-@Service("PlanReportService")
+@Service
+@RequiredArgsConstructor
 public class PlanReportService {
 
-    @Resource
-    private PlanReportMapper planReportMapper;
+    private final PlanReportRepository planReportRepository;
 
     /**
      * <p>분류 목록</p>
      *
-     * @param planReportVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (분류 목록)
      */
-    public List<PlanReportVO> selectPlanReportRtneCtgList(PlanReportVO planReportVO) throws Exception {
-        return planReportMapper.selectPlanReportRtneCtgList(planReportVO);
+    public List<PlanReportListDTO> selectPlanReportRtneCtgList(PlanReportSearchDTO searchDTO) {
+        return planReportRepository.searchPlanReportRtneCtgList(searchDTO.getUserId());
     }
 
     /**
      * <p>일과 목록</p>
      *
-     * @param planReportVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return Page (일과 목록)
      */
-    public List<PlanReportVO> selectPlanReportList(PlanReportVO planReportVO) throws Exception {
-        return planReportMapper.selectPlanReportList(planReportVO);
-    }
-
-    /**
-     * <p>일과 목록 수</p>
-     *
-     * @param planReportVO
-     * @return int
-     * @throws Exception throws Exception
-     */
-    public int selectPlanReportListCnt(PlanReportVO planReportVO) throws Exception {
-        return planReportMapper.selectPlanReportListCnt(planReportVO);
+    public Page<PlanReportListDTO> selectPlanReportList(PlanReportSearchDTO searchDTO) {
+        PageRequest pageRequest = PageRequest.of(searchDTO.getPageNo(), searchDTO.getPageSize());
+        return planReportRepository.searchPlanReportList(searchDTO.getUserId(),
+            searchDTO.getRtneStartDate(), searchDTO.getRtneEndDate(), searchDTO.getRtneCtgCd(),
+            searchDTO.getRtneNm(), pageRequest);
     }
 
     /**
      * <p>일과 엑셀 목록</p>
      *
-     * @param planReportVO
-     * @return List
-     * @throws Exception throws Exception
+     * @param searchDTO (조회 조건)
+     * @return List (일과 목록)
      */
-    public List<PlanReportVO> selectPlanReportExcelList(PlanReportVO planReportVO) throws Exception {
-        return (List<PlanReportVO>) planReportMapper.selectPlanReportExcelList(planReportVO);
+    public List<PlanReportListDTO> selectPlanReportExcelList(PlanReportSearchDTO searchDTO) {
+        return planReportRepository.searchPlanReportExcelList(searchDTO.getUserId(),
+            searchDTO.getRtneStartDate(), searchDTO.getRtneEndDate(), searchDTO.getRtneCtgCd(),
+            searchDTO.getRtneNm());
     }
-
 }

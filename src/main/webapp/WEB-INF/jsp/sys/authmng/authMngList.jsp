@@ -179,7 +179,7 @@
               itemdblclick: function (view, node, htmlElement) {
                 var form = $('form[name="authMngForm"]');
                 $(form).find('input[name="authCd"]').val(node.data.authCd);
-                readAuthMng('U');
+                readAuthMng('UPDATE');
               }
             }
           },
@@ -195,23 +195,23 @@
       }
 
       // 상세
-      function readAuthMng(state) {
+      function readAuthMng(detailStatus) {
         var form = $('form[name="authMngForm"]');
         var authMngCnt = mainTree.getSelectionModel().getCount();
-        var authCd = state === "U" ? $(form).find('input[name="authCd"]').val() : "";
-        if (state === "U" && authMngCnt === 0) {
+        var authCd = detailStatus === "UPDATE" ? $(form).find('input[name="authCd"]').val() : "";
+        if (detailStatus === "UPDATE" && authMngCnt === 0) {
           alert("권한를 선택하세요.");
-        } else if (state === "U" && authMngCnt > 1) {
+        } else if (detailStatus === "UPDATE" && authMngCnt > 1) {
           alert("1개의 권한만 선택하세요.");
         } else {
-          var title = state === "I" ? "권한 등록" : "권한 정보";
+          var title = detailStatus === "INSERT" ? "권한 등록" : "권한 정보";
           var width = 750;
           $.ajax({
             type: "post",
             url: "/sys/authmng/authMngDetail.do",
             data: {
               authCd: authCd,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -282,7 +282,7 @@
       // 목록
       function moveList() {
         var url = "/sys/authmng/authMngList.do";
-        var menuCd = "${comsMenuVO.menuCd}";
+        var menuCd = "${comsMenuDTO.menuCd}";
         var csrfParam = "${_csrf.parameterName}";
         var csrfToken = "${_csrf.token}";
         $.util.moveMenu(url, menuCd, csrfParam, csrfToken);
@@ -304,7 +304,7 @@
         <%@ include file="/WEB-INF/jsp/cmmn/layout/left.jsp" %>
         <div class="contents-area col-md-10 col-sm-10 col-xs-12">
             <div class="sc-title">
-                <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
+                <span>${comsMenuDTO.menuNm}</span><em class="pull-right">${comsMenuDTO.upperMenuNm} &gt; ${comsMenuDTO.menuNm}</em>
             </div>
 
             <form:form modelAttribute="searchDTO" name="authMngSearchForm" method="post">
@@ -376,10 +376,10 @@
                         </ul>
                         <div id="authMngTree"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readAuthMng('I');" class="btn btn-red">
+                            <button type="button" onclick="readAuthMng('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readAuthMng('U');" class="btn btn-red">
+                            <button type="button" onclick="readAuthMng('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                             <button type="button" onclick="openUserPop();" class="btn btn-red">

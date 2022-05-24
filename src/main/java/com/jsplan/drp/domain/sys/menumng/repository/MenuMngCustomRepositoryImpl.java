@@ -10,7 +10,7 @@ import com.jsplan.drp.domain.sys.menumng.dto.MenuMngDetailDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.MenuMngListDTO;
 import com.jsplan.drp.domain.sys.menumng.dto.QMenuMngDetailDTO;
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import com.jsplan.drp.global.obj.repository.Querydsl5RepositorySupport;
 import com.jsplan.drp.global.util.StringUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;

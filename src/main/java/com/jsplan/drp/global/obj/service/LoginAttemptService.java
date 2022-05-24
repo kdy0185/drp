@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Service("LoginAttemptService")
 public class LoginAttemptService {
 
-    private final int MAX_ATTEMPT = 5; // 최대 로그인 시도 횟수
-    private final int BLOCK_TIME = 10; // 접근 차단 시간(분)
-    private LoadingCache<String, Integer> attemptsCache;
+    private static final int MAX_ATTEMPT = 5; // 최대 로그인 시도 횟수
+    private static final int BLOCK_TIME = 10; // 접근 차단 시간(분)
+    private static LoadingCache<String, Integer> attemptsCache;
 
     /**
      * <p>로그인 횟수를 저장할 cache 연동</p>

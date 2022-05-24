@@ -267,7 +267,7 @@
               celldblclick: function (grid, htmlElement, columnIndex, dataRecord) {
                 var form = $('form[name="userMngForm"]');
                 $(form).find('input[name="userId"]').val(dataRecord.data.userId);
-                readUserMng('U');
+                readUserMng('UPDATE');
               }
             }
           },
@@ -290,23 +290,23 @@
       }
 
       // 상세
-      function readUserMng(state) {
+      function readUserMng(detailStatus) {
         var form = $('form[name="userMngForm"]');
         var userMngCnt = mainGrid.getSelectionModel().getCount();
-        var userId = state === "U" ? $(form).find('input[name="userId"]').val() : "";
-        if (state === "U" && userMngCnt === 0) {
+        var userId = detailStatus === "UPDATE" ? $(form).find('input[name="userId"]').val() : "";
+        if (detailStatus === "UPDATE" && userMngCnt === 0) {
           alert("사용자를 선택하세요.");
-        } else if (state === "U" && userMngCnt > 1) {
+        } else if (detailStatus === "UPDATE" && userMngCnt > 1) {
           alert("1명의 사용자만 선택하세요.");
         } else {
-          var title = state === "I" ? "사용자 등록" : "사용자 정보";
+          var title = detailStatus === "INSERT" ? "사용자 등록" : "사용자 정보";
           var width = 750;
           $.ajax({
             type: "post",
             url: "/sys/usermng/userMngDetail.do",
             data: {
               userId: userId,
-              state: state
+              detailStatus: detailStatus
             },
             success: function (data, textStatus) {
               $("#popLayout").html(data);
@@ -361,7 +361,7 @@
         <%@ include file="/WEB-INF/jsp/cmmn/layout/left.jsp" %>
         <div class="contents-area col-md-10 col-sm-10 col-xs-12">
             <div class="sc-title">
-                <span>${comsMenuVO.menuNm}</span><em class="pull-right">${comsMenuVO.upperMenuNm} &gt; ${comsMenuVO.menuNm}</em>
+                <span>${comsMenuDTO.menuNm}</span><em class="pull-right">${comsMenuDTO.upperMenuNm} &gt; ${comsMenuDTO.menuNm}</em>
             </div>
 
             <form:form modelAttribute="searchDTO" name="userMngSearchForm" method="post">
@@ -456,10 +456,10 @@
                         </ul>
                         <div id="userMngGrid"></div>
                         <div class="btn-right-area">
-                            <button type="button" onclick="readUserMng('I');" class="btn btn-red">
+                            <button type="button" onclick="readUserMng('INSERT');" class="btn btn-red">
                                 <i class="fa fa-pencil-square-o"></i>등록
                             </button>
-                            <button type="button" onclick="readUserMng('U');" class="btn btn-red">
+                            <button type="button" onclick="readUserMng('UPDATE');" class="btn btn-red">
                                 <i class="fa fa-file-text-o"></i>상세
                             </button>
                             <button type="button" onclick="openAuthPop();" class="btn btn-red">

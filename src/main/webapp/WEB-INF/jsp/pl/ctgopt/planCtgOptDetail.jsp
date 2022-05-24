@@ -53,28 +53,51 @@
     });
   }
 
-  // 수정
-  function updatePlanCtgOpt() {
+  // 등록
+  function insertPlanCtgOpt() {
     var form = $('form[name="planCtgOptDetailForm"]');
-    var state = $(form).find('input[name="state"]').val();
-    var msg = state === "I" ? "등록" : "수정";
     $(form).validateForm();
 
     if ($(form).valid()) {
-      if (confirm(msg + " 하시겠습니까?")) {
+      if (confirm("등록 하시겠습니까?")) {
         $.ajax({
           type: "post",
-          url: "/pl/ctgopt/planCtgOptUpdate.do",
+          url: "/pl/ctgopt/planCtgOptInsert.do",
           data: $(form).serialize(),
-          success: function (code) {
-            if (code === "S") {
-              alert(msg + " 되었습니다.");
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("등록 되었습니다.");
               $.util.closeDialog();
               searchPlanCtgOpt();
-            } else if (code === "N") {
-              alert(msg + "된 데이터가 없습니다.");
+            } else if (res.dataStatus === "DUPLICATE") {
+              alert("중복된 분류 옵션입니다.");
             } else {
-              alert("오류가 발생하였습니다.\ncode : " + code);
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
+            }
+          }
+        });
+      }
+    }
+  }
+
+  // 수정
+  function updatePlanCtgOpt() {
+    var form = $('form[name="planCtgOptDetailForm"]');
+    $(form).validateForm();
+
+    if ($(form).valid()) {
+      if (confirm("수정 하시겠습니까?")) {
+        $.ajax({
+          type: "put",
+          url: "/pl/ctgopt/planCtgOptUpdate.do",
+          data: $(form).serialize(),
+          success: function (res) {
+            if (res.dataStatus === "SUCCESS") {
+              alert("수정 되었습니다.");
+              $.util.closeDialog();
+              searchPlanCtgOpt();
+            } else {
+              alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
             }
           }
         });
@@ -85,30 +108,29 @@
   // 삭제
   function deletePlanCtgOpt() {
     var form = $('form[name="planCtgOptDetailForm"]');
+
     if (confirm("삭제 하시겠습니까?")) {
       $.ajax({
-        type: "post",
+        type: "delete",
         url: "/pl/ctgopt/planCtgOptDelete.do",
         data: $(form).serialize(),
-        success: function (code) {
-          if (code === "S") {
+        success: function (res) {
+          if (res.dataStatus === "SUCCESS") {
             alert("삭제 되었습니다.");
             $.util.closeDialog();
             searchPlanCtgOpt();
-          } else if (code === "F") {
+          } else if (res.dataStatus === "CONSTRAINT") {
             alert("이미 적용된 일과가 있어 삭제할 수 없습니다.");
-          } else if (code === "N") {
-            alert("삭제된 데이터가 없습니다.");
           } else {
-            alert("오류가 발생하였습니다.\ncode : " + code);
+            alert("오류가 발생하였습니다.\ncode : " + res.dataStatus);
           }
         }
       });
     }
   }
 </script>
-<form:form modelAttribute="planCtgOptVO" name="planCtgOptDetailForm" method="post">
-    <form:hidden path="state"/>
+<form:form modelAttribute="detailDTO" name="planCtgOptDetailForm" method="post">
+    <form:hidden path="detailStatus"/>
     <table class="table blue-base-table">
         <colgroup>
             <col style="width: 15%"/>
@@ -121,27 +143,32 @@
             <th class="top-line"><span class="star-mark">분류 코드</span></th>
             <td class="top-line">
                 <form:input path="rtneCtgCd" cssClass="form-control input-sm width_42 required"
-                            readonly="${planCtgOptVO.state eq 'U' ? 'true' : 'false'}" onblur="getRtneCtgCd();"/>
+                            readonly="${detailDTO.detailStatus eq 'UPDATE' ? 'true' : 'false'}"
+                            onblur="getRtneCtgCd();"/>
             </td>
             <th class="top-line"><span class="star-unmark">상위 분류 코드</span></th>
             <td class="top-line">
-                <form:input path="upperRtneCtgCd" cssClass="form-control input-sm width_42" readonly="true"/>
+                <form:input path="upperRtneCtgCd" cssClass="form-control input-sm width_42"
+                            readonly="true"/>
             </td>
         </tr>
         <tr>
             <th><span class="star-mark">분류명</span></th>
-            <td><form:input path="rtneCtgNm" cssClass="form-control input-sm width_66 required"/></td>
+            <td><form:input path="rtneCtgNm"
+                            cssClass="form-control input-sm width_66 required"/></td>
             <th><span class="star-mark">가중치</span></th>
             <td><form:input path="wtVal" cssClass="form-control input-sm width_28 digitsReq"/></td>
         </tr>
         <tr>
             <th><span class="star-mark">최소 권장 시간</span></th>
             <td>
-                <form:input path="recgMinTime" id="recgMaxTime" cssClass="form-control input-sm width_28 lessThan"/>
+                <form:input path="recgMinTime" id="recgMaxTime"
+                            cssClass="form-control input-sm width_28 lessThan"/>
             </td>
             <th><span class="star-mark">최대 권장 시간</span></th>
             <td>
-                <form:input path="recgMaxTime" id="recgMinTime" cssClass="form-control input-sm width_28 moreThan" maxlength="2"/>
+                <form:input path="recgMaxTime" id="recgMinTime"
+                            cssClass="form-control input-sm width_28 moreThan" maxlength="2"/>
             </td>
         </tr>
         <tr>
@@ -155,9 +182,12 @@
             <th class="bottom-line"><span class="star-mark">담당자</span></th>
             <td class="bottom-line">
                 <form:hidden path="userId"/>
-                <form:input path="userNm" cssClass="form-control input-sm pull-left width_66 required" readonly="true"/>
-                <c:if test="${planCtgOptVO.authAdmin eq 'Y' && planCtgOptVO.state eq 'I'}">
-                    <button type="button" onclick="openUserSubPop(this);" class="btn btn-green search">
+                <form:input path="userNm"
+                            cssClass="form-control input-sm pull-left width_66 required"
+                            readonly="true"/>
+                <c:if test="${detailDTO.authAdmin eq 'Y' && detailDTO.detailStatus eq 'INSERT'}">
+                    <button type="button" onclick="openUserSubPop(this);"
+                            class="btn btn-green search">
                         <i class="fa fa-search margin_none"></i>
                     </button>
                 </c:if>
@@ -167,12 +197,12 @@
     </table>
     <div class="val-check-area"></div>
     <div class="btn-center-area">
-        <c:if test="${planCtgOptVO.state eq 'I'}">
-            <button type="button" onclick="updatePlanCtgOpt();" class="btn btn-red">
+        <c:if test="${detailDTO.detailStatus eq 'INSERT'}">
+            <button type="button" onclick="insertPlanCtgOpt();" class="btn btn-red">
                 <i class="fa fa-pencil-square-o"></i>등록
             </button>
         </c:if>
-        <c:if test="${planCtgOptVO.state eq 'U'}">
+        <c:if test="${detailDTO.detailStatus eq 'UPDATE'}">
             <button type="button" onclick="updatePlanCtgOpt();" class="btn btn-red">
                 <i class="fa fa-floppy-o"></i>수정
             </button>

@@ -1,7 +1,8 @@
 package com.jsplan.drp.domain.sys.menumng.dto;
 
 import com.jsplan.drp.domain.sys.menumng.entity.MenuMng;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.DetailStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -45,7 +46,7 @@ public class MenuMngRequest {
 
     private String authCd; // 권한 코드
 
-    private String state; // 등록/수정 (등록 : I, 수정 : U)
+    private DetailStatus detailStatus; // 등록/수정 구분
 
     // Test 전용 생성자
     MenuMngRequest(String menuCd, String upperMenuCd, String menuNm, String menuEngNm,

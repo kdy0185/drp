@@ -19,7 +19,7 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthMngSearchDTOBuilder;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthUserMngListDTO;
 import com.jsplan.drp.domain.sys.authmng.entity.AuthMng;
 import com.jsplan.drp.domain.sys.authmng.repository.AuthMngRepository;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,7 +84,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한 목록 조회 테스트")
-    public void selectAuthMngList() throws Exception {
+    public void selectAuthMngList() {
         // given
         List<AuthMngListDTO> authMngList = new ArrayList<>();
         authMngList.add(listDTO);
@@ -105,7 +105,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("상위 권한 목록 조회 테스트")
-    public void selectUpperAuthMngList() throws Exception {
+    public void selectUpperAuthMngList() {
         // given
         List<AuthMng> authMngList = new ArrayList<>();
         authMngList.add(AuthMng.builder().authCd("AUTH_ADMIN").authNm("슈퍼 관리자 권한").build());
@@ -126,7 +126,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한 상세 조회 테스트")
-    public void selectAuthMngDetail() throws Exception {
+    public void selectAuthMngDetail() {
         // mocking
         given(authMngRepository.findAuthMngByAuthCd(anyString())).willReturn(detailDTO);
 
@@ -140,7 +140,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한 등록 테스트")
-    public void insertAuthMngData() throws Exception {
+    public void insertAuthMngData() {
         // mocking
         given(authMngRepository.save(any())).willReturn(authMng);
         given(authMngRepository.findAuthMngByAuthCd(anyString())).willReturn(detailDTO);
@@ -155,7 +155,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한 수정 테스트")
-    public void updateAuthMngData() throws Exception {
+    public void updateAuthMngData() {
         // given
         request = AuthMngRequestBuilder.build(authCd, upperAuthCd, "권한 수정", null, authLv, authOrd);
 
@@ -171,7 +171,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한 삭제 테스트")
-    public void deleteAuthMngData() throws Exception {
+    public void deleteAuthMngData() {
         // when
         authMngService.deleteAuthMngData(request);
 
@@ -181,7 +181,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한별 사용자 목록 조회 테스트")
-    public void selectAuthUserMngList() throws Exception {
+    public void selectAuthUserMngList() {
         // given
         List<AuthUserMngListDTO> list = new ArrayList<>();
         list.add(new AuthUserMngListDTO("sys_app", "TEST1", "010-1111-1111"));
@@ -205,7 +205,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("사용자 설정 적용 테스트")
-    public void updateAuthUserMngData() throws Exception {
+    public void updateAuthUserMngData() {
         // given
         String authCdList = "AUTH_TEST";
         String userIdList = "sys_app";
@@ -225,7 +225,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("권한별 메뉴 목록 조회 테스트")
-    public void selectAuthMenuMngList() throws Exception {
+    public void selectAuthMenuMngList() {
         // given
         List<AuthMenuMngListDTO> authMenuMngList = new ArrayList<>();
         authMenuMngList.add(new AuthMenuMngListDTO("S0100", "일정 통계", "Y", "Y"));
@@ -247,7 +247,7 @@ class AuthMngServiceTest {
 
     @Test
     @DisplayName("메뉴 설정 적용 테스트")
-    public void updateAuthMenuMngData() throws Exception {
+    public void updateAuthMenuMngData() {
         // given
         String authCdList = "AUTH_TEST";
         String menuCdList = "S0100";

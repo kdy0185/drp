@@ -14,7 +14,7 @@ import com.jsplan.drp.domain.sys.authmng.dto.AuthMngDetailDTO;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthMngRequest;
 import com.jsplan.drp.domain.sys.authmng.dto.AuthMngRequestBuilder;
 import com.jsplan.drp.domain.sys.authmng.service.AuthMngService;
-import com.jsplan.drp.global.obj.entity.UseStatus;
+import com.jsplan.drp.global.obj.vo.UseStatus;
 import java.util.Locale;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
@@ -126,7 +126,7 @@ class AuthMngControllerTest {
         mockMvc.perform(post("/sys/authmng/authMngDetail.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("authCd", authCd)
-                .param("state", "U")
+                .param("detailStatus", "UPDATE")
             ).andExpect(view().name("sys/authmng/authMngDetail"))
             .andExpect(status().isOk());
     }
