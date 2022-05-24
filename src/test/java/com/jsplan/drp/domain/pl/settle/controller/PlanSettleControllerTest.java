@@ -82,7 +82,7 @@ class PlanSettleControllerTest {
     public void planSettleSearch() throws Exception {
         String rtneStartDate = "2022-01-01";
 
-        mockMvc.perform(get("/pl/settle/planSettleSearch.do")
+        mockMvc.perform(get("/pl/settle/planSettleDaySearch.do")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("pageNo", "0")
                 .param("pageSize", "200")

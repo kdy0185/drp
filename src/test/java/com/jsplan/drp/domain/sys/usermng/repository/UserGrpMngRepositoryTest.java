@@ -57,7 +57,6 @@ class UserGrpMngRepositoryTest {
         // then
         assertThat(detailDTO.getGrpNm()).isEqualTo("관리자 그룹");
         assertThat(detailDTO.getRegUser()).isEqualTo("시스템 관리자");
-        assertThat(detailDTO.getRegDate()).isEqualTo("2022-01-25 11:47:06");
     }
 
     @Test

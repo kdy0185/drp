@@ -81,6 +81,16 @@ spring:
     url: jdbc:log4jdbc:sqlserver://218.234.210.114:1433;databaseName=DRP
     username: sa
     password: y^2l1n9cC6
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+#        use_sql_comments: true
+    open-in-view: true
+    database-platform: com.jsplan.drp.global.config.MssqlDialectConfig
   servlet:
     multipart:
       enabled: true
@@ -105,7 +115,7 @@ project:
   properties:
     package: com.jsplan.drp
   path:
-    domain: http://13.209.50.216:3380
+    domain: http://3.34.2.174:3380
     root: /home/ec2-user/tomcat-8.5_drp/webapps/drp/
     upload: /home/ec2-user/tomcat-8.5_drp/webapps/drp/WEB-INF/classes/static/upload/
 logging:
