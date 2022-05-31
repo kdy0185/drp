@@ -11,12 +11,11 @@
 
 ## Environment
 
-* Java : 11.0.13
-* Spring : 5.3.15
-* Spring Boot : 2.6.3
-* Tomcat : 9.0.56
-* Packaging : War
-* Dependency : Gradle
+* Java 11.0.13
+* Spring Boot 2.6.3
+* Tomcat 9.0.56
+* Gradle 7.4
+* ExtJS 4.2.1
 
 
 ## Execution
@@ -33,7 +32,7 @@
 
 **일과 관리**
   * 일과별 달성률, 몰입도 등을 활용한 점수 산출
-  * 결산 정보 및 통계 조회
+  * 그리드 & 차트를 활용한 결산 정보 및 통계 조회
 
 **구조 변경 및 레거시 시스템 개선**
   * Maven → Gradle 변경
