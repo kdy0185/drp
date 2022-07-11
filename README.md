@@ -21,7 +21,7 @@
 
 * 실행 파일 : DrpApplication.java
 * 기본 주소 : http://localhost:8080/
-* 배포 주소 : http://3.34.2.174:3380/	
+* 배포 주소 : http://13.124.190.78:3380/
 
 
 ## Functions
